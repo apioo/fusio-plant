@@ -190,11 +190,11 @@
         "target": "Command"
       },
       "properties": {
-        "domains": {
-          "type": "array",
-          "schema": {
-            "type": "string"
-          }
+        "domain": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
         }
       }
     },

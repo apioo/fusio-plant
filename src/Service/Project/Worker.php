@@ -41,13 +41,14 @@ readonly class Worker
         return $this->waitForResponse($commandId);
     }
 
-    public function certbot(int $id, Model\ProjectApp $app): string
+    public function certbot(int $id, string $domain, string $email): string
     {
         $commandId = $this->buildCommandId($id);
 
         $command = new Model\CommandCertbot();
         $command->setType('certbot');
-        $command->setDomains($app->getDomains());
+        $command->setDomain($domain);
+        $command->setEmail($email);
         $this->writeCommand($commandId, $command);
 
         return $this->waitForResponse($commandId);

@@ -49,8 +49,9 @@ do
       rm -r "/docker/$name"
     elif [[ "$type" == "certbot" ]]; then
       domain=$(jq ".domain" "$command")
+      email=$(jq ".email" "$command")
       rm "$command"
-      certbot --nginx -d "$domain" > "$outputFile"
+      certbot --nginx --non-interactive --agree-tos -m "$email" -d "$domain" > "$outputFile"
     elif [[ "$type" == "pull" ]]; then
       name=$(jq ".name" "$command")
       rm "$command"
