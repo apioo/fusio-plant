@@ -7,20 +7,29 @@ namespace App\Model;
 
 class CommandCertbot extends Command implements \JsonSerializable, \PSX\Record\RecordableInterface
 {
-    protected ?string $domain = null;
-    public function setDomain(?string $domain): void
+    /**
+     * @var array<string>|null
+     */
+    protected ?array $domains = null;
+    /**
+     * @param array<string>|null $domains
+     */
+    public function setDomains(?array $domains): void
     {
-        $this->domain = $domain;
+        $this->domains = $domains;
     }
-    public function getDomain(): ?string
+    /**
+     * @return array<string>|null
+     */
+    public function getDomains(): ?array
     {
-        return $this->domain;
+        return $this->domains;
     }
     public function toRecord(): \PSX\Record\RecordInterface
     {
         /** @var \PSX\Record\Record<mixed> $record */
         $record = parent::toRecord();
-        $record->put('domain', $this->domain);
+        $record->put('domains', $this->domains);
         return $record;
     }
     public function jsonSerialize(): object

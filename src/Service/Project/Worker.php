@@ -12,12 +12,12 @@ readonly class Worker
     {
     }
 
-    public function setup(int $id, Model\Project $project): void
+    public function setup(int $id, Model\Project $project): string
     {
         $composeYaml = $this->composeWriter->write($id, $project->getApps());
         $nginxConfig = $this->nginxWriter->write($id, $project->getApps());
 
-        $commandId = $id . '-' . date('YmdHisv') . '.cmd';
+        $commandId = $this->buildCommandId($id);
 
         $command = new Model\CommandSetup();
         $command->setType('setup');
@@ -26,17 +26,116 @@ readonly class Worker
         $command->setNginx($nginxConfig);
         $this->writeCommand($commandId, $command);
 
-        $response = $this->waitForResponse($commandId);
+        return $this->waitForResponse($commandId);
     }
 
-    public function update(int $id, Model\Project $project): void
+    public function remove(int $id, ProjectRow $project): string
     {
+        $commandId = $this->buildCommandId($id);
 
+        $command = new Model\CommandRemove();
+        $command->setType('remove');
+        $command->setName($project->getName());
+        $this->writeCommand($commandId, $command);
+
+        return $this->waitForResponse($commandId);
     }
 
-    public function remove(int $id, ProjectRow $project): void
+    public function certbot(int $id, Model\ProjectApp $app): string
     {
+        $commandId = $this->buildCommandId($id);
 
+        $command = new Model\CommandCertbot();
+        $command->setType('certbot');
+        $command->setDomains($app->getDomains());
+        $this->writeCommand($commandId, $command);
+
+        return $this->waitForResponse($commandId);
+    }
+
+    public function pull(int $id, Model\Project $project): string
+    {
+        $commandId = $this->buildCommandId($id);
+
+        $command = new Model\CommandPull();
+        $command->setType('pull');
+        $command->setName($project->getName());
+        $this->writeCommand($commandId, $command);
+
+        return $this->waitForResponse($commandId);
+    }
+
+    public function up(int $id, Model\Project $project): string
+    {
+        $commandId = $this->buildCommandId($id);
+
+        $command = new Model\CommandUp();
+        $command->setType('up');
+        $command->setName($project->getName());
+        $this->writeCommand($commandId, $command);
+
+        return $this->waitForResponse($commandId);
+    }
+
+    public function down(int $id, Model\Project $project): string
+    {
+        $commandId = $this->buildCommandId($id);
+
+        $command = new Model\CommandDown();
+        $command->setType('down');
+        $command->setName($project->getName());
+        $this->writeCommand($commandId, $command);
+
+        return $this->waitForResponse($commandId);
+    }
+
+    public function logs(int $id, Model\Project $project): string
+    {
+        $commandId = $this->buildCommandId($id);
+
+        $command = new Model\CommandLogs();
+        $command->setType('logs');
+        $command->setName($project->getName());
+        $this->writeCommand($commandId, $command);
+
+        return $this->waitForResponse($commandId);
+    }
+
+    public function ps(int $id, Model\Project $project): string
+    {
+        $commandId = $this->buildCommandId($id);
+
+        $command = new Model\CommandPs();
+        $command->setType('ps');
+        $command->setName($project->getName());
+        $this->writeCommand($commandId, $command);
+
+        return $this->waitForResponse($commandId);
+    }
+
+    public function stats(int $id, Model\Project $project): string
+    {
+        $commandId = $this->buildCommandId($id);
+
+        $command = new Model\CommandStats();
+        $command->setType('stats');
+        $command->setName($project->getName());
+        $this->writeCommand($commandId, $command);
+
+        return $this->waitForResponse($commandId);
+    }
+
+    public function login(int $id, string $username, string $password): string
+    {
+        $commandId = $this->buildCommandId($id);
+
+        $command = new Model\CommandLogin();
+        $command->setType('login');
+        $command->setUsername($username);
+        $command->setPassword($password);
+        $this->writeCommand($commandId, $command);
+
+        return $this->waitForResponse($commandId);
     }
 
     private function writeCommand(string $commandId, Model\Command $command): void
@@ -61,5 +160,10 @@ readonly class Worker
                 throw new \RuntimeException('Command output timeout for: ' . $commandId);
             }
         }
+    }
+
+    private function buildCommandId(int $id): string
+    {
+        return $id . '-' . date('YmdHisv') . '.cmd';
     }
 }

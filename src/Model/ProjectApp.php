@@ -13,8 +13,11 @@ class ProjectApp implements \JsonSerializable, \PSX\Record\RecordableInterface
     protected ?string $name = null;
     #[Description('Name of the docker image i.e. mysql:8.0')]
     protected ?string $image = null;
-    #[Description('Optional a domain which is used for this app. If provided a sites-available entry will be registered and requests are routed to this app. Note make sure that the domain actual points to your server before using the domain so that it is possible to obtain an SSL certificate through certbot')]
-    protected ?string $domain = null;
+    /**
+     * @var array<string>|null
+     */
+    #[Description('Optional a list of domains for this app')]
+    protected ?array $domains = null;
     #[Description('Optional if a domain was provided indicates whether nginx content caching is activated, this can heavily improve the performance of your service, should be used for every readonly app otherwise you need to think about cache invalidation')]
     protected ?bool $cache = null;
     #[Description('Optional if a domain was provided the internal port of the docker image which is exposed, if not provided port 80 is assumed')]
@@ -50,13 +53,19 @@ class ProjectApp implements \JsonSerializable, \PSX\Record\RecordableInterface
     {
         return $this->image;
     }
-    public function setDomain(?string $domain): void
+    /**
+     * @param array<string>|null $domains
+     */
+    public function setDomains(?array $domains): void
     {
-        $this->domain = $domain;
+        $this->domains = $domains;
     }
-    public function getDomain(): ?string
+    /**
+     * @return array<string>|null
+     */
+    public function getDomains(): ?array
     {
-        return $this->domain;
+        return $this->domains;
     }
     public function setCache(?bool $cache): void
     {
@@ -122,7 +131,7 @@ class ProjectApp implements \JsonSerializable, \PSX\Record\RecordableInterface
         $record = new \PSX\Record\Record();
         $record->put('name', $this->name);
         $record->put('image', $this->image);
-        $record->put('domain', $this->domain);
+        $record->put('domains', $this->domains);
         $record->put('cache', $this->cache);
         $record->put('port', $this->port);
         $record->put('environment', $this->environment);

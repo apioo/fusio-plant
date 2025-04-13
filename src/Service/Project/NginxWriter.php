@@ -2,6 +2,7 @@
 
 namespace App\Service\Project;
 
+use App\Exception\ConfigurationException;
 use App\Model\ProjectApp;
 
 readonly class NginxWriter
@@ -26,7 +27,7 @@ readonly class NginxWriter
     private function writeConfigForApp(int $id, int $index, ProjectApp $app): string
     {
         $appId = $id . '_' . $app->getName();
-        $domains = $app->getDomain();
+        $domains = implode(' ', $app->getDomain() ?? throw new ConfigurationException('You must provide at least one domain'));
         $internalPort = $this->portNumberResolver->resolve($id, $index);
 
         $config = [];

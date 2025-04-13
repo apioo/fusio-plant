@@ -12,6 +12,7 @@ class Message implements \JsonSerializable, \PSX\Record\RecordableInterface
     protected ?bool $success = null;
     protected ?string $message = null;
     protected ?string $id = null;
+    protected ?string $output = null;
     public function setSuccess(?bool $success): void
     {
         $this->success = $success;
@@ -36,6 +37,14 @@ class Message implements \JsonSerializable, \PSX\Record\RecordableInterface
     {
         return $this->id;
     }
+    public function setOutput(?string $output): void
+    {
+        $this->output = $output;
+    }
+    public function getOutput(): ?string
+    {
+        return $this->output;
+    }
     public function toRecord(): \PSX\Record\RecordInterface
     {
         /** @var \PSX\Record\Record<mixed> $record */
@@ -43,6 +52,7 @@ class Message implements \JsonSerializable, \PSX\Record\RecordableInterface
         $record->put('success', $this->success);
         $record->put('message', $this->message);
         $record->put('id', $this->id);
+        $record->put('output', $this->output);
         return $record;
     }
     public function jsonSerialize(): object

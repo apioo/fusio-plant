@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Model;
+use App\Model\Message;
 use App\Service\Project\Worker;
 use App\Table;
 use Fusio\Engine\ContextInterface;
@@ -19,7 +20,7 @@ readonly class Project
     {
     }
 
-    public function create(Model\Project $project, ContextInterface $context): string
+    public function create(Model\Project $project, ContextInterface $context): Message
     {
         $this->assertProject($project);
 
@@ -34,7 +35,7 @@ readonly class Project
             $row->setInsertDate(LocalDateTime::now());
             $this->projectTable->create($row);
 
-            $this->worker->setup($this->projectTable->getLastInsertId(), $project);
+            $output = $this->worker->setup($this->projectTable->getLastInsertId(), $project);
 
             $this->dispatchEvent('project.created', $row, $row->getDisplayId());
 
@@ -45,10 +46,15 @@ readonly class Project
             throw $e;
         }
 
-        return $row->getDisplayId();
+        $message = new Message();
+        $message->setSuccess(true);
+        $message->setMessage('Project successful created');
+        $message->setId($row->getDisplayId());
+        $message->setOutput($output);
+        return $message;
     }
 
-    public function update(string $id, Model\Project $project): string
+    public function update(string $id, Model\Project $project): Message
     {
         $row = $this->projectTable->find($id);
         if (!$row instanceof Table\Generated\ProjectRow) {
@@ -64,7 +70,7 @@ readonly class Project
             $row->setUpdateDate(LocalDateTime::now());
             $this->projectTable->update($row);
 
-            $this->worker->update($row->getId(), $project);
+            $output = $this->worker->setup($row->getId(), $project);
 
             $this->dispatchEvent('project.updated', $row, $row->getDisplayId());
 
@@ -75,10 +81,15 @@ readonly class Project
             throw $e;
         }
 
-        return $row->getDisplayId();
+        $message = new Message();
+        $message->setSuccess(true);
+        $message->setMessage('Project successful updated');
+        $message->setId($row->getDisplayId());
+        $message->setOutput($output);
+        return $message;
     }
 
-    public function delete(string $id): string
+    public function delete(string $id): Message
     {
         $row = $this->projectTable->find($id);
         if (!$row instanceof Table\Generated\ProjectRow) {
@@ -90,7 +101,7 @@ readonly class Project
         try {
             $this->projectTable->delete($row);
 
-            $this->worker->remove($row->getId(), $row);
+            $output = $this->worker->remove($row->getId(), $row);
 
             $this->dispatchEvent('project.deleted', $row, $row->getDisplayId());
 
@@ -101,7 +112,12 @@ readonly class Project
             throw $e;
         }
 
-        return $row->getDisplayId();
+        $message = new Message();
+        $message->setSuccess(true);
+        $message->setMessage('Project successful deleted');
+        $message->setId($row->getDisplayId());
+        $message->setOutput($output);
+        return $message;
     }
 
     private function dispatchEvent(string $type, Table\Generated\ProjectRow $data, string $id): void
