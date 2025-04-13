@@ -11,7 +11,7 @@ class Message implements \JsonSerializable, \PSX\Record\RecordableInterface
 {
     protected ?bool $success = null;
     protected ?string $message = null;
-    protected ?int $id = null;
+    protected ?string $id = null;
     public function setSuccess(?bool $success): void
     {
         $this->success = $success;
@@ -28,11 +28,11 @@ class Message implements \JsonSerializable, \PSX\Record\RecordableInterface
     {
         return $this->message;
     }
-    public function setId(?int $id): void
+    public function setId(?string $id): void
     {
         $this->id = $id;
     }
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }

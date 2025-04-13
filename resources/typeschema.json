@@ -2,7 +2,7 @@
   "definitions": {
     "Collection": {
       "description": "A collection of things",
-      "type": "object",
+      "type": "struct",
       "properties": {
         "totalResults": {
           "type": "integer"
@@ -18,7 +18,7 @@
     },
     "Message": {
       "description": "Contains a message whether the operation was successful or not",
-      "type": "object",
+      "type": "struct",
       "properties": {
         "success": {
           "type": "boolean"
@@ -33,7 +33,7 @@
     },
     "Project": {
       "description": "A project is logical unit which contains multiple apps i.e. a backend and database app",
-      "type": "object",
+      "type": "struct",
       "properties": {
         "name": {
           "type": "string"
@@ -57,7 +57,7 @@
     },
     "Project_App": {
       "description": "An app of a project",
-      "type": "object",
+      "type": "struct",
       "properties": {
         "name": {
           "description": "Name of your app i.e. backend or database must be unique within the project",
@@ -105,7 +105,7 @@
     },
     "Project_App_Volume": {
       "description": "An app volume mounted on the server",
-      "type": "object",
+      "type": "struct",
       "properties": {
         "source": {
           "type": "string"
@@ -117,11 +117,162 @@
     },
     "Project_Collection": {
       "description": "A collection of all projects",
-      "extends": {
+      "parent": {
         "type": "reference",
         "target": "Collection",
         "template": {
           "T": "Project"
+        }
+      }
+    },
+    "Command": {
+      "type": "struct",
+      "base": true,
+      "properties": {
+        "type": {
+          "type": "string"
+        }
+      },
+      "discriminator": "type",
+      "mapping": {
+        "Command_Setup": "setup",
+        "Command_Remove": "remove",
+        "Command_Certbot": "certbot",
+        "Command_Pull": "pull",
+        "Command_Up": "up",
+        "Command_Down": "down",
+        "Command_Logs": "logs",
+        "Command_Ps": "ps",
+        "Command_Stats": "stats",
+        "Command_Login": "login"
+      }
+    },
+    "Command_Setup": {
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Command"
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "compose": {
+          "type": "string"
+        },
+        "nginx": {
+          "type": "string"
+        }
+      }
+    },
+    "Command_Remove": {
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Command"
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Command_Certbot": {
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Command"
+      },
+      "properties": {
+        "domain": {
+          "type": "string"
+        }
+      }
+    },
+    "Command_Pull": {
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Command"
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Command_Up": {
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Command"
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Command_Down": {
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Command"
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Command_Logs": {
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Command"
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Command_Ps": {
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Command"
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Command_Status": {
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Command"
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Command_Login": {
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Command"
+      },
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
         }
       }
     }
