@@ -54,8 +54,8 @@ readonly class ComposeWriter
             $return['links'] = $links;
         }
 
-        $domain = $app->getDomain();
-        if ($domain !== null && $domain !== '') {
+        $domains = $app->getDomains() ?? [];
+        if (count($domains) > 0) {
             $internalPort = $this->portNumberResolver->resolve($id, $index);
             $port = $app->getPort() ?? 80;
 
