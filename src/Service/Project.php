@@ -37,7 +37,7 @@ readonly class Project
             $row->setInsertDate(LocalDateTime::now());
             $this->projectTable->create($row);
 
-            $this->worker->setup($project);
+            $this->worker->setup($this->projectTable->getLastInsertId(), $project);
 
             $this->dispatchEvent('project.created', $row, $row->getDisplayId());
 
@@ -67,7 +67,7 @@ readonly class Project
             $row->setUpdateDate(LocalDateTime::now());
             $this->projectTable->update($row);
 
-            $this->worker->update($project);
+            $this->worker->update($row->getId(), $project);
 
             $this->dispatchEvent('project.updated', $row, $row->getDisplayId());
 
@@ -93,7 +93,7 @@ readonly class Project
         try {
             $this->projectTable->delete($row);
 
-            $this->worker->remove($row);
+            $this->worker->remove($row->getId(), $row);
 
             $this->dispatchEvent('project.deleted', $row, $row->getDisplayId());
 
