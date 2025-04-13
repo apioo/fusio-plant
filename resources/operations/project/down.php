@@ -9,13 +9,12 @@ use Fusio\Cli\Builder\Operation\Stability;
 return function (Operation $operation) {
     $operation->setScopes(['project']);
     $operation->setStability(Stability::EXPERIMENTAL);
-    $operation->setPublic(false);
-    $operation->setDescription('Updates a single project');
-    $operation->setHttpMethod(HttpMethod::PUT);
-    $operation->setHttpPath('/project/:id');
+    $operation->setPublic(true);
+    $operation->setDescription('Pulls the latest version');
+    $operation->setHttpMethod(HttpMethod::POST);
+    $operation->setHttpPath('/project/:id/down');
     $operation->setHttpCode(200);
-    $operation->setIncoming(Model\Project::class);
     $operation->setOutgoing(Model\Message::class);
     $operation->addThrow(999, Model\Message::class);
-    $operation->setAction(Action\Project\Update::class);
+    $operation->setAction(Action\Project\Down::class);
 };

@@ -3,3 +3,8 @@
 "project.create": !include resources/operations/project/create.php
 "project.update": !include resources/operations/project/update.php
 "project.delete": !include resources/operations/project/delete.php
+"project.certbot": !include resources/operations/project/certbot.php
+"project.pull": !include resources/operations/project/pull.php
+"project.up": !include resources/operations/project/up.php
+"project.down": !include resources/operations/project/down.php
+"project.logs": !include resources/operations/project/logs.php

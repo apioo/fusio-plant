@@ -21,9 +21,7 @@ readonly class Delete implements ActionInterface
     public function handle(RequestInterface $request, ParametersInterface $configuration, ContextInterface $context): mixed
     {
         try {
-            $message = $this->service->delete(
-                $request->get('id')
-            );
+            $message = $this->service->delete($request->get('id'));
         } catch (StatusCodeException $e) {
             throw $e;
         } catch (\Throwable $e) {

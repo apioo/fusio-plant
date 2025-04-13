@@ -16,6 +16,6 @@ return function (Operation $operation) {
     $operation->setHttpPath('/project/:id');
     $operation->setHttpCode(200);
     $operation->setOutgoing(Model\Message::class);
-    $operation->addThrow(500, Model\Message::class);
+    $operation->addThrow(999, Model\Message::class);
     $operation->setAction(Action\Project\Delete::class);
 };

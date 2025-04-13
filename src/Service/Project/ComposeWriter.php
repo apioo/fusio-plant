@@ -32,6 +32,9 @@ readonly class ComposeWriter
         $return = [
             'image' => $app->getImage(),
             'restart' => 'always',
+            'labels' => [
+                'org.fusio-project.plant.project' => $id,
+            ],
         ];
 
         $environment = $app->getEnvironment();

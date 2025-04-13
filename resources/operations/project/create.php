@@ -17,6 +17,6 @@ return function (Operation $operation) {
     $operation->setHttpCode(201);
     $operation->setIncoming(Model\Project::class);
     $operation->setOutgoing(Model\Message::class);
-    $operation->addThrow(500, Model\Message::class);
+    $operation->addThrow(999, Model\Message::class);
     $operation->setAction(Action\Project\Create::class);
 };

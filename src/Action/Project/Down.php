@@ -2,20 +2,20 @@
 
 namespace App\Action\Project;
 
-use App\View;
+use App\Service;
 use Fusio\Engine\ActionInterface;
 use Fusio\Engine\ContextInterface;
 use Fusio\Engine\ParametersInterface;
 use Fusio\Engine\RequestInterface;
 
-readonly class Get implements ActionInterface
+readonly class Down implements ActionInterface
 {
-    public function __construct(private View\Project $view)
+    public function __construct(private Service\Project $service)
     {
     }
 
     public function handle(RequestInterface $request, ParametersInterface $configuration, ContextInterface $context): mixed
     {
-        return $this->view->getEntity($request->get('id'));
+        return $this->service->down($request->get('id'));
     }
 }

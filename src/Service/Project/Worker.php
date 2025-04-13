@@ -41,20 +41,20 @@ readonly class Worker
         return $this->waitForResponse($commandId);
     }
 
-    public function certbot(int $id, string $domain, string $email): string
+    public function certbot(int $id, Model\ProjectCertbot $certbot): string
     {
         $commandId = $this->buildCommandId($id);
 
         $command = new Model\CommandCertbot();
         $command->setType('certbot');
-        $command->setDomain($domain);
-        $command->setEmail($email);
+        $command->setDomain($certbot->getDomain());
+        $command->setEmail($certbot->getEmail());
         $this->writeCommand($commandId, $command);
 
         return $this->waitForResponse($commandId);
     }
 
-    public function pull(int $id, Model\Project $project): string
+    public function pull(int $id, ProjectRow $project): string
     {
         $commandId = $this->buildCommandId($id);
 
@@ -66,7 +66,7 @@ readonly class Worker
         return $this->waitForResponse($commandId);
     }
 
-    public function up(int $id, Model\Project $project): string
+    public function up(int $id, ProjectRow $project): string
     {
         $commandId = $this->buildCommandId($id);
 
@@ -78,7 +78,7 @@ readonly class Worker
         return $this->waitForResponse($commandId);
     }
 
-    public function down(int $id, Model\Project $project): string
+    public function down(int $id, ProjectRow $project): string
     {
         $commandId = $this->buildCommandId($id);
 
@@ -90,7 +90,7 @@ readonly class Worker
         return $this->waitForResponse($commandId);
     }
 
-    public function logs(int $id, Model\Project $project): string
+    public function logs(int $id, ProjectRow $project): string
     {
         $commandId = $this->buildCommandId($id);
 
@@ -102,7 +102,7 @@ readonly class Worker
         return $this->waitForResponse($commandId);
     }
 
-    public function ps(int $id, Model\Project $project): string
+    public function ps(int $id, ProjectRow $project): string
     {
         $commandId = $this->buildCommandId($id);
 
@@ -114,7 +114,7 @@ readonly class Worker
         return $this->waitForResponse($commandId);
     }
 
-    public function stats(int $id, Model\Project $project): string
+    public function stats(int $id, ProjectRow $project): string
     {
         $commandId = $this->buildCommandId($id);
 

@@ -46,12 +46,7 @@ readonly class Project
             throw $e;
         }
 
-        $message = new Message();
-        $message->setSuccess(true);
-        $message->setMessage('Project successful created');
-        $message->setId($row->getDisplayId());
-        $message->setOutput($output);
-        return $message;
+        return $this->newMessage('Project successfully created', $row->getDisplayId(), $output);
     }
 
     public function update(string $id, Model\Project $project): Message
@@ -81,12 +76,7 @@ readonly class Project
             throw $e;
         }
 
-        $message = new Message();
-        $message->setSuccess(true);
-        $message->setMessage('Project successful updated');
-        $message->setId($row->getDisplayId());
-        $message->setOutput($output);
-        return $message;
+        return $this->newMessage('Project successfully updated', $row->getDisplayId(), $output);
     }
 
     public function delete(string $id): Message
@@ -112,12 +102,91 @@ readonly class Project
             throw $e;
         }
 
-        $message = new Message();
-        $message->setSuccess(true);
-        $message->setMessage('Project successful deleted');
-        $message->setId($row->getDisplayId());
-        $message->setOutput($output);
-        return $message;
+        return $this->newMessage('Project successfully deleted', $row->getDisplayId(), $output);
+    }
+
+    public function certbot(string $id, Model\ProjectCertbot $certbot): Message
+    {
+        $row = $this->projectTable->find($id);
+        if (!$row instanceof Table\Generated\ProjectRow) {
+            throw new StatusCode\NotFoundException('Provided project does not exist');
+        }
+
+        $output = $this->worker->certbot($id, $certbot);
+
+        return $this->newMessage('Project certbot successfully executed', $row->getDisplayId(), $output);
+    }
+
+    public function pull(string $id): Message
+    {
+        $row = $this->projectTable->find($id);
+        if (!$row instanceof Table\Generated\ProjectRow) {
+            throw new StatusCode\NotFoundException('Provided project does not exist');
+        }
+
+        $output = $this->worker->pull($id, $row);
+
+        return $this->newMessage('Project pull successfully executed', $row->getDisplayId(), $output);
+    }
+
+    public function up(string $id): Message
+    {
+        $row = $this->projectTable->find($id);
+        if (!$row instanceof Table\Generated\ProjectRow) {
+            throw new StatusCode\NotFoundException('Provided project does not exist');
+        }
+
+        $output = $this->worker->up($id, $row);
+
+        return $this->newMessage('Project up successfully executed', $row->getDisplayId(), $output);
+    }
+
+    public function down(string $id): Message
+    {
+        $row = $this->projectTable->find($id);
+        if (!$row instanceof Table\Generated\ProjectRow) {
+            throw new StatusCode\NotFoundException('Provided project does not exist');
+        }
+
+        $output = $this->worker->down($id, $row);
+
+        return $this->newMessage('Project up successfully executed', $row->getDisplayId(), $output);
+    }
+
+    public function logs(string $id): Message
+    {
+        $row = $this->projectTable->find($id);
+        if (!$row instanceof Table\Generated\ProjectRow) {
+            throw new StatusCode\NotFoundException('Provided project does not exist');
+        }
+
+        $output = $this->worker->logs($id, $row);
+
+        return $this->newMessage('Project logs successfully executed', $row->getDisplayId(), $output);
+    }
+
+    public function ps(string $id): Message
+    {
+        $row = $this->projectTable->find($id);
+        if (!$row instanceof Table\Generated\ProjectRow) {
+            throw new StatusCode\NotFoundException('Provided project does not exist');
+        }
+
+        $output = $this->worker->ps($id, $row);
+
+        return $this->newMessage('Project ps successfully executed', $row->getDisplayId(), $output);
+    }
+
+    public function stats(string $id): Message
+    {
+        $row = $this->projectTable->find($id);
+        if (!$row instanceof Table\Generated\ProjectRow) {
+            throw new StatusCode\NotFoundException('Provided project does not exist');
+        }
+
+        $output = $this->worker->stats($id, $row);
+
+        return $this->newMessage('Project stats successfully executed', $row->getDisplayId(), $output);
     }
 
     private function dispatchEvent(string $type, Table\Generated\ProjectRow $data, string $id): void
@@ -139,5 +208,15 @@ readonly class Project
         if ($apps === null || count($apps) === 0) {
             throw new StatusCode\BadRequestException('No apps provided');
         }
+    }
+
+    private function newMessage(string $message, string $id, ?string $output = null): Message
+    {
+        $return = new Message();
+        $return->setSuccess(true);
+        $return->setMessage($message);
+        $return->setId($id);
+        $return->setOutput($output);
+        return $return;
     }
 }

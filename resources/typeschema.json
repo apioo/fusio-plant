@@ -121,6 +121,18 @@
         }
       }
     },
+    "Project_Certbot": {
+      "description": "Requests an SSL certificate for the provided domain",
+      "type": "struct",
+      "properties": {
+        "domain": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        }
+      }
+    },
     "Project_Collection": {
       "description": "A collection of all projects",
       "parent": {
