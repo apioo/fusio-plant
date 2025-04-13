@@ -1,0 +1,5 @@
+"project.getAll": !include resources/operations/project/collection.php
+"project.get": !include resources/operations/project/entity.php
+"project.create": !include resources/operations/project/create.php
+"project.update": !include resources/operations/project/update.php
+"project.delete": !include resources/operations/project/delete.php

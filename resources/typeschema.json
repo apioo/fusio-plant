@@ -1,0 +1,129 @@
+{
+  "definitions": {
+    "Collection": {
+      "description": "A collection of things",
+      "type": "object",
+      "properties": {
+        "totalResults": {
+          "type": "integer"
+        },
+        "entry": {
+          "type": "array",
+          "items": {
+            "type": "generic",
+            "name": "T"
+          }
+        }
+      }
+    },
+    "Message": {
+      "description": "Contains a message whether the operation was successful or not",
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "Project": {
+      "description": "A project is logical unit which contains multiple apps i.e. a backend and database app",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "apps": {
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Project_App"
+          }
+        },
+        "updateDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "insertDate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "Project_App": {
+      "description": "An app of a project",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name of your app i.e. backend or database must be unique within the project",
+          "type": "string"
+        },
+        "image": {
+          "description": "Name of the docker image i.e. mysql:8.0",
+          "type": "string"
+        },
+        "domain": {
+          "description": "Optional a domain which is used for this app. If provided a sites-available entry will be registered and requests are routed to this app. Note make sure that the domain actual points to your server before using the domain so that it is possible to obtain an SSL certificate through certbot",
+          "type": "string"
+        },
+        "cache": {
+          "description": "Optional if a domain was provided indicates whether nginx content caching is activated, this can heavily improve the performance of your service, should be used for every readonly app otherwise you need to think about cache invalidation",
+          "type": "boolean"
+        },
+        "port": {
+          "description": "Optional if a domain was provided the internal port of the docker image which is exposed, if not provided port 80 is assumed",
+          "type": "integer"
+        },
+        "environment": {
+          "description": "Environment variables provided to the docker image",
+          "type": "map",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "volumes": {
+          "description": "List of volumes which should be mounted to persist content",
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Project_App_Volume"
+          }
+        },
+        "links": {
+          "description": "List of links to other apps",
+          "type": "array",
+          "schema": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Project_App_Volume": {
+      "description": "An app volume mounted on the server",
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "destination": {
+          "type": "string"
+        }
+      }
+    },
+    "Project_Collection": {
+      "description": "A collection of all projects",
+      "extends": {
+        "type": "reference",
+        "target": "Collection",
+        "template": {
+          "T": "Project"
+        }
+      }
+    }
+  }
+}

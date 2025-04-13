@@ -1,0 +1,6 @@
+project_created:
+  description: 'Project was created'
+project_updated:
+  description: 'Project was updated'
+project_deleted:
+  description: 'Project was deleted'
