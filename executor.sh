@@ -22,8 +22,8 @@ do
     type=$(jq ".type" "$command")
     output=$(basename -- "$command")
     outputFile="/opt/output/$output"
-    echo "" > $outputFile
-    chown www-data: $outputFile
+    echo "" > "$outputFile"
+    chown www-data: "$outputFile"
     if [[ "$type" == "setup" ]]; then
       name=$(jq ".name" "$command")
       compose=$(jq ".compose" "$command")

@@ -6,19 +6,16 @@ use App\Model;
 use App\Table\Generated\ProjectRow;
 use PSX\Json\Parser;
 
-class Worker
+readonly class Worker
 {
-    public function __construct(
-        private ComposeWriter $composeWriter,
-        private NginxWriter   $nginxWriter,
-    )
+    public function __construct(private ComposeWriter $composeWriter, private NginxWriter $nginxWriter)
     {
     }
 
     public function setup(int $id, Model\Project $project): void
     {
         $composeYaml = $this->composeWriter->write($id, $project->getApps());
-        $nginxConfig = $this->nginxWriter->write($project->getApps());
+        $nginxConfig = $this->nginxWriter->write($id, $project->getApps());
 
         $commandId = $id . '-' . date('YmdHisv') . '.cmd';
 

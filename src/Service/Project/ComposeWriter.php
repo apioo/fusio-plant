@@ -6,7 +6,7 @@ use App\Model\ProjectApp;
 use PSX\Record\Record;
 use Symfony\Component\Yaml\Yaml;
 
-class ComposeWriter
+readonly class ComposeWriter
 {
     public function __construct(private PortNumberResolver $portNumberResolver)
     {

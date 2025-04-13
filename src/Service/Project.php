@@ -15,11 +15,8 @@ use Ramsey\Uuid\Uuid;
 
 readonly class Project
 {
-    public function __construct(
-        private Table\Project       $projectTable,
-        private Worker              $worker,
-        private DispatcherInterface $dispatcher
-    ) {
+    public function __construct(private Table\Project $projectTable, private Worker $worker, private DispatcherInterface $dispatcher)
+    {
     }
 
     public function create(Model\Project $project, ContextInterface $context): string
