@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # This file is part of the Fusio Plant project (https://plant.fusio-project.org).
 # Fusio Plant is a server control panel to easily self-host apps on your server.
 #
@@ -33,89 +33,7 @@ mkdir /opt/plant/input
 mkdir /opt/plant/output
 chown -R www-data: /opt/plant/input
 chown -R www-data: /opt/plant/output
-cat > /opt/plant/executor <<- "EOF"
-#!/bin/sh
-while inotifywait -q -e modify /opt/input
-do
-  for command in /opt/input/*.cmd; do
-    type = $(jq ".type" $command)
-    output = $(basename -- "$command")
-    outputFile = "/opt/output/$output"
-    echo "" > $outputFile
-    chown www-data: $outputFile
-    if [[ "$type" == "setup" ]]; then
-      domain = $(jq ".domain" $command)
-      compose = $(jq ".compose" $command)
-      nginx = $(jq ".nginx" $command)
-      rm $command
-      mkdir "/docker/$domain"
-      echo "$compose" > "/docker/$domain/docker-compose.yml"
-      echo "$nginx" > "/etc/nginx/sites-available/$domain"
-      ln -s "/etc/nginx/sites-available/$domain" "/etc/nginx/sites-enabled/$domain"
-      service nginx reload
-      pushd "/docker/$domain"
-      docker compose up -d > $outputFile
-      popd
-    elif [[ "$type" == "remove" ]]; then
-      domain = $(jq ".domain" $command)
-      rm $command
-      rm "/etc/nginx/sites-enabled/$domain"
-      rm "/etc/nginx/sites-available/$domain"
-      service nginx reload
-      pushd "/docker/$domain"
-      docker compose down > $outputFile
-      popd
-      rm -r "/docker/$domain"
-    elif [[ "$type" == "certbot" ]]; then
-      domain = $(jq ".domain" $command)
-      rm $command
-      certbot --nginx -d $domain > $outputFile
-    elif [[ "$type" == "pull" ]]; then
-      domain = $(jq ".domain" $command)
-      rm $command
-      pushd "/docker/$domain"
-      docker compose pull > $outputFile
-      popd
-    elif [[ "$type" == "up" ]]; then
-      domain = $(jq ".domain" $command)
-      rm $command
-      pushd "/docker/$domain"
-      docker compose up -d > $outputFile
-      popd
-    elif [[ "$type" == "down" ]]; then
-      domain = $(jq ".domain" $command)
-      rm $command
-      pushd "/docker/$domain"
-      docker compose down > $outputFile
-      popd
-    elif [[ "$type" == "logs" ]]; then
-      domain = $(jq ".domain" $command)
-      rm $command
-      pushd "/docker/$domain"
-      docker compose logs --no-color --tail=256 > $outputFile
-      popd
-    elif [[ "$type" == "ps" ]]; then
-      domain = $(jq ".domain" $command)
-      rm $command
-      pushd "/docker/$domain"
-      docker compose ps --format=json > $outputFile
-      popd
-    elif [[ "$type" == "stats" ]]; then
-      domain = $(jq ".domain" $command)
-      rm $command
-      pushd "/docker/$domain"
-      docker compose stats --no-stream --format=json > $outputFile
-      popd
-    elif [[ "$type" == "login" ]]; then
-      username = $(jq ".username" $command)
-      password = $(jq ".password" $command)
-      rm $command
-      echo $password | docker login -u $username --password-stdin > $outputFile
-    fi
-  done
-  sleep 1
-done
-EOF
+curl -fsSL https://raw.githubusercontent.com/apioo/fusio-plant/refs/heads/main/executor.sh -o /opt/plant/executor
 chmod +x /opt/plant/executor
 ln -s /opt/plant/executor /usr/bin/plant-executor
 cat > /etc/supervisor/conf.d/plant.conf <<- "EOF"
