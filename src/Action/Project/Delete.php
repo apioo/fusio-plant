@@ -2,7 +2,6 @@
 
 namespace App\Action\Project;
 
-use App\Model\Message;
 use App\Service;
 use Fusio\Engine\ActionInterface;
 use Fusio\Engine\ContextInterface;
