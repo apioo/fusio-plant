@@ -3,9 +3,7 @@
 namespace App\View;
 
 use App\Table;
-use Fusio\Impl\Table\Generated\UserTable;
 use PSX\Nested\Builder;
-use PSX\Nested\Reference;
 use PSX\Sql\Condition;
 use PSX\Sql\ViewAbstract;
 
@@ -35,16 +33,9 @@ class Project extends ViewAbstract
             'itemsPerPage' => $count,
             'entry' => $builder->doCollection([$this->getTable(Table\Project::class), 'findAll'], [$condition, $startIndex, $count], [
                 'id' => $builder->fieldInteger(Table\Generated\ProjectTable::COLUMN_DISPLAY_ID),
-                'user' => $builder->doEntity([$this->getTable(UserTable::class), 'find'], [new Reference(Table\Generated\ProjectTable::COLUMN_USER_ID)], [
-                    'id' => $builder->fieldInteger(UserTable::COLUMN_ID),
-                    'name' => UserTable::COLUMN_NAME,
-                ]),
                 'name' => Table\Generated\ProjectTable::COLUMN_NAME,
                 'updateDate' => $builder->fieldDateTime(Table\Generated\ProjectTable::COLUMN_UPDATE_DATE),
                 'insertDate' => $builder->fieldDateTime(Table\Generated\ProjectTable::COLUMN_INSERT_DATE),
-                'links' => [
-                    'self' => $builder->fieldFormat(Table\Generated\ProjectTable::COLUMN_DISPLAY_ID, '/project/%s'),
-                ]
             ]),
         ];
 
@@ -57,17 +48,10 @@ class Project extends ViewAbstract
 
         $definition = $builder->doEntity([$this->getTable(Table\Project::class), 'find'], [$id], [
             'id' => $builder->fieldInteger(Table\Generated\ProjectTable::COLUMN_ID),
-            'user' => $builder->doEntity([$this->getTable(UserTable::class), 'find'], [new Reference(Table\Generated\ProjectTable::COLUMN_USER_ID)], [
-                'id' => $builder->fieldInteger(UserTable::COLUMN_ID),
-                'name' => UserTable::COLUMN_NAME,
-            ]),
             'name' => Table\Generated\ProjectTable::COLUMN_NAME,
             'apps' => $builder->fieldJson(Table\Generated\ProjectTable::COLUMN_APPS),
             'updateDate' => $builder->fieldDateTime(Table\Generated\ProjectTable::COLUMN_UPDATE_DATE),
             'insertDate' => $builder->fieldDateTime(Table\Generated\ProjectTable::COLUMN_INSERT_DATE),
-            'links' => [
-                'self' => $builder->fieldFormat(Table\Generated\ProjectTable::COLUMN_DISPLAY_ID, '/project/%s'),
-            ]
         ]);
 
         return $builder->build($definition);
