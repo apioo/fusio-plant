@@ -3,6 +3,7 @@
 namespace App\Service\Project;
 
 use App\Exception\ConfigurationException;
+use App\Exception\PortResolveException;
 use App\Model\ProjectApp;
 
 readonly class NginxWriter
@@ -13,6 +14,8 @@ readonly class NginxWriter
 
     /**
      * @param array<ProjectApp> $apps
+     * @throws ConfigurationException
+     * @throws PortResolveException
      */
     public function write(int $id, array $apps): string
     {
@@ -24,6 +27,10 @@ readonly class NginxWriter
         return implode("\n", $configs) . "\n";
     }
 
+    /**
+     * @throws ConfigurationException
+     * @throws PortResolveException
+     */
     private function writeConfigForApp(int $id, int $index, ProjectApp $app): string
     {
         $appId = $id . '_' . $app->getName();
