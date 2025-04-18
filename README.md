@@ -61,7 +61,7 @@ Contains the plant executor which receives commands through the `/opt/plant/inpu
 writes responses back to the `/opt/plant/output` folder. Since the plant app also runs in a
 container those folders are mounted into the plant app and help to execute commands on the
 host. The executor is a simple bash script that listens for file changes in this folder,
-you can see all commands at the [executor script](./executor.sh).
+you can see all commands at the [executor script](./bash/executor.sh).
 
 ### /cache
 

@@ -40,7 +40,7 @@ mkdir /opt/plant/input
 mkdir /opt/plant/output
 chown -R www-data: /opt/plant/input
 chown -R www-data: /opt/plant/output
-curl -fsSL https://raw.githubusercontent.com/apioo/fusio-plant/refs/heads/main/executor.sh -o /opt/plant/executor
+curl -fsSL https://raw.githubusercontent.com/apioo/fusio-plant/refs/heads/main/bash/executor.sh -o /opt/plant/executor
 chmod +x /opt/plant/executor
 ln -s /opt/plant/executor /usr/bin/plant-executor
 cat > /etc/supervisor/conf.d/plant.conf <<EOF
@@ -53,7 +53,8 @@ directory=/docker
 autostart=true
 autorestart=true
 EOF
-
+curl -fsSL https://raw.githubusercontent.com/apioo/fusio-plant/refs/heads/main/bash/prune.sh -o /etc/cron.daily/docker-prune
+chmod +x /etc/cron.daily/docker-prune
 random_id=$(uuidgen)
 panel_app_domain="plant-$random_id.$domain"
 panel_api_domain="api-$random_id.$domain"
@@ -91,7 +92,7 @@ services:
       - "127.0.0.1:8900:80"
 
   backend:
-    image: ghcr.io/apioo/fusio-plant-backend:main
+    image: ghcr.io/apioo/fusio-plant:main
     restart: always
     environment:
       FUSIO_TENANT_ID: ""
