@@ -20,7 +20,7 @@ cd /
 echo "Fusio-Plant installation"
 echo ""
 echo "To install Fusio-Plant you need to provide the domain of your server i.e. myserver.com"
-echo "Make sure, that the DNS A/AAAA record of your domain already points to your server"
+echo "Make sure that the DNS A/AAAA record of your domain already points to your server"
 echo ""
 read -p "Domain: " domain
 echo ""
