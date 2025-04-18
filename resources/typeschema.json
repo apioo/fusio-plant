@@ -82,7 +82,7 @@
           "type": "boolean"
         },
         "port": {
-          "description": "Optional if a domain was provided the internal port of the docker image which is exposed, if not provided port 80 is assumed",
+          "description": "Optional if a domain was provided the internal port of the docker image which is exposes an HTTP server, if not provided port 80 is assumed",
           "type": "integer"
         },
         "environment": {

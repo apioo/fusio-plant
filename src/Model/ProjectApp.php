@@ -20,7 +20,7 @@ class ProjectApp implements \JsonSerializable, \PSX\Record\RecordableInterface
     protected ?array $domains = null;
     #[Description('Optional if a domain was provided indicates whether nginx content caching is activated, this can heavily improve the performance of your service, should be used for every readonly app otherwise you need to think about cache invalidation')]
     protected ?bool $cache = null;
-    #[Description('Optional if a domain was provided the internal port of the docker image which is exposed, if not provided port 80 is assumed')]
+    #[Description('Optional if a domain was provided the internal port of the docker image which is exposes an HTTP server, if not provided port 80 is assumed')]
     protected ?int $port = null;
     /**
      * @var \PSX\Record\Record<string>|null
