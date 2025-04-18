@@ -38,6 +38,9 @@
       "description": "A project is logical unit which contains multiple apps i.e. a backend and database app",
       "type": "struct",
       "properties": {
+        "id": {
+          "type": "string"
+        },
         "name": {
           "type": "string"
         },

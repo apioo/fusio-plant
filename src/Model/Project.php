@@ -9,6 +9,7 @@ use PSX\Schema\Attribute\Description;
 #[Description('A project is logical unit which contains multiple apps i.e. a backend and database app')]
 class Project implements \JsonSerializable, \PSX\Record\RecordableInterface
 {
+    protected ?string $id = null;
     protected ?string $name = null;
     /**
      * @var array<ProjectApp>|null
@@ -16,6 +17,14 @@ class Project implements \JsonSerializable, \PSX\Record\RecordableInterface
     protected ?array $apps = null;
     protected ?\PSX\DateTime\LocalDateTime $updateDate = null;
     protected ?\PSX\DateTime\LocalDateTime $insertDate = null;
+    public function setId(?string $id): void
+    {
+        $this->id = $id;
+    }
+    public function getId(): ?string
+    {
+        return $this->id;
+    }
     public function setName(?string $name): void
     {
         $this->name = $name;
@@ -58,6 +67,7 @@ class Project implements \JsonSerializable, \PSX\Record\RecordableInterface
     {
         /** @var \PSX\Record\Record<mixed> $record */
         $record = new \PSX\Record\Record();
+        $record->put('id', $this->id);
         $record->put('name', $this->name);
         $record->put('apps', $this->apps);
         $record->put('updateDate', $this->updateDate);

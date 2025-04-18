@@ -1,0 +1,15 @@
+Consumer:
+  scopes:
+    - project
+    - default
+    - system
+    - authorization
+    - consumer
+Administrator:
+  scopes:
+    - project
+    - default
+    - system
+    - authorization
+    - consumer
+    - backend
