@@ -26,6 +26,7 @@ do
     chown www-data: "$outputFile"
     if [[ "$type" == "setup" ]]; then
       name=$(jq ".name" "$command")
+      name="${name//[^[:alnum:]]/_}"
       compose=$(jq ".compose" "$command")
       nginx=$(jq ".nginx" "$command")
       rm "$command"
@@ -39,6 +40,7 @@ do
       popd
     elif [[ "$type" == "remove" ]]; then
       name=$(jq ".name" "$command")
+      name="${name//[^[:alnum:]]/_}"
       rm "$command"
       rm "/etc/nginx/sites-enabled/$name"
       rm "/etc/nginx/sites-available/$name"
@@ -48,49 +50,55 @@ do
       popd
       rm -r "/docker/$name"
     elif [[ "$type" == "certbot" ]]; then
-      domain=$(jq ".domain" "$command")
-      email=$(jq ".email" "$command")
+      domain=$(printf "%b" "$(jq ".domain" "$command")")
+      email=$(printf "%b" "$(jq ".email" "$command")")
       rm "$command"
       certbot --nginx --non-interactive --agree-tos -m "$email" -d "$domain" > "$outputFile"
     elif [[ "$type" == "pull" ]]; then
       name=$(jq ".name" "$command")
+      name="${name//[^[:alnum:]]/_}"
       rm "$command"
       pushd "/docker/$name"
       docker compose pull > "$outputFile"
       popd
     elif [[ "$type" == "up" ]]; then
       name=$(jq ".name" "$command")
+      name="${name//[^[:alnum:]]/_}"
       rm "$command"
       pushd "/docker/$name"
       docker compose up -d > "$outputFile"
       popd
     elif [[ "$type" == "down" ]]; then
       name=$(jq ".name" "$command")
+      name="${name//[^[:alnum:]]/_}"
       rm "$command"
       pushd "/docker/$name"
       docker compose down > "$outputFile"
       popd
     elif [[ "$type" == "logs" ]]; then
       name=$(jq ".name" "$command")
+      name="${name//[^[:alnum:]]/_}"
       rm "$command"
       pushd "/docker/$name"
       docker compose logs --no-color --tail=256 > "$outputFile"
       popd
     elif [[ "$type" == "ps" ]]; then
       name=$(jq ".name" "$command")
+      name="${name//[^[:alnum:]]/_}"
       rm "$command"
       pushd "/docker/$name"
       docker compose ps --format=json > "$outputFile"
       popd
     elif [[ "$type" == "stats" ]]; then
       name=$(jq ".name" "$command")
+      name="${name//[^[:alnum:]]/_}"
       rm "$command"
       pushd "/docker/$name"
       docker compose stats --no-stream --format=json > "$outputFile"
       popd
     elif [[ "$type" == "login" ]]; then
-      username=$(jq ".username" "$command")
-      password=$(jq ".password" "$command")
+      username=$(printf "%b" "$(jq ".username" "$command")")
+      password=$(printf "%b" "$(jq ".password" "$command")")
       rm "$command"
       echo "$password" | docker login -u "$username" --password-stdin > "$outputFile"
     fi

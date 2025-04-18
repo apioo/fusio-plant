@@ -17,6 +17,13 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 cd /
+echo "Fusio-Plant installation"
+echo ""
+echo "To install Fusio-Plant you need to provide the domain of your server i.e. myserver.com"
+echo "Make sure, that the DNS A/AAAA record of your domain already points to your server"
+echo ""
+read -p "Domain: " domain
+echo ""
 apt-get update
 apt-get install nginx zip unzip certbot python3-certbot-nginx ca-certificates curl jq inotify-tools supervisor
 install -m 0755 -d /etc/apt/keyrings
@@ -36,7 +43,7 @@ chown -R www-data: /opt/plant/output
 curl -fsSL https://raw.githubusercontent.com/apioo/fusio-plant/refs/heads/main/executor.sh -o /opt/plant/executor
 chmod +x /opt/plant/executor
 ln -s /opt/plant/executor /usr/bin/plant-executor
-cat > /etc/supervisor/conf.d/plant.conf <<- "EOF"
+cat > /etc/supervisor/conf.d/plant.conf <<EOF
 [program:plant]
 command=/usr/bin/plant-executor
 user=root
@@ -47,24 +54,24 @@ autostart=true
 autorestart=true
 EOF
 
-hostname=$(hostname)
 random_id=$(uuidgen)
-panel_app_hostname="plant.$random_id.$hostname"
-panel_api_hostname="api.$random_id.$hostname"
+panel_app_domain="plant-$random_id.$domain"
+panel_api_domain="api-$random_id.$domain"
 project_key=$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 40)
 mysql_password=$(tr -dc 'A-Za-z0-9!?%=' < /dev/urandom | head -c 20)
+backend_username=$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 8)
 backend_password=$(tr -dc 'A-Za-z0-9!?%=' < /dev/urandom | head -c 16)
 rm /etc/nginx/sites-enabled/default
-cat > /etc/nginx/sites-available/plant <<- "EOF"
+cat > /etc/nginx/sites-available/plant <<EOF
 server {
-  server_name $panel_app_hostname;
+  server_name $panel_app_domain;
   location / {
     proxy_pass http://127.0.0.1:8900;
   }
 }
 
 server {
-  server_name $panel_api_hostname;
+  server_name $panel_api_domain;
   location / {
     proxy_pass http://127.0.0.1:8901;
   }
@@ -73,9 +80,8 @@ server {
 EOF
 ln -s /etc/nginx/sites-available/plant /etc/nginx/sites-enabled/plant
 service nginx reload
-
-
-cat > /etc/nginx/sites-available/plant <<- "EOF"
+mkdir /docker/plant
+cat > /docker/plant/docker-compose.yml <<EOF
 version: '3'
 services:
   frontend:
@@ -90,15 +96,15 @@ services:
     environment:
       FUSIO_TENANT_ID: ""
       FUSIO_PROJECT_KEY: "$project_key"
-      FUSIO_URL: "https://$panel_api_hostname"
-      FUSIO_APPS_URL: "https://$panel_api_hostname/apps"
+      FUSIO_URL: "https://$panel_api_domain"
+      FUSIO_APPS_URL: "https://$panel_api_domain/apps"
       FUSIO_ENV: "prod"
       FUSIO_DEBUG: "false"
       FUSIO_CONNECTION: "pdo-mysql://fusio:$mysql_password@mysql-fusio/fusio"
-      FUSIO_BACKEND_USER: "fusio"
-      FUSIO_BACKEND_EMAIL: "christoph.kappestein@gmail.com"
+      FUSIO_BACKEND_USER: "$backend_username"
+      FUSIO_BACKEND_EMAIL: "info@$domain"
       FUSIO_BACKEND_PW: "$backend_password"
-      FUSIO_MAIL_SENDER: "info@$hostname"
+      FUSIO_MAIL_SENDER: "info@$domain"
     volumes:
       - /opt/plant/input:/var/www/html/fusio/input
       - /opt/plant/output:/var/www/html/fusio/output
@@ -118,14 +124,18 @@ services:
     volumes:
       - ./db:/var/lib/mysql
 EOF
-
+docker compose up -d
+certbot --nginx --non-interactive --agree-tos -m "info@$domain" -d "$panel_api_domain"
+certbot --nginx --non-interactive --agree-tos -m "info@$domain" -d "$panel_app_domain"
 supervisord
-
-echo "Fusio Plant successfully installed"
-echo "The app is available at:"
-echo "App: $panel_app_hostname"
-echo "API: $panel_api_hostname"
 echo ""
-echo "In case you want to use a different hostname simply adjust the following file:"
-echo "/etc/nginx/sites-available/plant"
+echo "Fusio Plant successfully installed"
+echo ""
+echo "The app is available at:"
+echo "App: https://$panel_app_domain"
+echo "API: https://$panel_api_domain"
+echo ""
+echo "You can login at the backend with the following credentials:"
+echo "Username: $backend_username"
+echo "Password: $backend_password"
 echo ""
