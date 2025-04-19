@@ -1,0 +1,3 @@
+FetchUsage:
+  cron: '* * * * *'
+  action: 'App\Action\Monitor\FetchUsage'

@@ -9,13 +9,13 @@ class Fusio extends PresetAbstract
 {
     public function load(): array
     {
-        $projectKey = '';
-        $mysqlRootPassword = '';
-        $mysqlFusioPassword = '';
+        $projectKey = sha1(random_bytes(40));
+        $mysqlRootPassword = substr(sha1(random_bytes(40)), 0, 16);
+        $mysqlFusioPassword = substr(sha1(random_bytes(40)), 0, 16);;
 
-        $backendUser = '';
-        $backendEmail = '';
-        $backendPassword = '';
+        $backendUser = 'fusio';
+        $backendEmail = 'info@mydomain.com';
+        $backendPassword = substr(sha1(random_bytes(40)), 0, 16);;
 
         $fusioEnv = Record::fromArray([
             'FUSIO_TENANT_ID' => '',
