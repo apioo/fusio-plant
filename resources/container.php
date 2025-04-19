@@ -1,5 +1,6 @@
 <?php
 
+use App\Service\PresetInterface;
 use Fusio\Engine\Adapter\ServiceBuilder;
 use PSX\Framework\Dependency\Configurator;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -18,4 +19,9 @@ return static function (ContainerConfigurator $container) {
         ->public();
 
     $services->load('App\\View\\', __DIR__ . '/../src/View');
+
+    $services->instanceof(PresetInterface::class)
+        ->tag('fusio.plant.preset');
+    $services->load('App\\Preset\\', __DIR__ . '/../src/Preset');
+
 };

@@ -1,5 +1,6 @@
 Consumer:
   scopes:
+    - preset
     - project
     - default
     - system
@@ -7,6 +8,7 @@ Consumer:
     - consumer
 Administrator:
   scopes:
+    - preset
     - project
     - default
     - system

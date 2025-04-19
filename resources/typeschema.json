@@ -34,6 +34,35 @@
         }
       }
     },
+    "Preset": {
+      "description": "A preset config",
+      "type": "struct",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "apps": {
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Project_App"
+          }
+        }
+      }
+    },
+    "Preset_Collection": {
+      "description": "A collection of all presets",
+      "parent": {
+        "type": "reference",
+        "target": "Collection",
+        "template": {
+          "T": "Preset"
+        }
+      }
+    },
     "Project": {
       "description": "A project is logical unit which contains multiple apps i.e. a backend and database app",
       "type": "struct",

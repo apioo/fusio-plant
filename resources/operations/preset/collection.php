@@ -12,9 +12,9 @@ return function (Operation $operation) {
     $operation->setPublic(true);
     $operation->setDescription('Returns a preset for a specific app');
     $operation->setHttpMethod(HttpMethod::GET);
-    $operation->setHttpPath('/preset/:name');
+    $operation->setHttpPath('/preset');
     $operation->setHttpCode(200);
-    $operation->setOutgoing(Model\Preset::class);
+    $operation->setOutgoing(Model\PresetCollection::class);
     $operation->addThrow(999, Model\Message::class);
-    $operation->setAction(Action\Preset\Get::class);
+    $operation->setAction(Action\Preset\GetAll::class);
 };
