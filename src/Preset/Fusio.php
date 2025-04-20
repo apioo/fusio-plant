@@ -10,12 +10,11 @@ class Fusio extends PresetAbstract
     public function load(): array
     {
         $projectKey = sha1(random_bytes(40));
-        $mysqlRootPassword = substr(sha1(random_bytes(40)), 0, 16);
-        $mysqlFusioPassword = substr(sha1(random_bytes(40)), 0, 16);;
+        $mysqlFusioPassword = substr(sha1(random_bytes(40)), 0, 16);
 
         $backendUser = 'fusio';
         $backendEmail = 'info@mydomain.com';
-        $backendPassword = substr(sha1(random_bytes(40)), 0, 16);;
+        $backendPassword = substr(sha1(random_bytes(40)), 0, 16);
 
         $fusioEnv = Record::fromArray([
             'FUSIO_TENANT_ID' => '',
@@ -24,7 +23,7 @@ class Fusio extends PresetAbstract
             'FUSIO_APPS_URL' => '',
             'FUSIO_ENV' => 'prod',
             'FUSIO_DEBUG' => 'false',
-            'FUSIO_CONNECTION' => 'pdo-mysql://fusio:' . $mysqlFusioPassword . '@mysql-fusio/fusio',
+            'FUSIO_CONNECTION' => 'pdo-mysql://fusio:' . $mysqlFusioPassword . '@mysql/fusio',
             'FUSIO_BACKEND_USER' => $backendUser,
             'FUSIO_BACKEND_EMAIL' => $backendEmail,
             'FUSIO_BACKEND_PW' => $backendPassword,
@@ -38,17 +37,17 @@ class Fusio extends PresetAbstract
         ]);
 
         $mysqlEnv = Record::fromArray([
-            'MYSQL_ROOT_PASSWORD' => $mysqlRootPassword,
             'MYSQL_USER' => 'fusio',
             'MYSQL_PASSWORD' => $mysqlFusioPassword,
             'MYSQL_DATABASE' => 'fusio',
+            'MYSQL_RANDOM_ROOT_PASSWORD' => '1',
         ]);
 
-        $mysqlVolume = $this->newVolume('/var/lib/mysql', './db');
-
         return [
-            $this->newApp('fusio', 'fusio/fusio:5.2', environment: $fusioEnv, links: ['mysql-fusio']),
-            $this->newApp('mysql-fusio', 'mysql:8.0', environment: $mysqlEnv, volumes: [$mysqlVolume]),
+            $this->newApp('fusio', 'fusio/fusio:5.2', environment: $fusioEnv, links: ['mysql']),
+            $this->newApp('mysql', 'mysql:8.0', environment: $mysqlEnv, volumes: [
+                $this->newVolume('./db', '/var/lib/mysql')
+            ]),
         ];
     }
 }
