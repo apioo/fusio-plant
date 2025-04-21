@@ -55,9 +55,8 @@ autorestart=true
 EOF
 curl -fsSL https://raw.githubusercontent.com/apioo/fusio-plant/refs/heads/main/bash/prune.sh -o /etc/cron.daily/docker-prune
 chmod +x /etc/cron.daily/docker-prune
-random_id=$(uuidgen)
-panel_app_domain="plant-$random_id.$domain"
-panel_api_domain="api-$random_id.$domain"
+panel_app_domain="plant.$domain"
+panel_api_domain="api.$domain"
 project_key=$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 40)
 mysql_password=$(tr -dc 'A-Za-z0-9!?%=' < /dev/urandom | head -c 20)
 backend_username=$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 8)

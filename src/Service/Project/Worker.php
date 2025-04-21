@@ -2,6 +2,9 @@
 
 namespace App\Service\Project;
 
+use App\Exception\ConfigurationException;
+use App\Exception\PortResolveException;
+use App\Exception\ProcessTimeoutException;
 use App\Model;
 use App\Table\Generated\ProjectRow;
 use PSX\Json\Parser;
@@ -12,6 +15,11 @@ readonly class Worker
     {
     }
 
+    /**
+     * @throws ProcessTimeoutException
+     * @throws ConfigurationException
+     * @throws PortResolveException
+     */
     public function setup(int $id, Model\Project $project): string
     {
         $composeYaml = $this->composeWriter->write($id, $project->getApps());
@@ -29,6 +37,9 @@ readonly class Worker
         return $this->waitForResponse($commandId);
     }
 
+    /**
+     * @throws ProcessTimeoutException
+     */
     public function remove(int $id, ProjectRow $project): string
     {
         $commandId = $this->buildCommandId($id);
@@ -41,6 +52,9 @@ readonly class Worker
         return $this->waitForResponse($commandId);
     }
 
+    /**
+     * @throws ProcessTimeoutException
+     */
     public function certbot(int $id, Model\ProjectCertbot $certbot): string
     {
         $commandId = $this->buildCommandId($id);
@@ -54,6 +68,9 @@ readonly class Worker
         return $this->waitForResponse($commandId);
     }
 
+    /**
+     * @throws ProcessTimeoutException
+     */
     public function pull(int $id, ProjectRow $project): string
     {
         $commandId = $this->buildCommandId($id);
@@ -66,6 +83,9 @@ readonly class Worker
         return $this->waitForResponse($commandId);
     }
 
+    /**
+     * @throws ProcessTimeoutException
+     */
     public function up(int $id, ProjectRow $project): string
     {
         $commandId = $this->buildCommandId($id);
@@ -78,6 +98,9 @@ readonly class Worker
         return $this->waitForResponse($commandId);
     }
 
+    /**
+     * @throws ProcessTimeoutException
+     */
     public function down(int $id, ProjectRow $project): string
     {
         $commandId = $this->buildCommandId($id);
@@ -90,6 +113,9 @@ readonly class Worker
         return $this->waitForResponse($commandId);
     }
 
+    /**
+     * @throws ProcessTimeoutException
+     */
     public function logs(int $id, ProjectRow $project): string
     {
         $commandId = $this->buildCommandId($id);
@@ -102,6 +128,9 @@ readonly class Worker
         return $this->waitForResponse($commandId);
     }
 
+    /**
+     * @throws ProcessTimeoutException
+     */
     public function ps(int $id, ProjectRow $project): string
     {
         $commandId = $this->buildCommandId($id);
@@ -114,6 +143,9 @@ readonly class Worker
         return $this->waitForResponse($commandId);
     }
 
+    /**
+     * @throws ProcessTimeoutException
+     */
     public function stats(int $id, ProjectRow $project): string
     {
         $commandId = $this->buildCommandId($id);
@@ -126,6 +158,9 @@ readonly class Worker
         return $this->waitForResponse($commandId);
     }
 
+    /**
+     * @throws ProcessTimeoutException
+     */
     public function login(int $id, string $username, string $password): string
     {
         $commandId = $this->buildCommandId($id);
@@ -144,6 +179,9 @@ readonly class Worker
         file_put_contents(__DIR__ . '/../../../input/' . $commandId . '.cmd', Parser::encode($command));
     }
 
+    /**
+     * @throws ProcessTimeoutException
+     */
     private function waitForResponse(string $commandId): string
     {
         $file = __DIR__ . '/../../../output/' . $commandId . '.cmd';
@@ -157,14 +195,14 @@ readonly class Worker
             sleep(1);
             $count++;
 
-            if ($count > 60) {
-                throw new \RuntimeException('Command output timeout for: ' . $commandId);
+            if ($count > 30) {
+                throw new ProcessTimeoutException('Command output timeout for: ' . $commandId);
             }
         }
     }
 
     private function buildCommandId(int $id): string
     {
-        return $id . '-' . date('YmdHisv') . '.cmd';
+        return $id . '-' . date('YmdHisv');
     }
 }

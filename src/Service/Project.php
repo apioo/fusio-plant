@@ -2,6 +2,9 @@
 
 namespace App\Service;
 
+use App\Exception\ConfigurationException;
+use App\Exception\PortResolveException;
+use App\Exception\ProcessTimeoutException;
 use App\Model;
 use App\Model\Message;
 use App\Service\Project\Worker;
@@ -30,12 +33,17 @@ readonly class Project
             $row = new Table\Generated\ProjectRow();
             $row->setUserId($context->getUser()->getId());
             $row->setDisplayId(Uuid::uuid4()->toString());
+            $row->setName($project->getName());
             $row->setApps(Parser::encode($project->getApps()));
             $row->setUpdateDate(LocalDateTime::now());
             $row->setInsertDate(LocalDateTime::now());
             $this->projectTable->create($row);
 
-            $output = $this->worker->setup($this->projectTable->getLastInsertId(), $project);
+            try {
+                $output = $this->worker->setup($this->projectTable->getLastInsertId(), $project);
+            } catch (ProcessTimeoutException|ConfigurationException|PortResolveException $e) {
+                throw new StatusCode\InternalServerErrorException('Could not setup project, got: ' . $e->getMessage(), previous: $e);
+            }
 
             $this->dispatchEvent('project.created', $row, $row->getDisplayId());
 
@@ -65,7 +73,11 @@ readonly class Project
             $row->setUpdateDate(LocalDateTime::now());
             $this->projectTable->update($row);
 
-            $output = $this->worker->setup($row->getId(), $project);
+            try {
+                $output = $this->worker->setup($row->getId(), $project);
+            } catch (ProcessTimeoutException $e) {
+                throw new StatusCode\InternalServerErrorException('Could not update project, got: ' . $e->getMessage(), previous: $e);
+            }
 
             $this->dispatchEvent('project.updated', $row, $row->getDisplayId());
 
@@ -91,7 +103,11 @@ readonly class Project
         try {
             $this->projectTable->delete($row);
 
-            $output = $this->worker->remove($row->getId(), $row);
+            try {
+                $output = $this->worker->remove($row->getId(), $row);
+            } catch (ProcessTimeoutException $e) {
+                throw new StatusCode\InternalServerErrorException('Could not remove project, got: ' . $e->getMessage(), previous: $e);
+            }
 
             $this->dispatchEvent('project.deleted', $row, $row->getDisplayId());
 
@@ -112,7 +128,11 @@ readonly class Project
             throw new StatusCode\NotFoundException('Provided project does not exist');
         }
 
-        $output = $this->worker->certbot($id, $certbot);
+        try {
+            $output = $this->worker->certbot($id, $certbot);
+        } catch (ProcessTimeoutException $e) {
+            throw new StatusCode\InternalServerErrorException('Could not obtain SSL certificates, got: ' . $e->getMessage(), previous: $e);
+        }
 
         return $this->newMessage('Project certbot successfully executed', $row->getDisplayId(), $output);
     }
@@ -124,7 +144,11 @@ readonly class Project
             throw new StatusCode\NotFoundException('Provided project does not exist');
         }
 
-        $output = $this->worker->pull($id, $row);
+        try {
+            $output = $this->worker->pull($id, $row);
+        } catch (ProcessTimeoutException $e) {
+            throw new StatusCode\InternalServerErrorException('Could not pull, got: ' . $e->getMessage(), previous: $e);
+        }
 
         return $this->newMessage('Project pull successfully executed', $row->getDisplayId(), $output);
     }
@@ -136,7 +160,11 @@ readonly class Project
             throw new StatusCode\NotFoundException('Provided project does not exist');
         }
 
-        $output = $this->worker->up($id, $row);
+        try {
+            $output = $this->worker->up($id, $row);
+        } catch (ProcessTimeoutException $e) {
+            throw new StatusCode\InternalServerErrorException('Could not up, got: ' . $e->getMessage(), previous: $e);
+        }
 
         return $this->newMessage('Project up successfully executed', $row->getDisplayId(), $output);
     }
@@ -148,7 +176,11 @@ readonly class Project
             throw new StatusCode\NotFoundException('Provided project does not exist');
         }
 
-        $output = $this->worker->down($id, $row);
+        try {
+            $output = $this->worker->down($id, $row);
+        } catch (ProcessTimeoutException $e) {
+            throw new StatusCode\InternalServerErrorException('Could not down, got: ' . $e->getMessage(), previous: $e);
+        }
 
         return $this->newMessage('Project up successfully executed', $row->getDisplayId(), $output);
     }
@@ -160,7 +192,11 @@ readonly class Project
             throw new StatusCode\NotFoundException('Provided project does not exist');
         }
 
-        $output = $this->worker->logs($id, $row);
+        try {
+            $output = $this->worker->logs($id, $row);
+        } catch (ProcessTimeoutException $e) {
+            throw new StatusCode\InternalServerErrorException('Could not get logs, got: ' . $e->getMessage(), previous: $e);
+        }
 
         return $this->newMessage('Project logs successfully executed', $row->getDisplayId(), $output);
     }
@@ -172,7 +208,11 @@ readonly class Project
             throw new StatusCode\NotFoundException('Provided project does not exist');
         }
 
-        $output = $this->worker->ps($id, $row);
+        try {
+            $output = $this->worker->ps($id, $row);
+        } catch (ProcessTimeoutException $e) {
+            throw new StatusCode\InternalServerErrorException('Could not get ps, got: ' . $e->getMessage(), previous: $e);
+        }
 
         return $this->newMessage('Project ps successfully executed', $row->getDisplayId(), $output);
     }
@@ -184,7 +224,11 @@ readonly class Project
             throw new StatusCode\NotFoundException('Provided project does not exist');
         }
 
-        $output = $this->worker->stats($id, $row);
+        try {
+            $output = $this->worker->stats($id, $row);
+        } catch (ProcessTimeoutException $e) {
+            throw new StatusCode\InternalServerErrorException('Could not get stats, got: ' . $e->getMessage(), previous: $e);
+        }
 
         return $this->newMessage('Project stats successfully executed', $row->getDisplayId(), $output);
     }
