@@ -1,3 +1,4 @@
+"dashboard.getAll": !include resources/operations/dashboard/collection.php
 "preset.getAll": !include resources/operations/preset/collection.php
 "preset.get": !include resources/operations/preset/entity.php
 "project.getAll": !include resources/operations/project/collection.php

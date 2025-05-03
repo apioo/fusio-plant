@@ -9,7 +9,7 @@ use Fusio\Cli\Builder\Operation\Stability;
 return function (Operation $operation) {
     $operation->setScopes(['preset']);
     $operation->setStability(Stability::EXPERIMENTAL);
-    $operation->setPublic(true);
+    $operation->setPublic(false);
     $operation->setDescription('Returns a preset for a specific app');
     $operation->setHttpMethod(HttpMethod::GET);
     $operation->setHttpPath('/preset/:name');

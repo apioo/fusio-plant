@@ -9,7 +9,7 @@ use Fusio\Cli\Builder\Operation\Stability;
 return function (Operation $operation) {
     $operation->setScopes(['project']);
     $operation->setStability(Stability::EXPERIMENTAL);
-    $operation->setPublic(true);
+    $operation->setPublic(false);
     $operation->setDescription('Pulls the latest version');
     $operation->setHttpMethod(HttpMethod::POST);
     $operation->setHttpPath('/project/:id/pull');

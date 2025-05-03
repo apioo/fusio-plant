@@ -34,6 +34,68 @@
         }
       }
     },
+    "Dashboard_Collection": {
+      "description": "All dashboard statistics",
+      "type": "struct",
+      "properties": {
+        "cpuPerc": {
+          "type": "reference",
+          "target": "Dashboard_Chart"
+        },
+        "memPerc": {
+          "type": "reference",
+          "target": "Dashboard_Chart"
+        },
+        "netioReceived": {
+          "type": "reference",
+          "target": "Dashboard_Chart"
+        },
+        "netioSent": {
+          "type": "reference",
+          "target": "Dashboard_Chart"
+        },
+        "blockioWritten": {
+          "type": "reference",
+          "target": "Dashboard_Chart"
+        },
+        "blockioRead": {
+          "type": "reference",
+          "target": "Dashboard_Chart"
+        }
+      }
+    },
+    "Dashboard_Chart": {
+      "type": "struct",
+      "properties": {
+        "labels": {
+          "type": "array",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "series": {
+          "type": "array",
+          "schema": {
+            "type": "reference",
+            "target": "Dashboard_Chart_Series"
+          }
+        }
+      }
+    },
+    "Dashboard_Chart_Series": {
+      "type": "struct",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "data": {
+          "type": "array",
+          "schema": {
+            "type": "number"
+          }
+        }
+      }
+    },
     "Preset": {
       "description": "A preset config",
       "type": "struct",

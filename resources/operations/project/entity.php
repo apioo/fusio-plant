@@ -10,7 +10,7 @@ use PSX\Schema\Type\Factory\PropertyTypeFactory;
 return function (Operation $operation) {
     $operation->setScopes(['project']);
     $operation->setStability(Stability::EXPERIMENTAL);
-    $operation->setPublic(true);
+    $operation->setPublic(false);
     $operation->setDescription('Returns a single project');
     $operation->setHttpMethod(HttpMethod::GET);
     $operation->setHttpPath('/project/:id');
