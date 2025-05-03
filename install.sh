@@ -55,8 +55,6 @@ autorestart=true
 EOF
 curl -fsSL https://raw.githubusercontent.com/apioo/fusio-plant/refs/heads/main/bash/prune.sh -o /etc/cron.daily/docker-prune
 chmod +x /etc/cron.daily/docker-prune
-panel_app_domain="plant.$domain"
-panel_api_domain="api.$domain"
 project_key=$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 40)
 mysql_password=$(tr -dc 'A-Za-z0-9!?%=' < /dev/urandom | head -c 20)
 backend_username=$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 8)
@@ -64,16 +62,9 @@ backend_password=$(tr -dc 'A-Za-z0-9!?%=' < /dev/urandom | head -c 16)
 rm /etc/nginx/sites-enabled/default
 cat > /etc/nginx/sites-available/plant <<EOF
 server {
-  server_name $panel_app_domain;
+  server_name $domain;
   location / {
     proxy_pass http://127.0.0.1:8900;
-  }
-}
-
-server {
-  server_name $panel_api_domain;
-  location / {
-    proxy_pass http://127.0.0.1:8901;
   }
 }
 
@@ -84,20 +75,14 @@ mkdir /docker/plant
 cat > /docker/plant/docker-compose.yml <<EOF
 version: '3'
 services:
-  frontend:
-    image: ghcr.io/apioo/fusio-plant-frontend:main
-    restart: always
-    ports:
-      - "127.0.0.1:8900:80"
-
-  backend:
+  plant:
     image: ghcr.io/apioo/fusio-plant:main
     restart: always
     environment:
       FUSIO_TENANT_ID: ""
       FUSIO_PROJECT_KEY: "$project_key"
-      FUSIO_URL: "https://$panel_api_domain"
-      FUSIO_APPS_URL: "https://$panel_api_domain/apps"
+      FUSIO_URL: "https://$domain"
+      FUSIO_APPS_URL: "https://$domain/apps"
       FUSIO_ENV: "prod"
       FUSIO_DEBUG: "false"
       FUSIO_CONNECTION: "pdo-mysql://fusio:$mysql_password@mysql-fusio/fusio"
@@ -111,7 +96,7 @@ services:
     links:
       - mysql-fusio
     ports:
-      - "127.0.0.1:8901:80"
+      - "127.0.0.1:8900:80"
 
   mysql-fusio:
     image: mysql:8.0
@@ -125,15 +110,14 @@ services:
       - ./db:/var/lib/mysql
 EOF
 docker compose up -d
-certbot --nginx --non-interactive --agree-tos -m "info@$domain" -d "$panel_api_domain"
-certbot --nginx --non-interactive --agree-tos -m "info@$domain" -d "$panel_app_domain"
+certbot --nginx --non-interactive --agree-tos -m "info@$domain" -d "$domain"
 supervisord
 echo ""
 echo "Fusio Plant successfully installed"
 echo ""
-echo "The app is available at:"
-echo "App: https://$panel_app_domain"
-echo "API: https://$panel_api_domain"
+echo "The backend app is available at:"
+echo "API: https://$domain"
+echo "App: https://$domain/apps/plant"
 echo ""
 echo "You can login at the backend with the following credentials:"
 echo "Username: $backend_username"
