@@ -1,6 +1,14 @@
-project_created:
+project.created:
   description: 'Project was created'
-project_updated:
+project.updated:
   description: 'Project was updated'
-project_deleted:
+project.deleted:
   description: 'Project was deleted'
+project.certbot:
+  description: 'Project SSL certificates obtained'
+project.pull:
+  description: 'Project images pulled'
+project.up:
+  description: 'Started all project containers'
+project.down:
+  description: 'Shutdown all project containers'

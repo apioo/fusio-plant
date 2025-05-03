@@ -27,7 +27,7 @@ readonly class Update implements ActionInterface
         } catch (StatusCodeException $e) {
             throw $e;
         } catch (\Throwable $e) {
-            throw new InternalServerErrorException($e->getMessage());
+            throw new InternalServerErrorException($e->getMessage(), previous: $e);
         }
 
         return $this->response->build(200, [], $message);
