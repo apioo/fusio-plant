@@ -134,6 +134,8 @@ readonly class Project
             throw new StatusCode\InternalServerErrorException('Could not obtain SSL certificates, got: ' . $e->getMessage(), previous: $e);
         }
 
+        $this->dispatchEvent('project.certbot', $row, $row->getDisplayId());
+
         return $this->newMessage('Project certbot successfully executed', $row->getDisplayId(), $output);
     }
 
@@ -149,6 +151,8 @@ readonly class Project
         } catch (ProcessTimeoutException $e) {
             throw new StatusCode\InternalServerErrorException('Could not pull, got: ' . $e->getMessage(), previous: $e);
         }
+
+        $this->dispatchEvent('project.pull', $row, $row->getDisplayId());
 
         return $this->newMessage('Project pull successfully executed', $row->getDisplayId(), $output);
     }
@@ -166,6 +170,8 @@ readonly class Project
             throw new StatusCode\InternalServerErrorException('Could not up, got: ' . $e->getMessage(), previous: $e);
         }
 
+        $this->dispatchEvent('project.up', $row, $row->getDisplayId());
+
         return $this->newMessage('Project up successfully executed', $row->getDisplayId(), $output);
     }
 
@@ -181,6 +187,8 @@ readonly class Project
         } catch (ProcessTimeoutException $e) {
             throw new StatusCode\InternalServerErrorException('Could not down, got: ' . $e->getMessage(), previous: $e);
         }
+
+        $this->dispatchEvent('project.down', $row, $row->getDisplayId());
 
         return $this->newMessage('Project up successfully executed', $row->getDisplayId(), $output);
     }
