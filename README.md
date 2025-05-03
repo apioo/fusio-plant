@@ -6,7 +6,7 @@
 # Fusio Plant
 
 Fusio Plant is an open-source server panel to easily self-host apps on your server.
-It can be seen as a modern alternative to tools like cPanel with a simple,
+It can be seen as a modern lightweight alternative to cPanel or Plesk with a simple,
 performant and clean tech-stack.
 
 ## Goals
@@ -38,10 +38,10 @@ Note: On installation the "install" script asks for a domain of your server. Ple
 that the DNS A/AAAA record of your domain already points to your server. The domain is only needed
 to access the Plant App and API, for the actual apps which you host with Plant you can select
 different domain names. It is recommended to use a domain which is not easy to guess
-like `server-1ec0bf62.mycontrol.com`, in this case the installer would configure two sub-domains:
+like `server-1ec0bf62.mycontrol.com`, in this case you could access the backend with:
 
-* App: `plant.server-1ec0bf62.mycontrol.com`
-* API: `api.server-1ec0bf62.mycontrol.com`
+* API: `server-1ec0bf62.mycontrol.com`
+* App: `server-1ec0bf62.mycontrol.com/apps/plant`
 
 Choosing such a domain name is just an additional security layer so that it is more challenging to
 access the backend app and API to control your server. If you access the app, you still need to
@@ -59,7 +59,7 @@ Contains all projects and each project contains a `docker-compose.yml` file.
 
 Contains the plant executor which receives commands through the `/opt/plant/input` folder and
 writes responses back to the `/opt/plant/output` folder. Since the plant app also runs in a
-container those folders are mounted into the plant app and help to execute commands on the
+container those folders are mounted into the plant app to execute commands on the
 host. The executor is a simple bash script that listens for file changes in this folder,
 you can see all available commands at the [executor script](./bash/executor.sh).
 
