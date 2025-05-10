@@ -1,7 +1,6 @@
 version: '3'
 services:
-  # Fusio container
-  fusio:
+  fusio-plant:
     build: fusio/plant
     restart: always
     environment:
@@ -18,10 +17,7 @@ services:
       FUSIO_MAILER: "native://default"
       FUSIO_MESSENGER: "doctrine://default"
       FUSIO_MAIL_SENDER: "info@api.fusio.cloud"
-      FUSIO_WORKER_JAVA: "worker-java:9090"
-      FUSIO_WORKER_JAVASCRIPT: "worker-javascript:9091"
-      FUSIO_WORKER_PHP: "worker-php:9092"
-      FUSIO_WORKER_PYTHON: "worker-python:9093"
+      FUSIO_TRUSTED_IP_HEADER: ""
     links:
       - mysql-fusio
     ports:
@@ -31,7 +27,7 @@ services:
     image: mysql:8.0
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: "61ad6c605975"
+      MYSQL_RANDOM_ROOT_PASSWORD: "1"
       MYSQL_USER: "fusio"
       MYSQL_PASSWORD: "61ad6c605975"
       MYSQL_DATABASE: "fusio"
