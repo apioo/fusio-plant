@@ -9,5 +9,6 @@ return \PSX\Framework\Dependency\ContainerBuilder::build(
         __DIR__ . '/vendor/fusio/engine/resources/container.php',
         __DIR__ . '/vendor/fusio/impl/resources/container.php',
         __DIR__ . '/resources/container.php',
+        ...\Fusio\Impl\Adapter\AdapterFinder::getFiles(__DIR__ . '/provider.php'),
     ],
 );
