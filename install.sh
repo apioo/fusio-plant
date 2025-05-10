@@ -90,6 +90,7 @@ services:
       FUSIO_BACKEND_EMAIL: "info@$domain"
       FUSIO_BACKEND_PW: "$backend_password"
       FUSIO_MAIL_SENDER: "info@$domain"
+      FUSIO_TRUSTED_IP_HEADER: "X-Forwarded-For"
     volumes:
       - /opt/plant/input:/var/www/html/fusio/input
       - /opt/plant/output:/var/www/html/fusio/output
@@ -102,7 +103,7 @@ services:
     image: mysql:8.0
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: "$mysql_password"
+      MYSQL_RANDOM_ROOT_PASSWORD: "1"
       MYSQL_USER: "fusio"
       MYSQL_PASSWORD: "$mysql_password"
       MYSQL_DATABASE: "fusio"
