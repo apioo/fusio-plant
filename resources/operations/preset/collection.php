@@ -10,7 +10,7 @@ return function (Operation $operation) {
     $operation->setScopes(['preset']);
     $operation->setStability(Stability::EXPERIMENTAL);
     $operation->setPublic(false);
-    $operation->setDescription('Returns a preset for a specific app');
+    $operation->setDescription('Returns all available presets');
     $operation->setHttpMethod(HttpMethod::GET);
     $operation->setHttpPath('/preset');
     $operation->setHttpCode(200);
