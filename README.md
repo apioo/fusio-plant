@@ -27,7 +27,7 @@ To install Fusio Plant on your server you only need to execute the `install.sh` 
 Note currently only Ubuntu as OS is supported, we recommend running this script on a fresh Ubuntu
 installation. Download and run the `install.sh` script with the following command:
 
-```
+```bash
 curl -s https://raw.githubusercontent.com/apioo/fusio-plant/refs/heads/main/install.sh | bash
 ```
 
