@@ -16,5 +16,9 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+rm /opt/plant/output/*.cmd
+rm /opt/plant/output/*.lock
+
 docker system prune -f
 docker volume prune -f
