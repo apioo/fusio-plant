@@ -1,5 +1,6 @@
 Consumer:
   scopes:
+    - dashboard
     - preset
     - project
     - default
@@ -8,6 +9,7 @@ Consumer:
     - consumer
 Administrator:
   scopes:
+    - dashboard
     - preset
     - project
     - default
