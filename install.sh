@@ -77,7 +77,7 @@ cat > /docker/plant/docker-compose.yml <<EOF
 version: '3'
 services:
   plant:
-    image: ghcr.io/apioo/fusio-plant:main
+    image: fusio/plant
     restart: always
     environment:
       FUSIO_TENANT_ID: ""
