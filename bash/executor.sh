@@ -21,7 +21,8 @@ do
   for command in /opt/plant/input/*.cmd; do
     type=$(jq ".type" "$command")
     output=$(basename -- "$command")
-    outputFile="/opt/plant/output/$output"
+    outputFile="/opt/plant/output/$output.lock"
+    resultFile="/opt/plant/output/$output"
     touch "$outputFile"
     chown www-data: "$outputFile"
     case $type in
@@ -116,7 +117,7 @@ do
         rm "$command"
         ;;
     esac
-    echo "COMPLETE" >> "$outputFile"
+    mv "$outputFile" "$resultFile"
   done
   sleep 1
 done
