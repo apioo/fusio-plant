@@ -19,18 +19,18 @@
 while inotifywait -q -e modify /opt/plant/input
 do
   for command in /opt/plant/input/*.cmd; do
-    type=$(jq ".type" "$command")
+    type=$(jq -r ".type" "$command")
     output=$(basename -- "$command")
     outputFile="/opt/plant/output/$output.lock"
     resultFile="/opt/plant/output/$output"
-    touch "$outputFile"
+    touch "$outputFile":
     chown www-data: "$outputFile"
     case $type in
       "setup")
-        name=$(jq ".name" "$command")
+        name=$(jq -r ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
-        compose=$(jq ".compose" "$command")
-        nginx=$(jq ".nginx" "$command")
+        compose=$(jq -r ".compose" "$command")
+        nginx=$(jq -r ".nginx" "$command")
         rm "$command"
         mkdir "/docker/$name"
         echo "$compose" > "/docker/$name/docker-compose.yml"
@@ -42,7 +42,7 @@ do
         popd
         ;;
       "remove")
-        name=$(jq ".name" "$command")
+        name=$(jq -r ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
         rm "/etc/nginx/sites-enabled/$name"
@@ -54,13 +54,13 @@ do
         rm -r "/docker/$name"
         ;;
       "certbot")
-        domain=$(printf "%b" "$(jq ".domain" "$command")")
-        email=$(printf "%b" "$(jq ".email" "$command")")
+        domain=$(printf "%b" "$(jq -r ".domain" "$command")")
+        email=$(printf "%b" "$(jq -r ".email" "$command")")
         rm "$command"
         certbot --nginx --non-interactive --agree-tos -m "$email" -d "$domain" >> "$outputFile"
         ;;
       "pull")
-        name=$(jq ".name" "$command")
+        name=$(jq -r ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
         pushd "/docker/$name"
@@ -68,7 +68,7 @@ do
         popd
         ;;
       "up")
-        name=$(jq ".name" "$command")
+        name=$(jq -r ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
         pushd "/docker/$name"
@@ -76,7 +76,7 @@ do
         popd
         ;;
       "down")
-        name=$(jq ".name" "$command")
+        name=$(jq -r ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
         pushd "/docker/$name"
@@ -84,7 +84,7 @@ do
         popd
         ;;
       "logs")
-        name=$(jq ".name" "$command")
+        name=$(jq -r ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
         pushd "/docker/$name"
@@ -92,7 +92,7 @@ do
         popd
         ;;
       "ps")
-        name=$(jq ".name" "$command")
+        name=$(jq -r ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
         pushd "/docker/$name"
@@ -100,7 +100,7 @@ do
         popd
         ;;
       "stats")
-        name=$(jq ".name" "$command")
+        name=$(jq -r ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
         pushd "/docker/$name"
@@ -108,8 +108,8 @@ do
         popd
         ;;
       "login")
-        username=$(printf "%b" "$(jq ".username" "$command")")
-        password=$(printf "%b" "$(jq ".password" "$command")")
+        username=$(printf "%b" "$(jq -r ".username" "$command")")
+        password=$(printf "%b" "$(jq -r ".password" "$command")")
         rm "$command"
         echo "$password" | docker login -u "$username" --password-stdin >> "$outputFile"
         ;;
