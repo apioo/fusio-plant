@@ -43,7 +43,7 @@ readonly class Monitor
     {
         $projects = $this->projectTable->findAll();
         foreach ($projects as $project) {
-            $response = $this->project->stats($project->getId());
+            $response = $this->project->stats($project->getDisplayId());
             $this->parseOutput($project, $response->getOutput());
         }
     }
