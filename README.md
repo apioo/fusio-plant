@@ -28,7 +28,7 @@ Note currently only Ubuntu as OS is supported, we recommend running this script 
 installation. Download and run the `install.sh` script with the following command:
 
 ```bash
-curl -s https://raw.githubusercontent.com/apioo/fusio-plant/refs/heads/main/install.sh | bash
+curl -s https://raw.githubusercontent.com/apioo/fusio-plant/refs/heads/main/install.sh -o ./install.sh && chmod +x ./install.sh && ./install.sh
 ```
 
 The script installs on your server only Nginx, Docker and the Fusio Plant executor, all other
