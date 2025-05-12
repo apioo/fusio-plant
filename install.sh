@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 cd /
+echo ""
 echo "Fusio-Plant installation"
 echo ""
 echo "To install Fusio-Plant you need to provide the domain of your server i.e. myserver.com"
@@ -25,13 +26,13 @@ echo ""
 read -p "Domain: " domain
 echo ""
 apt-get update
-apt-get install nginx zip unzip certbot python3-certbot-nginx ca-certificates curl jq inotify-tools supervisor
+apt-get install nginx zip unzip certbot python3-certbot-nginx ca-certificates curl jq inotify-tools supervisor -y
 install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 chmod a+r /etc/apt/keyrings/docker.asc
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
 apt-get update
-apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 mkdir /docker
 mkdir /cache
 chown -R www-data: /cache
@@ -112,6 +113,14 @@ services:
 EOF
 docker compose up -d
 certbot --nginx --non-interactive --agree-tos -m "info@$domain" -d "$domain"
+if [ $? -ne 0 ]; then
+    echo ""
+    echo "NOTICE: We could not obtain an SSL certificate for your domain $domain"
+    echo "You need to point the DNS A/AAAA Record of your domain to your server"
+    echo "After this you can obtain the certificate by running the following command"
+    echo "> certbot --nginx --agree-tos -m \"info@$domain\" -d \"$domain\""
+    echo ""
+fi
 supervisord
 echo ""
 echo "Fusio Plant successfully installed"
