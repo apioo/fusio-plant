@@ -16,12 +16,12 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-while inotifywait -q -e modify /opt/input
+while inotifywait -q -e modify /opt/plant/input
 do
-  for command in /opt/input/*.cmd; do
+  for command in /opt/plant/input/*.cmd; do
     type=$(jq ".type" "$command")
     output=$(basename -- "$command")
-    outputFile="/opt/output/$output"
+    outputFile="/opt/plant/output/$output"
     echo "" > "$outputFile"
     chown www-data: "$outputFile"
     if [[ "$type" == "setup" ]]; then
