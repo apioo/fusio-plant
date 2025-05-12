@@ -22,86 +22,101 @@ do
     type=$(jq ".type" "$command")
     output=$(basename -- "$command")
     outputFile="/opt/plant/output/$output"
-    echo "" > "$outputFile"
+    touch "$outputFile"
     chown www-data: "$outputFile"
-    if [[ "$type" == "setup" ]]; then
-      name=$(jq ".name" "$command")
-      name="${name//[^[:alnum:]]/_}"
-      compose=$(jq ".compose" "$command")
-      nginx=$(jq ".nginx" "$command")
-      rm "$command"
-      mkdir "/docker/$name"
-      echo "$compose" > "/docker/$name/docker-compose.yml"
-      echo "$nginx" > "/etc/nginx/sites-available/$name"
-      ln -s "/etc/nginx/sites-available/$name" "/etc/nginx/sites-enabled/$name"
-      service nginx reload
-      pushd "/docker/$name"
-      docker compose up -d > "$outputFile"
-      popd
-    elif [[ "$type" == "remove" ]]; then
-      name=$(jq ".name" "$command")
-      name="${name//[^[:alnum:]]/_}"
-      rm "$command"
-      rm "/etc/nginx/sites-enabled/$name"
-      rm "/etc/nginx/sites-available/$name"
-      service nginx reload
-      pushd "/docker/$name"
-      docker compose down > "$outputFile"
-      popd
-      rm -r "/docker/$name"
-    elif [[ "$type" == "certbot" ]]; then
-      domain=$(printf "%b" "$(jq ".domain" "$command")")
-      email=$(printf "%b" "$(jq ".email" "$command")")
-      rm "$command"
-      certbot --nginx --non-interactive --agree-tos -m "$email" -d "$domain" > "$outputFile"
-    elif [[ "$type" == "pull" ]]; then
-      name=$(jq ".name" "$command")
-      name="${name//[^[:alnum:]]/_}"
-      rm "$command"
-      pushd "/docker/$name"
-      docker compose pull > "$outputFile"
-      popd
-    elif [[ "$type" == "up" ]]; then
-      name=$(jq ".name" "$command")
-      name="${name//[^[:alnum:]]/_}"
-      rm "$command"
-      pushd "/docker/$name"
-      docker compose up -d > "$outputFile"
-      popd
-    elif [[ "$type" == "down" ]]; then
-      name=$(jq ".name" "$command")
-      name="${name//[^[:alnum:]]/_}"
-      rm "$command"
-      pushd "/docker/$name"
-      docker compose down > "$outputFile"
-      popd
-    elif [[ "$type" == "logs" ]]; then
-      name=$(jq ".name" "$command")
-      name="${name//[^[:alnum:]]/_}"
-      rm "$command"
-      pushd "/docker/$name"
-      docker compose logs --no-color --tail=256 > "$outputFile"
-      popd
-    elif [[ "$type" == "ps" ]]; then
-      name=$(jq ".name" "$command")
-      name="${name//[^[:alnum:]]/_}"
-      rm "$command"
-      pushd "/docker/$name"
-      docker compose ps --format=json > "$outputFile"
-      popd
-    elif [[ "$type" == "stats" ]]; then
-      name=$(jq ".name" "$command")
-      name="${name//[^[:alnum:]]/_}"
-      rm "$command"
-      pushd "/docker/$name"
-      docker compose stats --no-stream --format=json > "$outputFile"
-      popd
-    elif [[ "$type" == "login" ]]; then
-      username=$(printf "%b" "$(jq ".username" "$command")")
-      password=$(printf "%b" "$(jq ".password" "$command")")
-      rm "$command"
-      echo "$password" | docker login -u "$username" --password-stdin > "$outputFile"
-    fi
+    case $type in
+      setup)
+        name=$(jq ".name" "$command")
+        name="${name//[^[:alnum:]]/_}"
+        compose=$(jq ".compose" "$command")
+        nginx=$(jq ".nginx" "$command")
+        rm "$command"
+        mkdir "/docker/$name"
+        echo "$compose" > "/docker/$name/docker-compose.yml"
+        echo "$nginx" > "/etc/nginx/sites-available/$name"
+        ln -s "/etc/nginx/sites-available/$name" "/etc/nginx/sites-enabled/$name"
+        service nginx reload
+        pushd "/docker/$name"
+        docker compose up -d >> "$outputFile"
+        popd
+        ;;
+      remove)
+        name=$(jq ".name" "$command")
+        name="${name//[^[:alnum:]]/_}"
+        rm "$command"
+        rm "/etc/nginx/sites-enabled/$name"
+        rm "/etc/nginx/sites-available/$name"
+        service nginx reload
+        pushd "/docker/$name"
+        docker compose down >> "$outputFile"
+        popd
+        rm -r "/docker/$name"
+        ;;
+      certbot)
+        domain=$(printf "%b" "$(jq ".domain" "$command")")
+        email=$(printf "%b" "$(jq ".email" "$command")")
+        rm "$command"
+        certbot --nginx --non-interactive --agree-tos -m "$email" -d "$domain" >> "$outputFile"
+        ;;
+      pull)
+        name=$(jq ".name" "$command")
+        name="${name//[^[:alnum:]]/_}"
+        rm "$command"
+        pushd "/docker/$name"
+        docker compose pull >> "$outputFile"
+        popd
+        ;;
+      up)
+        name=$(jq ".name" "$command")
+        name="${name//[^[:alnum:]]/_}"
+        rm "$command"
+        pushd "/docker/$name"
+        docker compose up -d >> "$outputFile"
+        popd
+        ;;
+      down)
+        name=$(jq ".name" "$command")
+        name="${name//[^[:alnum:]]/_}"
+        rm "$command"
+        pushd "/docker/$name"
+        docker compose down >> "$outputFile"
+        popd
+        ;;
+      logs)
+        name=$(jq ".name" "$command")
+        name="${name//[^[:alnum:]]/_}"
+        rm "$command"
+        pushd "/docker/$name"
+        docker compose logs --no-color --tail=256 >> "$outputFile"
+        popd
+        ;;
+      ps)
+        name=$(jq ".name" "$command")
+        name="${name//[^[:alnum:]]/_}"
+        rm "$command"
+        pushd "/docker/$name"
+        docker compose ps --format=json >> "$outputFile"
+        popd
+        ;;
+      stats)
+        name=$(jq ".name" "$command")
+        name="${name//[^[:alnum:]]/_}"
+        rm "$command"
+        pushd "/docker/$name"
+        docker compose stats --no-stream --format=json >> "$outputFile"
+        popd
+        ;;
+      login)
+        username=$(printf "%b" "$(jq ".username" "$command")")
+        password=$(printf "%b" "$(jq ".password" "$command")")
+        rm "$command"
+        echo "$password" | docker login -u "$username" --password-stdin >> "$outputFile"
+        ;;
+      *)
+        rm "$command"
+        ;;
+    esac
+    echo "COMPLETE" >> "$outputFile"
   done
   sleep 1
 done
