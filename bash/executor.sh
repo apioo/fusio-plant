@@ -26,7 +26,7 @@ do
     touch "$outputFile"
     chown www-data: "$outputFile"
     case $type in
-      setup)
+      "setup")
         name=$(jq ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         compose=$(jq ".compose" "$command")
@@ -41,7 +41,7 @@ do
         docker compose up -d >> "$outputFile"
         popd
         ;;
-      remove)
+      "remove")
         name=$(jq ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
@@ -53,13 +53,13 @@ do
         popd
         rm -r "/docker/$name"
         ;;
-      certbot)
+      "certbot")
         domain=$(printf "%b" "$(jq ".domain" "$command")")
         email=$(printf "%b" "$(jq ".email" "$command")")
         rm "$command"
         certbot --nginx --non-interactive --agree-tos -m "$email" -d "$domain" >> "$outputFile"
         ;;
-      pull)
+      "pull")
         name=$(jq ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
@@ -67,7 +67,7 @@ do
         docker compose pull >> "$outputFile"
         popd
         ;;
-      up)
+      "up")
         name=$(jq ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
@@ -75,7 +75,7 @@ do
         docker compose up -d >> "$outputFile"
         popd
         ;;
-      down)
+      "down")
         name=$(jq ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
@@ -83,7 +83,7 @@ do
         docker compose down >> "$outputFile"
         popd
         ;;
-      logs)
+      "logs")
         name=$(jq ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
@@ -91,7 +91,7 @@ do
         docker compose logs --no-color --tail=256 >> "$outputFile"
         popd
         ;;
-      ps)
+      "ps")
         name=$(jq ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
@@ -99,7 +99,7 @@ do
         docker compose ps --format=json >> "$outputFile"
         popd
         ;;
-      stats)
+      "stats")
         name=$(jq ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
@@ -107,7 +107,7 @@ do
         docker compose stats --no-stream --format=json >> "$outputFile"
         popd
         ;;
-      login)
+      "login")
         username=$(printf "%b" "$(jq ".username" "$command")")
         password=$(printf "%b" "$(jq ".password" "$command")")
         rm "$command"
