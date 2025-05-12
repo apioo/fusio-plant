@@ -67,7 +67,7 @@ class Dashboard extends ViewAbstract
                            DATE(mon.insert_date) AS date
                       FROM app_monitor mon
                      WHERE mon.project_id = :project_id
-                  GROUP BY DATE(mon.insert_date), mon.operation_id';
+                  GROUP BY DATE(mon.insert_date), mon.project_id';
 
             $result = $this->connection->fetchAllAssociative($sql, ['project_id' => $project->getId()]);
 
