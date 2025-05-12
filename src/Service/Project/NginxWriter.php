@@ -53,7 +53,11 @@ readonly class NginxWriter
     private function writeConfigForApp(int $id, int $index, ProjectApp $app): string
     {
         $appId = $id . '_' . $app->getName();
-        $domains = implode(' ', $app->getDomains() ?? throw new ConfigurationException('You must provide at least one domain'));
+        $domains = implode(' ', $app->getDomains() ?? []);
+        if (empty($domains)) {
+            throw new ConfigurationException('You must provide at least one domain');
+        }
+
         $internalPort = $this->portNumberResolver->resolve($id, $index);
 
         $config = [];
