@@ -65,8 +65,8 @@ class Project extends ViewAbstract
     {
         $builder = new Builder($this->connection);
 
-        $definition = $builder->doEntity([$this->getTable(Table\Project::class), 'find'], [$id], [
-            'id' => Table\Generated\ProjectTable::COLUMN_ID,
+        $definition = $builder->doEntity([$this->getTable(Table\Project::class), 'findByDisplayId'], [$id], [
+            'id' => Table\Generated\ProjectTable::COLUMN_DISPLAY_ID,
             'name' => Table\Generated\ProjectTable::COLUMN_NAME,
             'apps' => $builder->fieldJson(Table\Generated\ProjectTable::COLUMN_APPS),
             'updateDate' => $builder->fieldDateTime(Table\Generated\ProjectTable::COLUMN_UPDATE_DATE),
