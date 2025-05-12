@@ -16,5 +16,5 @@ return function (Operation $operation) {
     $operation->setHttpCode(200);
     $operation->setOutgoing(Model\DashboardCollection::class);
     $operation->addThrow(999, Model\Message::class);
-    $operation->setAction(Action\Preset\GetAll::class);
+    $operation->setAction(Action\Dashboard\GetAll::class);
 };
