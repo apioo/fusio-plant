@@ -111,7 +111,9 @@ services:
     volumes:
       - ./db:/var/lib/mysql
 EOF
+pushd /docker/plant
 docker compose up -d
+popd
 certbot --nginx --non-interactive --agree-tos -m "info@$domain" -d "$domain"
 if [ $? -ne 0 ]; then
     echo ""
