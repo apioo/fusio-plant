@@ -51,7 +51,7 @@ class Project extends ViewAbstract
             'startIndex' => $startIndex,
             'itemsPerPage' => $count,
             'entry' => $builder->doCollection([$this->getTable(Table\Project::class), 'findAll'], [$condition, $startIndex, $count], [
-                'id' => $builder->fieldInteger(Table\Generated\ProjectTable::COLUMN_DISPLAY_ID),
+                'id' => Table\Generated\ProjectTable::COLUMN_DISPLAY_ID,
                 'name' => Table\Generated\ProjectTable::COLUMN_NAME,
                 'updateDate' => $builder->fieldDateTime(Table\Generated\ProjectTable::COLUMN_UPDATE_DATE),
                 'insertDate' => $builder->fieldDateTime(Table\Generated\ProjectTable::COLUMN_INSERT_DATE),
@@ -66,7 +66,7 @@ class Project extends ViewAbstract
         $builder = new Builder($this->connection);
 
         $definition = $builder->doEntity([$this->getTable(Table\Project::class), 'find'], [$id], [
-            'id' => $builder->fieldInteger(Table\Generated\ProjectTable::COLUMN_ID),
+            'id' => Table\Generated\ProjectTable::COLUMN_ID,
             'name' => Table\Generated\ProjectTable::COLUMN_NAME,
             'apps' => $builder->fieldJson(Table\Generated\ProjectTable::COLUMN_APPS),
             'updateDate' => $builder->fieldDateTime(Table\Generated\ProjectTable::COLUMN_UPDATE_DATE),

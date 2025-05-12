@@ -78,7 +78,7 @@ readonly class Project
 
     public function update(string $id, Model\Project $project): Message
     {
-        $row = $this->projectTable->find($id);
+        $row = $this->projectTable->findByDisplayId($id);
         if (!$row instanceof Table\Generated\ProjectRow) {
             throw new StatusCode\NotFoundException('Provided project does not exist');
         }
@@ -112,7 +112,7 @@ readonly class Project
 
     public function delete(string $id): Message
     {
-        $row = $this->projectTable->find($id);
+        $row = $this->projectTable->findByDisplayId($id);
         if (!$row instanceof Table\Generated\ProjectRow) {
             throw new StatusCode\NotFoundException('Provided project does not exist');
         }
@@ -142,7 +142,7 @@ readonly class Project
 
     public function certbot(string $id, Model\ProjectCertbot $certbot): Message
     {
-        $row = $this->projectTable->find($id);
+        $row = $this->projectTable->findByDisplayId($id);
         if (!$row instanceof Table\Generated\ProjectRow) {
             throw new StatusCode\NotFoundException('Provided project does not exist');
         }
@@ -160,7 +160,7 @@ readonly class Project
 
     public function pull(string $id): Message
     {
-        $row = $this->projectTable->find($id);
+        $row = $this->projectTable->findByDisplayId($id);
         if (!$row instanceof Table\Generated\ProjectRow) {
             throw new StatusCode\NotFoundException('Provided project does not exist');
         }
@@ -178,7 +178,7 @@ readonly class Project
 
     public function up(string $id): Message
     {
-        $row = $this->projectTable->find($id);
+        $row = $this->projectTable->findByDisplayId($id);
         if (!$row instanceof Table\Generated\ProjectRow) {
             throw new StatusCode\NotFoundException('Provided project does not exist');
         }
@@ -196,7 +196,7 @@ readonly class Project
 
     public function down(string $id): Message
     {
-        $row = $this->projectTable->find($id);
+        $row = $this->projectTable->findByDisplayId($id);
         if (!$row instanceof Table\Generated\ProjectRow) {
             throw new StatusCode\NotFoundException('Provided project does not exist');
         }
@@ -214,7 +214,7 @@ readonly class Project
 
     public function logs(string $id): Message
     {
-        $row = $this->projectTable->find($id);
+        $row = $this->projectTable->findByDisplayId($id);
         if (!$row instanceof Table\Generated\ProjectRow) {
             throw new StatusCode\NotFoundException('Provided project does not exist');
         }
@@ -230,7 +230,7 @@ readonly class Project
 
     public function ps(string $id): Message
     {
-        $row = $this->projectTable->find($id);
+        $row = $this->projectTable->findByDisplayId($id);
         if (!$row instanceof Table\Generated\ProjectRow) {
             throw new StatusCode\NotFoundException('Provided project does not exist');
         }
@@ -246,7 +246,7 @@ readonly class Project
 
     public function stats(string $id): Message
     {
-        $row = $this->projectTable->find($id);
+        $row = $this->projectTable->findByDisplayId($id);
         if (!$row instanceof Table\Generated\ProjectRow) {
             throw new StatusCode\NotFoundException('Provided project does not exist');
         }
