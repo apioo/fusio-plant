@@ -43,7 +43,7 @@ readonly class ComposeWriter
 
         return Yaml::dump([
             'services' => $services,
-        ]);
+        ], inline: 12);
     }
 
     private function buildConfigForApp(int $id, int $index, ProjectApp $app): array
@@ -62,7 +62,7 @@ readonly class ComposeWriter
         }
 
         $volumes = $app->getVolumes();
-        if (is_array($volumes)) {
+        if (is_array($volumes) && count($volumes) > 0) {
             $list = [];
             foreach ($volumes as $volume) {
                 $list[] = $volume->getSource() . ':' . $volume->getDestination();
@@ -72,7 +72,7 @@ readonly class ComposeWriter
         }
 
         $links = $app->getLinks();
-        if (is_array($volumes)) {
+        if (is_array($volumes) && count($volumes) > 0) {
             $return['links'] = $links;
         }
 
