@@ -8,5 +8,6 @@
 config: !include resources/config.yaml
 event: !include resources/events.yaml
 operation: !include resources/operation.yaml
+cronjob: !include resources/cronjob.yaml
 role: !include resources/role.yaml
 scope: !include resources/scope.yaml
