@@ -40,6 +40,12 @@ readonly class NginxWriter
     {
         $configs = [];
         foreach ($apps as $index => $app) {
+            $domains = $app->getDomains() ?? [];
+            if (count($domains) === 0) {
+                // no nginx config needed in case there are no domains
+                continue;
+            }
+
             $configs[] = $this->writeConfigForApp($id, $index, $app);
         }
 

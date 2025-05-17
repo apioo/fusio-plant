@@ -273,11 +273,21 @@ readonly class Project
         $this->dispatcher->dispatch($type, $event);
     }
 
-    private function assertProject(Model\Project $page): void
+    private function assertProject(Model\Project $project): void
     {
-        $apps = $page->getApps();
+        if (!ctype_alnum($project->getName())) {
+            throw new StatusCode\BadRequestException('Project name must contain only alphanumerical characters');
+        }
+
+        $apps = $project->getApps();
         if ($apps === null || count($apps) === 0) {
             throw new StatusCode\BadRequestException('No apps provided');
+        }
+
+        foreach ($apps as $app) {
+            if (!ctype_alnum($app->getName())) {
+                throw new StatusCode\BadRequestException('App name must contain only alphanumerical characters');
+            }
         }
     }
 
