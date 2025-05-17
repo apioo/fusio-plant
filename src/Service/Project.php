@@ -38,7 +38,7 @@ use Ramsey\Uuid\Uuid;
 
 readonly class Project
 {
-    public function __construct(private Table\Project $projectTable, private Worker $worker, private DispatcherInterface $dispatcher)
+    public function __construct(private Table\Project $projectTable, private Table\Monitor $monitorTable, private Worker $worker, private DispatcherInterface $dispatcher)
     {
     }
 
@@ -120,6 +120,8 @@ readonly class Project
         $this->projectTable->beginTransaction();
 
         try {
+            $this->monitorTable->deleteByProjectId($row->getId());
+
             $this->projectTable->delete($row);
 
             try {
