@@ -56,7 +56,17 @@ readonly class Monitor
 
         $lines = explode("\n", $output);
         foreach ($lines as $line) {
-            $data = Parser::decode(trim($line));
+            $line = trim($line);
+            if (empty($line)) {
+                continue;
+            }
+
+            try {
+                $data = Parser::decode($line);
+            } catch (\JsonException) {
+                continue;
+            }
+
             if (!$data instanceof \stdClass) {
                 continue;
             }
