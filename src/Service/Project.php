@@ -148,7 +148,7 @@ readonly class Project
         }
 
         try {
-            $output = $this->worker->certbot($id, $certbot);
+            $output = $this->worker->certbot($row->getId(), $certbot);
         } catch (ProcessTimeoutException $e) {
             throw new StatusCode\InternalServerErrorException('Could not obtain SSL certificates, got: ' . $e->getMessage(), previous: $e);
         }
@@ -166,7 +166,7 @@ readonly class Project
         }
 
         try {
-            $output = $this->worker->pull($id, $row);
+            $output = $this->worker->pull($row->getId(), $row);
         } catch (ProcessTimeoutException $e) {
             throw new StatusCode\InternalServerErrorException('Could not pull, got: ' . $e->getMessage(), previous: $e);
         }
@@ -184,7 +184,7 @@ readonly class Project
         }
 
         try {
-            $output = $this->worker->up($id, $row);
+            $output = $this->worker->up($row->getId(), $row);
         } catch (ProcessTimeoutException $e) {
             throw new StatusCode\InternalServerErrorException('Could not up, got: ' . $e->getMessage(), previous: $e);
         }
@@ -202,7 +202,7 @@ readonly class Project
         }
 
         try {
-            $output = $this->worker->down($id, $row);
+            $output = $this->worker->down($row->getId(), $row);
         } catch (ProcessTimeoutException $e) {
             throw new StatusCode\InternalServerErrorException('Could not down, got: ' . $e->getMessage(), previous: $e);
         }
@@ -220,7 +220,7 @@ readonly class Project
         }
 
         try {
-            $output = $this->worker->logs($id, $row);
+            $output = $this->worker->logs($row->getId(), $row);
         } catch (ProcessTimeoutException $e) {
             throw new StatusCode\InternalServerErrorException('Could not get logs, got: ' . $e->getMessage(), previous: $e);
         }
@@ -236,7 +236,7 @@ readonly class Project
         }
 
         try {
-            $output = $this->worker->ps($id, $row);
+            $output = $this->worker->ps($row->getId(), $row);
         } catch (ProcessTimeoutException $e) {
             throw new StatusCode\InternalServerErrorException('Could not get ps, got: ' . $e->getMessage(), previous: $e);
         }
@@ -252,7 +252,7 @@ readonly class Project
         }
 
         try {
-            $output = $this->worker->stats($id, $row);
+            $output = $this->worker->stats($row->getId(), $row);
         } catch (ProcessTimeoutException $e) {
             throw new StatusCode\InternalServerErrorException('Could not get stats, got: ' . $e->getMessage(), previous: $e);
         }
