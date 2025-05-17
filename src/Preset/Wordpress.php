@@ -34,7 +34,7 @@ class Wordpress extends PresetAbstract
             'WORDPRESS_DB_HOST' => 'mysql',
             'WORDPRESS_DB_USER' => 'wordpress',
             'WORDPRESS_DB_PASSWORD' => $mysqlWordpressPassword,
-            'WORDPRESS_DB_NAME' => 'mysql',
+            'WORDPRESS_DB_NAME' => 'wordpress',
         ]);
 
         $mysqlEnv = Record::fromArray([
