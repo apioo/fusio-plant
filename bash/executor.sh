@@ -38,6 +38,7 @@ do
         ln -s "/etc/nginx/sites-available/$name" "/etc/nginx/sites-enabled/$name"
         service nginx reload
         pushd "/docker/$name" || continue
+        docker compose pull
         docker compose up -d >> "$outputFile"
         popd || continue
         ;;
