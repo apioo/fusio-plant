@@ -72,7 +72,7 @@ readonly class ComposeWriter
         }
 
         $links = $app->getLinks();
-        if (is_array($volumes) && count($volumes) > 0) {
+        if (is_array($links) && count($links) > 0) {
             $return['links'] = $links;
         }
 
