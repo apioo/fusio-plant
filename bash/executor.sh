@@ -37,9 +37,9 @@ do
         echo "$nginx" > "/etc/nginx/sites-available/$name"
         ln -s "/etc/nginx/sites-available/$name" "/etc/nginx/sites-enabled/$name"
         service nginx reload
-        pushd "/docker/$name"
+        pushd "/docker/$name" || continue
         docker compose up -d >> "$outputFile"
-        popd
+        popd || continue
         ;;
       "remove")
         name=$(jq -r ".name" "$command")
@@ -48,9 +48,9 @@ do
         rm "/etc/nginx/sites-enabled/$name"
         rm "/etc/nginx/sites-available/$name"
         service nginx reload
-        pushd "/docker/$name"
+        pushd "/docker/$name" || continue
         docker compose down >> "$outputFile"
-        popd
+        popd || continue
         rm -r "/docker/$name"
         ;;
       "certbot")
@@ -63,49 +63,49 @@ do
         name=$(jq -r ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
-        pushd "/docker/$name"
+        pushd "/docker/$name" || continue
         docker compose pull >> "$outputFile"
-        popd
+        popd || continue
         ;;
       "up")
         name=$(jq -r ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
-        pushd "/docker/$name"
+        pushd "/docker/$name" || continue
         docker compose up -d >> "$outputFile"
-        popd
+        popd || continue
         ;;
       "down")
         name=$(jq -r ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
-        pushd "/docker/$name"
+        pushd "/docker/$name" || continue
         docker compose down >> "$outputFile"
-        popd
+        popd || continue
         ;;
       "logs")
         name=$(jq -r ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
-        pushd "/docker/$name"
+        pushd "/docker/$name" || continue
         docker compose logs --no-color --tail=256 >> "$outputFile"
-        popd
+        popd || continue
         ;;
       "ps")
         name=$(jq -r ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
-        pushd "/docker/$name"
+        pushd "/docker/$name" || continue
         docker compose ps --format=json >> "$outputFile"
-        popd
+        popd || continue
         ;;
       "stats")
         name=$(jq -r ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
-        pushd "/docker/$name"
+        pushd "/docker/$name" || continue
         docker compose stats --no-stream --format=json >> "$outputFile"
-        popd
+        popd || continue
         ;;
       "login")
         username=$(printf "%b" "$(jq -r ".username" "$command")")
