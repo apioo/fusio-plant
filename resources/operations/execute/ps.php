@@ -7,14 +7,14 @@ use Fusio\Cli\Builder\Operation\HttpMethod;
 use Fusio\Cli\Builder\Operation\Stability;
 
 return function (Operation $operation) {
-    $operation->setScopes(['project']);
+    $operation->setScopes(['execute']);
     $operation->setStability(Stability::EXPERIMENTAL);
     $operation->setPublic(false);
-    $operation->setDescription('Pulls the latest version');
+    $operation->setDescription('List containers');
     $operation->setHttpMethod(HttpMethod::POST);
-    $operation->setHttpPath('/project/:id/up');
+    $operation->setHttpPath('/execute/ps');
     $operation->setHttpCode(200);
-    $operation->setOutgoing(Model\Message::class);
+    $operation->setOutgoing(Model\DockerProcesses::class);
     $operation->addThrow(999, Model\Message::class);
-    $operation->setAction(Action\Project\Up::class);
+    $operation->setAction(Action\Execute\Ps::class);
 };

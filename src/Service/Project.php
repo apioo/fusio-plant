@@ -26,7 +26,7 @@ use App\Exception\PortResolveException;
 use App\Exception\ProcessTimeoutException;
 use App\Model;
 use App\Model\Message;
-use App\Service\Project\Worker;
+use App\Service\Project\ProjectExecutor;
 use App\Table;
 use Fusio\Engine\ContextInterface;
 use Fusio\Engine\DispatcherInterface;
@@ -38,8 +38,13 @@ use Ramsey\Uuid\Uuid;
 
 readonly class Project
 {
-    public function __construct(private Table\Project $projectTable, private Table\Monitor $monitorTable, private Worker $worker, private DispatcherInterface $dispatcher)
-    {
+    public function __construct(
+        private Table\Project $projectTable,
+        private Table\Monitor $monitorTable,
+        private ProjectExecutor $executor,
+        private JsonParser $jsonParser,
+        private DispatcherInterface $dispatcher
+    ) {
     }
 
     public function create(Model\Project $project, ContextInterface $context): Message
@@ -59,7 +64,7 @@ readonly class Project
             $this->projectTable->create($row);
 
             try {
-                $output = $this->worker->setup($this->projectTable->getLastInsertId(), $project);
+                $output = $this->executor->setup($this->projectTable->getLastInsertId(), $project);
             } catch (ProcessTimeoutException|ConfigurationException|PortResolveException $e) {
                 throw new StatusCode\InternalServerErrorException('Could not setup project, got: ' . $e->getMessage(), previous: $e);
             }
@@ -93,7 +98,7 @@ readonly class Project
             $this->projectTable->update($row);
 
             try {
-                $output = $this->worker->setup($row->getId(), $project);
+                $output = $this->executor->setup($row->getId(), $project);
             } catch (ProcessTimeoutException $e) {
                 throw new StatusCode\InternalServerErrorException('Could not update project, got: ' . $e->getMessage(), previous: $e);
             }
@@ -125,7 +130,7 @@ readonly class Project
             $this->projectTable->delete($row);
 
             try {
-                $output = $this->worker->remove($row->getId(), $row);
+                $output = $this->executor->remove($row->getId(), $row);
             } catch (ProcessTimeoutException $e) {
                 throw new StatusCode\InternalServerErrorException('Could not remove project, got: ' . $e->getMessage(), previous: $e);
             }
@@ -142,7 +147,7 @@ readonly class Project
         return $this->newMessage('Project successfully deleted', $row->getDisplayId(), $output);
     }
 
-    public function certbot(string $id, Model\ProjectCertbot $certbot): Message
+    public function down(string $id): Message
     {
         $row = $this->projectTable->findOneByDisplayId($id);
         if (!$row instanceof Table\Generated\ProjectRow) {
@@ -150,14 +155,53 @@ readonly class Project
         }
 
         try {
-            $output = $this->worker->certbot($row->getId(), $certbot);
+            $output = $this->executor->down($row->getId(), $row);
         } catch (ProcessTimeoutException $e) {
-            throw new StatusCode\InternalServerErrorException('Could not obtain SSL certificates, got: ' . $e->getMessage(), previous: $e);
+            throw new StatusCode\InternalServerErrorException('Could not down, got: ' . $e->getMessage(), previous: $e);
         }
 
-        $this->dispatchEvent('project.certbot', $row, $row->getDisplayId());
+        $this->dispatchEvent('project.down', $row, $row->getDisplayId());
 
-        return $this->newMessage('Project certbot successfully executed', $row->getDisplayId(), $output);
+        return $this->newMessage('Project up successfully executed', $row->getDisplayId(), $output);
+    }
+
+    public function logs(string $id): Model\DockerLogs
+    {
+        $row = $this->projectTable->findOneByDisplayId($id);
+        if (!$row instanceof Table\Generated\ProjectRow) {
+            throw new StatusCode\NotFoundException('Provided project does not exist');
+        }
+
+        try {
+            $output = $this->executor->logs($row->getId(), $row);
+        } catch (ProcessTimeoutException $e) {
+            throw new StatusCode\InternalServerErrorException('Could not get logs, got: ' . $e->getMessage(), previous: $e);
+        }
+
+        $logs = new Model\DockerLogs();
+        $logs->setOutput($output);
+        return $logs;
+    }
+
+    public function ps(string $id): Model\DockerProcesses
+    {
+        $row = $this->projectTable->findOneByDisplayId($id);
+        if (!$row instanceof Table\Generated\ProjectRow) {
+            throw new StatusCode\NotFoundException('Provided project does not exist');
+        }
+
+        try {
+            $output = $this->executor->ps($row->getId(), $row);
+        } catch (ProcessTimeoutException $e) {
+            throw new StatusCode\InternalServerErrorException('Could not get ps, got: ' . $e->getMessage(), previous: $e);
+        }
+
+        $lines = $this->jsonParser->parseLines($output, Model\DockerProcess::class);
+
+        $collection = new Model\DockerProcesses();
+        $collection->setTotalResults(count($lines));
+        $collection->setEntry($lines);
+        return $collection;
     }
 
     public function pull(string $id): Message
@@ -168,7 +212,7 @@ readonly class Project
         }
 
         try {
-            $output = $this->worker->pull($row->getId(), $row);
+            $output = $this->executor->pull($row->getId(), $row);
         } catch (ProcessTimeoutException $e) {
             throw new StatusCode\InternalServerErrorException('Could not pull, got: ' . $e->getMessage(), previous: $e);
         }
@@ -176,6 +220,27 @@ readonly class Project
         $this->dispatchEvent('project.pull', $row, $row->getDisplayId());
 
         return $this->newMessage('Project pull successfully executed', $row->getDisplayId(), $output);
+    }
+
+    public function stats(string $id): Model\DockerStatistics
+    {
+        $row = $this->projectTable->findOneByDisplayId($id);
+        if (!$row instanceof Table\Generated\ProjectRow) {
+            throw new StatusCode\NotFoundException('Provided project does not exist');
+        }
+
+        try {
+            $output = $this->executor->stats($row->getId(), $row);
+        } catch (ProcessTimeoutException $e) {
+            throw new StatusCode\InternalServerErrorException('Could not get stats, got: ' . $e->getMessage(), previous: $e);
+        }
+
+        $lines = $this->jsonParser->parseLines($output, Model\DockerStatistic::class);
+
+        $collection = new Model\DockerStatistics();
+        $collection->setTotalResults(count($lines));
+        $collection->setEntry($lines);
+        return $collection;
     }
 
     public function up(string $id): Message
@@ -186,7 +251,7 @@ readonly class Project
         }
 
         try {
-            $output = $this->worker->up($row->getId(), $row);
+            $output = $this->executor->up($row->getId(), $row);
         } catch (ProcessTimeoutException $e) {
             throw new StatusCode\InternalServerErrorException('Could not up, got: ' . $e->getMessage(), previous: $e);
         }
@@ -194,72 +259,6 @@ readonly class Project
         $this->dispatchEvent('project.up', $row, $row->getDisplayId());
 
         return $this->newMessage('Project up successfully executed', $row->getDisplayId(), $output);
-    }
-
-    public function down(string $id): Message
-    {
-        $row = $this->projectTable->findOneByDisplayId($id);
-        if (!$row instanceof Table\Generated\ProjectRow) {
-            throw new StatusCode\NotFoundException('Provided project does not exist');
-        }
-
-        try {
-            $output = $this->worker->down($row->getId(), $row);
-        } catch (ProcessTimeoutException $e) {
-            throw new StatusCode\InternalServerErrorException('Could not down, got: ' . $e->getMessage(), previous: $e);
-        }
-
-        $this->dispatchEvent('project.down', $row, $row->getDisplayId());
-
-        return $this->newMessage('Project up successfully executed', $row->getDisplayId(), $output);
-    }
-
-    public function logs(string $id): Message
-    {
-        $row = $this->projectTable->findOneByDisplayId($id);
-        if (!$row instanceof Table\Generated\ProjectRow) {
-            throw new StatusCode\NotFoundException('Provided project does not exist');
-        }
-
-        try {
-            $output = $this->worker->logs($row->getId(), $row);
-        } catch (ProcessTimeoutException $e) {
-            throw new StatusCode\InternalServerErrorException('Could not get logs, got: ' . $e->getMessage(), previous: $e);
-        }
-
-        return $this->newMessage('Project logs successfully executed', $row->getDisplayId(), $output);
-    }
-
-    public function ps(string $id): Message
-    {
-        $row = $this->projectTable->findOneByDisplayId($id);
-        if (!$row instanceof Table\Generated\ProjectRow) {
-            throw new StatusCode\NotFoundException('Provided project does not exist');
-        }
-
-        try {
-            $output = $this->worker->ps($row->getId(), $row);
-        } catch (ProcessTimeoutException $e) {
-            throw new StatusCode\InternalServerErrorException('Could not get ps, got: ' . $e->getMessage(), previous: $e);
-        }
-
-        return $this->newMessage('Project ps successfully executed', $row->getDisplayId(), $output);
-    }
-
-    public function stats(string $id): Message
-    {
-        $row = $this->projectTable->findOneByDisplayId($id);
-        if (!$row instanceof Table\Generated\ProjectRow) {
-            throw new StatusCode\NotFoundException('Provided project does not exist');
-        }
-
-        try {
-            $output = $this->worker->stats($row->getId(), $row);
-        } catch (ProcessTimeoutException $e) {
-            throw new StatusCode\InternalServerErrorException('Could not get stats, got: ' . $e->getMessage(), previous: $e);
-        }
-
-        return $this->newMessage('Project stats successfully executed', $row->getDisplayId(), $output);
     }
 
     private function dispatchEvent(string $type, Table\Generated\ProjectRow $data, string $id): void

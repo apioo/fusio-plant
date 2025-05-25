@@ -19,7 +19,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace App\Action\Project;
+namespace App\Action\Execute;
 
 use App\Service;
 use Fusio\Engine\ActionInterface;
@@ -29,14 +29,13 @@ use Fusio\Engine\RequestInterface;
 
 readonly class Certbot implements ActionInterface
 {
-    public function __construct(private Service\Project $service)
+    public function __construct(private Service\System $service)
     {
     }
 
     public function handle(RequestInterface $request, ParametersInterface $configuration, ContextInterface $context): mixed
     {
         return $this->service->certbot(
-            $request->get('id'),
             $request->getPayload()
         );
     }

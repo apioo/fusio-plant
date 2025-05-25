@@ -1,4 +1,9 @@
 "dashboard.getAll": !include resources/operations/dashboard/collection.php
+"execute.certbot": !include resources/operations/execute/certbot.php
+"execute.images": !include resources/operations/execute/images.php
+"execute.login": !include resources/operations/execute/login.php
+"execute.ps": !include resources/operations/execute/ps.php
+"execute.stats": !include resources/operations/execute/stats.php
 "preset.getAll": !include resources/operations/preset/collection.php
 "preset.get": !include resources/operations/preset/entity.php
 "project.getAll": !include resources/operations/project/collection.php
@@ -6,8 +11,8 @@
 "project.create": !include resources/operations/project/create.php
 "project.update": !include resources/operations/project/update.php
 "project.delete": !include resources/operations/project/delete.php
-"project.certbot": !include resources/operations/project/certbot.php
-"project.pull": !include resources/operations/project/pull.php
-"project.up": !include resources/operations/project/up.php
-"project.down": !include resources/operations/project/down.php
-"project.logs": !include resources/operations/project/logs.php
+"project.execute.down": !include resources/operations/project/execute/down.php
+"project.execute.logs": !include resources/operations/project/execute/logs.php
+"project.execute.ps": !include resources/operations/project/execute/ps.php
+"project.execute.pull": !include resources/operations/project/execute/pull.php
+"project.execute.up": !include resources/operations/project/execute/up.php

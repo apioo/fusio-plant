@@ -8,16 +8,19 @@ use PSX\Schema\Attribute\DerivedType;
 use PSX\Schema\Attribute\Discriminator;
 
 #[Discriminator('type')]
-#[DerivedType(CommandSetup::class, 'setup')]
-#[DerivedType(CommandRemove::class, 'remove')]
+#[DerivedType(CommandProjectSetup::class, 'project-setup')]
+#[DerivedType(CommandProjectRemove::class, 'project-remove')]
+#[DerivedType(CommandProjectDown::class, 'project-down')]
+#[DerivedType(CommandProjectLogs::class, 'project-logs')]
+#[DerivedType(CommandProjectPs::class, 'project-ps')]
+#[DerivedType(CommandProjectPull::class, 'project-pull')]
+#[DerivedType(CommandProjectStats::class, 'project-stats')]
+#[DerivedType(CommandProjectUp::class, 'project-up')]
 #[DerivedType(CommandCertbot::class, 'certbot')]
-#[DerivedType(CommandPull::class, 'pull')]
-#[DerivedType(CommandUp::class, 'up')]
-#[DerivedType(CommandDown::class, 'down')]
-#[DerivedType(CommandLogs::class, 'logs')]
+#[DerivedType(CommandImages::class, 'images')]
+#[DerivedType(CommandLogin::class, 'login')]
 #[DerivedType(CommandPs::class, 'ps')]
 #[DerivedType(CommandStats::class, 'stats')]
-#[DerivedType(CommandLogin::class, 'login')]
 abstract class Command implements \JsonSerializable, \PSX\Record\RecordableInterface
 {
     protected ?string $type = null;

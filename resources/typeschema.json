@@ -215,7 +215,17 @@
         }
       }
     },
-    "Project_Certbot": {
+    "Project_Collection": {
+      "description": "A collection of all projects",
+      "parent": {
+        "type": "reference",
+        "target": "Collection",
+        "template": {
+          "T": "Project"
+        }
+      }
+    },
+    "Certbot_Request": {
       "description": "Requests an SSL certificate for the provided domain",
       "type": "struct",
       "properties": {
@@ -227,13 +237,196 @@
         }
       }
     },
-    "Project_Collection": {
-      "description": "A collection of all projects",
+    "Docker_Login": {
+      "description": "Docker login",
+      "type": "struct",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "Docker_Images": {
+      "description": "A collection of all images",
       "parent": {
         "type": "reference",
         "target": "Collection",
         "template": {
-          "T": "Project"
+          "T": "Docker_Image"
+        }
+      }
+    },
+    "Docker_Image": {
+      "type": "struct",
+      "properties": {
+        "ID": {
+          "type": "string"
+        },
+        "Containers": {
+          "type": "string"
+        },
+        "Digest": {
+          "type": "string"
+        },
+        "Repository": {
+          "type": "string"
+        },
+        "SharedSize": {
+          "type": "string"
+        },
+        "Size": {
+          "type": "string"
+        },
+        "Tag": {
+          "type": "string"
+        },
+        "UniqueSize": {
+          "type": "string"
+        },
+        "VirtualSize": {
+          "type": "string"
+        },
+        "CreatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "CreatedSince": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "Docker_Processes": {
+      "description": "A collection of all processes",
+      "parent": {
+        "type": "reference",
+        "target": "Collection",
+        "template": {
+          "T": "Docker_Process"
+        }
+      }
+    },
+    "Docker_Process": {
+      "type": "struct",
+      "properties": {
+        "ID": {
+          "description": "",
+          "type": "string"
+        },
+        "Command": {
+          "description": "",
+          "type": "string"
+        },
+        "Image": {
+          "description": "",
+          "type": "string"
+        },
+        "Labels": {
+          "description": "",
+          "type": "string"
+        },
+        "LocalVolumes": {
+          "description": "",
+          "type": "string"
+        },
+        "Mounts": {
+          "description": "",
+          "type": "string"
+        },
+        "Names": {
+          "description": "",
+          "type": "string"
+        },
+        "Networks": {
+          "description": "",
+          "type": "string"
+        },
+        "Ports": {
+          "description": "",
+          "type": "string"
+        },
+        "RunningFor": {
+          "description": "",
+          "type": "string"
+        },
+        "Size": {
+          "description": "",
+          "type": "string"
+        },
+        "State": {
+          "description": "",
+          "type": "string"
+        },
+        "Status": {
+          "description": "",
+          "type": "string"
+        },
+        "CreatedAt": {
+          "description": "",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "Docker_Statistics": {
+      "description": "A collection of all statistics",
+      "parent": {
+        "type": "reference",
+        "target": "Collection",
+        "template": {
+          "T": "Docker_Statistic"
+        }
+      }
+    },
+    "Docker_Statistic": {
+      "type": "struct",
+      "properties": {
+        "ID": {
+          "description": "",
+          "type": "string"
+        },
+        "Container": {
+          "description": "",
+          "type": "string"
+        },
+        "Name": {
+          "description": "",
+          "type": "string"
+        },
+        "PIDs": {
+          "description": "",
+          "type": "string"
+        },
+        "CPUPerc": {
+          "description": "",
+          "type": "string"
+        },
+        "MemPerc": {
+          "description": "",
+          "type": "string"
+        },
+        "MemUsage": {
+          "description": "",
+          "type": "string"
+        },
+        "BlockIO": {
+          "description": "",
+          "type": "string"
+        },
+        "NetIO": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "Docker_Logs": {
+      "type": "struct",
+      "properties": {
+        "output": {
+          "type": "string"
         }
       }
     },
@@ -247,19 +440,22 @@
       },
       "discriminator": "type",
       "mapping": {
-        "Command_Setup": "setup",
-        "Command_Remove": "remove",
+        "Command_Project_Setup": "project-setup",
+        "Command_Project_Remove": "project-remove",
+        "Command_Project_Down": "project-down",
+        "Command_Project_Logs": "project-logs",
+        "Command_Project_Ps": "project-ps",
+        "Command_Project_Pull": "project-pull",
+        "Command_Project_Stats": "project-stats",
+        "Command_Project_Up": "project-up",
         "Command_Certbot": "certbot",
-        "Command_Pull": "pull",
-        "Command_Up": "up",
-        "Command_Down": "down",
-        "Command_Logs": "logs",
+        "Command_Images": "images",
+        "Command_Login": "login",
         "Command_Ps": "ps",
-        "Command_Stats": "stats",
-        "Command_Login": "login"
+        "Command_Stats": "stats"
       }
     },
-    "Command_Setup": {
+    "Command_Project_Setup": {
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -277,7 +473,79 @@
         }
       }
     },
-    "Command_Remove": {
+    "Command_Project_Remove": {
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Command"
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Command_Project_Down": {
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Command"
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Command_Project_Logs": {
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Command"
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Command_Project_Ps": {
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Command"
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Command_Project_Pull": {
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Command"
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Command_Project_Stats": {
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Command"
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Command_Project_Up": {
       "type": "struct",
       "parent": {
         "type": "reference",
@@ -304,76 +572,13 @@
         }
       }
     },
-    "Command_Pull": {
+    "Command_Images": {
       "type": "struct",
       "parent": {
         "type": "reference",
         "target": "Command"
       },
       "properties": {
-        "name": {
-          "type": "string"
-        }
-      }
-    },
-    "Command_Up": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Command"
-      },
-      "properties": {
-        "name": {
-          "type": "string"
-        }
-      }
-    },
-    "Command_Down": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Command"
-      },
-      "properties": {
-        "name": {
-          "type": "string"
-        }
-      }
-    },
-    "Command_Logs": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Command"
-      },
-      "properties": {
-        "name": {
-          "type": "string"
-        }
-      }
-    },
-    "Command_Ps": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Command"
-      },
-      "properties": {
-        "name": {
-          "type": "string"
-        }
-      }
-    },
-    "Command_Stats": {
-      "type": "struct",
-      "parent": {
-        "type": "reference",
-        "target": "Command"
-      },
-      "properties": {
-        "name": {
-          "type": "string"
-        }
       }
     },
     "Command_Login": {
@@ -389,6 +594,24 @@
         "password": {
           "type": "string"
         }
+      }
+    },
+    "Command_Ps": {
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Command"
+      },
+      "properties": {
+      }
+    },
+    "Command_Stats": {
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Command"
+      },
+      "properties": {
       }
     }
   }

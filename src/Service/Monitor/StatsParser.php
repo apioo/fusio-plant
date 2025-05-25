@@ -21,42 +21,32 @@
 
 namespace App\Service\Monitor;
 
-use App\DTO\StatsResult;
-use PSX\Json\Parser;
+use App\DTO\Docker\Stats;
+use App\Model\DockerStatistic;
+use App\Service\JsonParser;
 
 readonly class StatsParser
 {
+    public function __construct(private JsonParser $parser)
+    {
+    }
+
     /**
-     * @return \Generator<StatsResult>
+     * @return \Generator<Stats>
      */
     public function parse(string $output): \Generator
     {
-        $lines = explode("\n", $output);
-        foreach ($lines as $line) {
-            $line = trim($line);
-            if (empty($line)) {
-                continue;
-            }
+        $lines = $this->parser->parseLines($output, DockerStatistic::class);
+        foreach ($lines as $data) {
+            [$memUsage, $memLimit] = $this->parseUnits($data->getMemUsage());
+            [$netIOReceived, $netIOSent] = $this->parseUnits($data->getBlockIO());
+            [$blockIOWritten, $blockIORead] = $this->parseUnits($data->getNetIO());
 
-            try {
-                $data = Parser::decode($line);
-            } catch (\JsonException) {
-                continue;
-            }
-
-            if (!$data instanceof \stdClass) {
-                continue;
-            }
-
-            [$memUsage, $memLimit] = $this->parseUnits($data->MemUsage ?? null);
-            [$netIOReceived, $netIOSent] = $this->parseUnits($data->BlockIO ?? null);
-            [$blockIOWritten, $blockIORead] = $this->parseUnits($data->NetIO ?? null);
-
-            yield new StatsResult(
-                $data->Container ?? null,
-                $data->Name ?? null,
-                $this->parsePercentage($data->CPUPerc ?? null),
-                $this->parsePercentage($data->MemPerc ?? null),
+            yield new Stats(
+                $data->getContainer(),
+                $data->getName(),
+                $this->parsePercentage($data->getCPUPerc()),
+                $this->parsePercentage($data->getMemPerc()),
                 $memUsage,
                 $memLimit,
                 $netIOReceived,

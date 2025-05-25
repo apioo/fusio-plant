@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace App\Model;
 
 
-class CommandPull extends Command implements \JsonSerializable, \PSX\Record\RecordableInterface
+class CommandProjectPs extends Command implements \JsonSerializable, \PSX\Record\RecordableInterface
 {
     protected ?string $name = null;
     public function setName(?string $name): void

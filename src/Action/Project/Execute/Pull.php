@@ -19,7 +19,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace App\Action\Project;
+namespace App\Action\Project\Execute;
 
 use App\Service;
 use Fusio\Engine\ActionInterface;

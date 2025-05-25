@@ -19,9 +19,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use App\DTO\StatsResult;
+use App\DTO\Docker\Stats;
+use App\Service\JsonParser;
 use App\Service\Monitor\StatsParser;
 use PHPUnit\Framework\TestCase;
+use PSX\Schema\SchemaManager;
 
 class StatsParserTest extends TestCase
 {
@@ -32,13 +34,13 @@ class StatsParserTest extends TestCase
 {"BlockIO":"0B / 418kB","CPUPerc":"0.00%","Container":"82b7cd0aaf17","ID":"82b7cd0aaf17","MemPerc":"0.24%","MemUsage":"19.14MiB / 7.709GiB","Name":"drupal-postgres-1","NetIO":"1.84kB / 126B","PIDs":"6"}
 TEXT;
 
-        $result = iterator_to_array((new StatsParser())->parse($raw));
+        $result = iterator_to_array((new StatsParser(new JsonParser(new SchemaManager())))->parse($raw));
 
         self::assertCount(2, $result);
 
         $stats = $result[0] ?? null;
 
-        self::assertInstanceOf(StatsResult::class, $stats);
+        self::assertInstanceOf(Stats::class, $stats);
         self::assertSame('11f38036482f', $stats->container);
         self::assertSame('drupal-drupal-1', $stats->name);
         self::assertSame(0, $stats->cpuPercentage);

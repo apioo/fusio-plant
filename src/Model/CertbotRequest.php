@@ -7,7 +7,7 @@ namespace App\Model;
 use PSX\Schema\Attribute\Description;
 
 #[Description('Requests an SSL certificate for the provided domain')]
-class ProjectCertbot implements \JsonSerializable, \PSX\Record\RecordableInterface
+class CertbotRequest implements \JsonSerializable, \PSX\Record\RecordableInterface
 {
     protected ?string $domain = null;
     protected ?string $email = null;

@@ -27,7 +27,7 @@ class MonitorTable extends \PSX\Sql\TableAbstract
     }
     public function getColumns(): array
     {
-        return [self::COLUMN_ID => 0x3020000a, self::COLUMN_PROJECT_ID => 0x20000a, self::COLUMN_CONTAINER_ID => 0xa000ff, self::COLUMN_NAME => 0xa000ff, self::COLUMN_CPU_PERC => 0x500000, self::COLUMN_MEM_PERC => 0x500000, self::COLUMN_MEM_USAGE => 0x20000a, self::COLUMN_MEM_LIMIT => 0x20000a, self::COLUMN_NETIO_RECEIVED => 0x20000a, self::COLUMN_NETIO_SENT => 0x20000a, self::COLUMN_BLOCKIO_WRITTEN => 0x20000a, self::COLUMN_BLOCKIO_READ => 0x20000a, self::COLUMN_INSERT_DATE => 0x800000];
+        return [self::COLUMN_ID => 0x3020000a, self::COLUMN_PROJECT_ID => 0x20000a, self::COLUMN_CONTAINER_ID => 0xa000ff, self::COLUMN_NAME => 0xa000ff, self::COLUMN_CPU_PERC => 0x20000a, self::COLUMN_MEM_PERC => 0x20000a, self::COLUMN_MEM_USAGE => 0x20000a, self::COLUMN_MEM_LIMIT => 0x20000a, self::COLUMN_NETIO_RECEIVED => 0x20000a, self::COLUMN_NETIO_SENT => 0x20000a, self::COLUMN_BLOCKIO_WRITTEN => 0x20000a, self::COLUMN_BLOCKIO_READ => 0x20000a, self::COLUMN_INSERT_DATE => 0x800000];
     }
     /**
      * @return array<\App\Table\Generated\MonitorRow>
@@ -213,7 +213,7 @@ class MonitorTable extends \PSX\Sql\TableAbstract
      * @return array<\App\Table\Generated\MonitorRow>
      * @throws \PSX\Sql\Exception\QueryException
      */
-    public function findByCpuPerc(string $value, ?int $startIndex = null, ?int $count = null, ?\App\Table\Generated\MonitorColumn $sortBy = null, ?\PSX\Sql\OrderBy $sortOrder = null): array
+    public function findByCpuPerc(int $value, ?int $startIndex = null, ?int $count = null, ?\App\Table\Generated\MonitorColumn $sortBy = null, ?\PSX\Sql\OrderBy $sortOrder = null): array
     {
         $condition = \PSX\Sql\Condition::withAnd();
         $condition->equals('cpu_perc', $value);
@@ -222,7 +222,7 @@ class MonitorTable extends \PSX\Sql\TableAbstract
     /**
      * @throws \PSX\Sql\Exception\QueryException
      */
-    public function findOneByCpuPerc(string $value): ?\App\Table\Generated\MonitorRow
+    public function findOneByCpuPerc(int $value): ?\App\Table\Generated\MonitorRow
     {
         $condition = \PSX\Sql\Condition::withAnd();
         $condition->equals('cpu_perc', $value);
@@ -231,7 +231,7 @@ class MonitorTable extends \PSX\Sql\TableAbstract
     /**
      * @throws \PSX\Sql\Exception\ManipulationException
      */
-    public function updateByCpuPerc(string $value, \App\Table\Generated\MonitorRow $record): int
+    public function updateByCpuPerc(int $value, \App\Table\Generated\MonitorRow $record): int
     {
         $condition = \PSX\Sql\Condition::withAnd();
         $condition->equals('cpu_perc', $value);
@@ -240,7 +240,7 @@ class MonitorTable extends \PSX\Sql\TableAbstract
     /**
      * @throws \PSX\Sql\Exception\ManipulationException
      */
-    public function deleteByCpuPerc(string $value): int
+    public function deleteByCpuPerc(int $value): int
     {
         $condition = \PSX\Sql\Condition::withAnd();
         $condition->equals('cpu_perc', $value);
@@ -250,7 +250,7 @@ class MonitorTable extends \PSX\Sql\TableAbstract
      * @return array<\App\Table\Generated\MonitorRow>
      * @throws \PSX\Sql\Exception\QueryException
      */
-    public function findByMemPerc(string $value, ?int $startIndex = null, ?int $count = null, ?\App\Table\Generated\MonitorColumn $sortBy = null, ?\PSX\Sql\OrderBy $sortOrder = null): array
+    public function findByMemPerc(int $value, ?int $startIndex = null, ?int $count = null, ?\App\Table\Generated\MonitorColumn $sortBy = null, ?\PSX\Sql\OrderBy $sortOrder = null): array
     {
         $condition = \PSX\Sql\Condition::withAnd();
         $condition->equals('mem_perc', $value);
@@ -259,7 +259,7 @@ class MonitorTable extends \PSX\Sql\TableAbstract
     /**
      * @throws \PSX\Sql\Exception\QueryException
      */
-    public function findOneByMemPerc(string $value): ?\App\Table\Generated\MonitorRow
+    public function findOneByMemPerc(int $value): ?\App\Table\Generated\MonitorRow
     {
         $condition = \PSX\Sql\Condition::withAnd();
         $condition->equals('mem_perc', $value);
@@ -268,7 +268,7 @@ class MonitorTable extends \PSX\Sql\TableAbstract
     /**
      * @throws \PSX\Sql\Exception\ManipulationException
      */
-    public function updateByMemPerc(string $value, \App\Table\Generated\MonitorRow $record): int
+    public function updateByMemPerc(int $value, \App\Table\Generated\MonitorRow $record): int
     {
         $condition = \PSX\Sql\Condition::withAnd();
         $condition->equals('mem_perc', $value);
@@ -277,7 +277,7 @@ class MonitorTable extends \PSX\Sql\TableAbstract
     /**
      * @throws \PSX\Sql\Exception\ManipulationException
      */
-    public function deleteByMemPerc(string $value): int
+    public function deleteByMemPerc(int $value): int
     {
         $condition = \PSX\Sql\Condition::withAnd();
         $condition->equals('mem_perc', $value);

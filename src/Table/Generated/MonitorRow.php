@@ -8,8 +8,8 @@ class MonitorRow implements \JsonSerializable, \PSX\Record\RecordableInterface
     private ?int $projectId = null;
     private ?string $containerId = null;
     private ?string $name = null;
-    private ?string $cpuPerc = null;
-    private ?string $memPerc = null;
+    private ?int $cpuPerc = null;
+    private ?int $memPerc = null;
     private ?int $memUsage = null;
     private ?int $memLimit = null;
     private ?int $netioReceived = null;
@@ -49,19 +49,19 @@ class MonitorRow implements \JsonSerializable, \PSX\Record\RecordableInterface
     {
         return $this->name ?? throw new \PSX\Sql\Exception\NoValueAvailable('No value for required column "name" was provided');
     }
-    public function setCpuPerc(string $cpuPerc): void
+    public function setCpuPerc(int $cpuPerc): void
     {
         $this->cpuPerc = $cpuPerc;
     }
-    public function getCpuPerc(): string
+    public function getCpuPerc(): int
     {
         return $this->cpuPerc ?? throw new \PSX\Sql\Exception\NoValueAvailable('No value for required column "cpu_perc" was provided');
     }
-    public function setMemPerc(string $memPerc): void
+    public function setMemPerc(int $memPerc): void
     {
         $this->memPerc = $memPerc;
     }
-    public function getMemPerc(): string
+    public function getMemPerc(): int
     {
         return $this->memPerc ?? throw new \PSX\Sql\Exception\NoValueAvailable('No value for required column "mem_perc" was provided');
     }
@@ -151,8 +151,8 @@ class MonitorRow implements \JsonSerializable, \PSX\Record\RecordableInterface
         $row->projectId = isset($data['project_id']) && is_int($data['project_id']) ? $data['project_id'] : null;
         $row->containerId = isset($data['container_id']) && is_string($data['container_id']) ? $data['container_id'] : null;
         $row->name = isset($data['name']) && is_string($data['name']) ? $data['name'] : null;
-        $row->cpuPerc = isset($data['cpu_perc']) && is_string($data['cpu_perc']) ? $data['cpu_perc'] : null;
-        $row->memPerc = isset($data['mem_perc']) && is_string($data['mem_perc']) ? $data['mem_perc'] : null;
+        $row->cpuPerc = isset($data['cpu_perc']) && is_int($data['cpu_perc']) ? $data['cpu_perc'] : null;
+        $row->memPerc = isset($data['mem_perc']) && is_int($data['mem_perc']) ? $data['mem_perc'] : null;
         $row->memUsage = isset($data['mem_usage']) && is_int($data['mem_usage']) ? $data['mem_usage'] : null;
         $row->memLimit = isset($data['mem_limit']) && is_int($data['mem_limit']) ? $data['mem_limit'] : null;
         $row->netioReceived = isset($data['netio_received']) && is_int($data['netio_received']) ? $data['netio_received'] : null;

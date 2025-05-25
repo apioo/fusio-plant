@@ -19,22 +19,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace App\DTO;
+namespace App\Action\Project\Execute;
 
-readonly class StatsResult
+use App\Service;
+use Fusio\Engine\ActionInterface;
+use Fusio\Engine\ContextInterface;
+use Fusio\Engine\ParametersInterface;
+use Fusio\Engine\RequestInterface;
+
+readonly class Down implements ActionInterface
 {
-    public function __construct(
-        public string $container,
-        public string $name,
-        public int $cpuPercentage,
-        public int $memPercentage,
-        public int $memUsage,
-        public int $memLimit,
-        public int $netIOReceived,
-        public int $netIOSent,
-        public int $blockIOWritten,
-        public int $blockIORead,
-    )
+    public function __construct(private Service\Project $service)
     {
+    }
+
+    public function handle(RequestInterface $request, ParametersInterface $configuration, ContextInterface $context): mixed
+    {
+        return $this->service->down($request->get('id'));
     }
 }

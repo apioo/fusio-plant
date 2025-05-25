@@ -26,7 +26,7 @@ do
     touch "$outputFile":
     chown www-data: "$outputFile"
     case $type in
-      "setup")
+      "project-setup")
         name=$(jq -r ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         compose=$(jq -r ".compose" "$command")
@@ -42,7 +42,7 @@ do
         docker compose up -d >> "$outputFile"
         popd || continue
         ;;
-      "remove")
+      "project-remove")
         name=$(jq -r ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
@@ -54,29 +54,7 @@ do
         popd || continue
         rm -r "/docker/$name"
         ;;
-      "certbot")
-        domain=$(printf "%b" "$(jq -r ".domain" "$command")")
-        email=$(printf "%b" "$(jq -r ".email" "$command")")
-        rm "$command"
-        certbot --nginx --non-interactive --agree-tos -m "$email" -d "$domain" >> "$outputFile"
-        ;;
-      "pull")
-        name=$(jq -r ".name" "$command")
-        name="${name//[^[:alnum:]]/_}"
-        rm "$command"
-        pushd "/docker/$name" || continue
-        docker compose pull >> "$outputFile"
-        popd || continue
-        ;;
-      "up")
-        name=$(jq -r ".name" "$command")
-        name="${name//[^[:alnum:]]/_}"
-        rm "$command"
-        pushd "/docker/$name" || continue
-        docker compose up -d >> "$outputFile"
-        popd || continue
-        ;;
-      "down")
+      "project-down")
         name=$(jq -r ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
@@ -84,7 +62,7 @@ do
         docker compose down >> "$outputFile"
         popd || continue
         ;;
-      "logs")
+      "project-logs")
         name=$(jq -r ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
@@ -92,7 +70,7 @@ do
         docker compose logs --no-color --tail=256 >> "$outputFile"
         popd || continue
         ;;
-      "ps")
+      "project-ps")
         name=$(jq -r ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
@@ -100,7 +78,15 @@ do
         docker compose ps --format=json >> "$outputFile"
         popd || continue
         ;;
-      "stats")
+      "project-pull")
+        name=$(jq -r ".name" "$command")
+        name="${name//[^[:alnum:]]/_}"
+        rm "$command"
+        pushd "/docker/$name" || continue
+        docker compose pull >> "$outputFile"
+        popd || continue
+        ;;
+      "project-stats")
         name=$(jq -r ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
@@ -108,11 +94,37 @@ do
         docker compose stats --no-stream --format=json >> "$outputFile"
         popd || continue
         ;;
+      "project-up")
+        name=$(jq -r ".name" "$command")
+        name="${name//[^[:alnum:]]/_}"
+        rm "$command"
+        pushd "/docker/$name" || continue
+        docker compose up -d >> "$outputFile"
+        popd || continue
+        ;;
+      "certbot")
+        domain=$(printf "%b" "$(jq -r ".domain" "$command")")
+        email=$(printf "%b" "$(jq -r ".email" "$command")")
+        rm "$command"
+        certbot --nginx --non-interactive --agree-tos -m "$email" -d "$domain" >> "$outputFile"
+        ;;
+      "images")
+        rm "$command"
+        docker images --format=json >> "$outputFile"
+        ;;
       "login")
         username=$(printf "%b" "$(jq -r ".username" "$command")")
         password=$(printf "%b" "$(jq -r ".password" "$command")")
         rm "$command"
         echo "$password" | docker login -u "$username" --password-stdin >> "$outputFile"
+        ;;
+      "ps")
+        rm "$command"
+        docker ps --format=json >> "$outputFile"
+        ;;
+      "stats")
+        rm "$command"
+        docker stats --no-stream --format=json >> "$outputFile"
         ;;
       *)
         rm "$command"

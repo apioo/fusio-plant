@@ -5,17 +5,16 @@ use App\Model;
 use Fusio\Cli\Builder\Operation;
 use Fusio\Cli\Builder\Operation\HttpMethod;
 use Fusio\Cli\Builder\Operation\Stability;
-use PSX\Schema\Type\Factory\PropertyTypeFactory;
 
 return function (Operation $operation) {
-    $operation->setScopes(['project']);
+    $operation->setScopes(['execute']);
     $operation->setStability(Stability::EXPERIMENTAL);
     $operation->setPublic(false);
-    $operation->setDescription('Returns the latest logs');
-    $operation->setHttpMethod(HttpMethod::GET);
-    $operation->setHttpPath('/project/:id/logs');
+    $operation->setDescription('Returns statistic data for the project');
+    $operation->setHttpMethod(HttpMethod::POST);
+    $operation->setHttpPath('/project/:id/execute/stats');
     $operation->setHttpCode(200);
-    $operation->setOutgoing(Model\Message::class);
+    $operation->setOutgoing(Model\DockerStatistics::class);
     $operation->addThrow(999, Model\Message::class);
-    $operation->setAction(Action\Project\Logs::class);
+    $operation->setAction(Action\Project\Execute\Stats::class);
 };

@@ -25,12 +25,12 @@ use App\Exception\ConfigurationException;
 use App\Exception\PortResolveException;
 use App\Exception\ProcessTimeoutException;
 use App\Model;
+use App\Service\Executor;
 use App\Table\Generated\ProjectRow;
-use PSX\Json\Parser;
 
-readonly class Worker
+readonly class ProjectExecutor
 {
-    public function __construct(private ComposeWriter $composeWriter, private NginxWriter $nginxWriter)
+    public function __construct(private Executor $executor, private ComposeWriter $composeWriter, private NginxWriter $nginxWriter)
     {
     }
 
@@ -46,14 +46,14 @@ readonly class Worker
 
         $commandId = $this->buildCommandId($id);
 
-        $command = new Model\CommandSetup();
-        $command->setType('setup');
+        $command = new Model\CommandProjectSetup();
+        $command->setType('project-setup');
         $command->setName($project->getName());
         $command->setCompose($composeYaml);
         $command->setNginx($nginxConfig);
-        $this->writeCommand($commandId, $command);
+        $this->executor->writeCommand($commandId, $command);
 
-        return $this->waitForResponse($commandId);
+        return $this->executor->waitForResponse($commandId);
     }
 
     /**
@@ -63,28 +63,12 @@ readonly class Worker
     {
         $commandId = $this->buildCommandId($id);
 
-        $command = new Model\CommandRemove();
-        $command->setType('remove');
+        $command = new Model\CommandProjectRemove();
+        $command->setType('project-remove');
         $command->setName($project->getName());
-        $this->writeCommand($commandId, $command);
+        $this->executor->writeCommand($commandId, $command);
 
-        return $this->waitForResponse($commandId);
-    }
-
-    /**
-     * @throws ProcessTimeoutException
-     */
-    public function certbot(int $id, Model\ProjectCertbot $certbot): string
-    {
-        $commandId = $this->buildCommandId($id);
-
-        $command = new Model\CommandCertbot();
-        $command->setType('certbot');
-        $command->setDomain($certbot->getDomain());
-        $command->setEmail($certbot->getEmail());
-        $this->writeCommand($commandId, $command);
-
-        return $this->waitForResponse($commandId);
+        return $this->executor->waitForResponse($commandId);
     }
 
     /**
@@ -94,12 +78,12 @@ readonly class Worker
     {
         $commandId = $this->buildCommandId($id);
 
-        $command = new Model\CommandPull();
-        $command->setType('pull');
+        $command = new Model\CommandProjectPull();
+        $command->setType('project-pull');
         $command->setName($project->getName());
-        $this->writeCommand($commandId, $command);
+        $this->executor->writeCommand($commandId, $command);
 
-        return $this->waitForResponse($commandId);
+        return $this->executor->waitForResponse($commandId);
     }
 
     /**
@@ -109,12 +93,12 @@ readonly class Worker
     {
         $commandId = $this->buildCommandId($id);
 
-        $command = new Model\CommandUp();
-        $command->setType('up');
+        $command = new Model\CommandProjectUp();
+        $command->setType('project-up');
         $command->setName($project->getName());
-        $this->writeCommand($commandId, $command);
+        $this->executor->writeCommand($commandId, $command);
 
-        return $this->waitForResponse($commandId);
+        return $this->executor->waitForResponse($commandId);
     }
 
     /**
@@ -124,12 +108,12 @@ readonly class Worker
     {
         $commandId = $this->buildCommandId($id);
 
-        $command = new Model\CommandDown();
-        $command->setType('down');
+        $command = new Model\CommandProjectDown();
+        $command->setType('project-down');
         $command->setName($project->getName());
-        $this->writeCommand($commandId, $command);
+        $this->executor->writeCommand($commandId, $command);
 
-        return $this->waitForResponse($commandId);
+        return $this->executor->waitForResponse($commandId);
     }
 
     /**
@@ -139,12 +123,12 @@ readonly class Worker
     {
         $commandId = $this->buildCommandId($id);
 
-        $command = new Model\CommandLogs();
-        $command->setType('logs');
+        $command = new Model\CommandProjectLogs();
+        $command->setType('project-logs');
         $command->setName($project->getName());
-        $this->writeCommand($commandId, $command);
+        $this->executor->writeCommand($commandId, $command);
 
-        return $this->waitForResponse($commandId);
+        return $this->executor->waitForResponse($commandId);
     }
 
     /**
@@ -154,12 +138,12 @@ readonly class Worker
     {
         $commandId = $this->buildCommandId($id);
 
-        $command = new Model\CommandPs();
-        $command->setType('ps');
+        $command = new Model\CommandProjectPs();
+        $command->setType('project-ps');
         $command->setName($project->getName());
-        $this->writeCommand($commandId, $command);
+        $this->executor->writeCommand($commandId, $command);
 
-        return $this->waitForResponse($commandId);
+        return $this->executor->waitForResponse($commandId);
     }
 
     /**
@@ -169,55 +153,12 @@ readonly class Worker
     {
         $commandId = $this->buildCommandId($id);
 
-        $command = new Model\CommandStats();
-        $command->setType('stats');
+        $command = new Model\CommandProjectStats();
+        $command->setType('project-stats');
         $command->setName($project->getName());
-        $this->writeCommand($commandId, $command);
+        $this->executor->writeCommand($commandId, $command);
 
-        return $this->waitForResponse($commandId);
-    }
-
-    /**
-     * @throws ProcessTimeoutException
-     */
-    public function login(int $id, string $username, string $password): string
-    {
-        $commandId = $this->buildCommandId($id);
-
-        $command = new Model\CommandLogin();
-        $command->setType('login');
-        $command->setUsername($username);
-        $command->setPassword($password);
-        $this->writeCommand($commandId, $command);
-
-        return $this->waitForResponse($commandId);
-    }
-
-    private function writeCommand(string $commandId, Model\Command $command): void
-    {
-        file_put_contents(__DIR__ . '/../../../input/' . $commandId . '.cmd', Parser::encode($command));
-    }
-
-    /**
-     * @throws ProcessTimeoutException
-     */
-    private function waitForResponse(string $commandId): string
-    {
-        $file = __DIR__ . '/../../../output/' . $commandId . '.cmd';
-
-        $count = 0;
-        while (true) {
-            if (is_file($file)) {
-                return file_get_contents($file);
-            }
-
-            sleep(1);
-            $count++;
-
-            if ($count > 30) {
-                throw new ProcessTimeoutException('Command output timeout for: ' . $commandId);
-            }
-        }
+        return $this->executor->waitForResponse($commandId);
     }
 
     private function buildCommandId(int $id): string

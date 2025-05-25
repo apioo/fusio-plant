@@ -19,22 +19,38 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace App\Action\Project;
+namespace App\Service;
 
-use App\Service;
-use Fusio\Engine\ActionInterface;
-use Fusio\Engine\ContextInterface;
-use Fusio\Engine\ParametersInterface;
-use Fusio\Engine\RequestInterface;
+use App\Exception\ProcessTimeoutException;
+use App\Model;
+use PSX\Json\Parser;
 
-readonly class Down implements ActionInterface
+readonly class Executor
 {
-    public function __construct(private Service\Project $service)
+    public function writeCommand(string $commandId, Model\Command $command): void
     {
+        file_put_contents(__DIR__ . '/../../../input/' . $commandId . '.cmd', Parser::encode($command));
     }
 
-    public function handle(RequestInterface $request, ParametersInterface $configuration, ContextInterface $context): mixed
+    /**
+     * @throws ProcessTimeoutException
+     */
+    public function waitForResponse(string $commandId): string
     {
-        return $this->service->down($request->get('id'));
+        $file = __DIR__ . '/../../../output/' . $commandId . '.cmd';
+
+        $count = 0;
+        while (true) {
+            if (is_file($file)) {
+                return file_get_contents($file);
+            }
+
+            sleep(1);
+            $count++;
+
+            if ($count > 30) {
+                throw new ProcessTimeoutException('Command output timeout for: ' . $commandId);
+            }
+        }
     }
 }

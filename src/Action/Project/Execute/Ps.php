@@ -19,7 +19,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace App\Action\Project;
+namespace App\Action\Project\Execute;
 
 use App\Service;
 use Fusio\Engine\ActionInterface;
@@ -27,7 +27,7 @@ use Fusio\Engine\ContextInterface;
 use Fusio\Engine\ParametersInterface;
 use Fusio\Engine\RequestInterface;
 
-readonly class Up implements ActionInterface
+readonly class Ps implements ActionInterface
 {
     public function __construct(private Service\Project $service)
     {
@@ -35,6 +35,6 @@ readonly class Up implements ActionInterface
 
     public function handle(RequestInterface $request, ParametersInterface $configuration, ContextInterface $context): mixed
     {
-        return $this->service->up($request->get('id'));
+        return $this->service->ps($request->get('id'));
     }
 }
