@@ -3,6 +3,7 @@ Consumer:
     - dashboard
     - preset
     - project
+    - execute
     - default
     - system
     - authorization
@@ -12,6 +13,7 @@ Administrator:
     - dashboard
     - preset
     - project
+    - execute
     - default
     - system
     - authorization

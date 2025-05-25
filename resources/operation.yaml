@@ -15,4 +15,5 @@
 "project.execute.logs": !include resources/operations/project/execute/logs.php
 "project.execute.ps": !include resources/operations/project/execute/ps.php
 "project.execute.pull": !include resources/operations/project/execute/pull.php
+"project.execute.stats": !include resources/operations/project/execute/stats.php
 "project.execute.up": !include resources/operations/project/execute/up.php
