@@ -14,8 +14,7 @@ return function (Operation $operation) {
     $operation->setHttpMethod(HttpMethod::POST);
     $operation->setHttpPath('/execute/images');
     $operation->setHttpCode(200);
-    $operation->setIncoming(Model\DockerImages::class);
-    $operation->setOutgoing(Model\Message::class);
+    $operation->setOutgoing(Model\DockerImages::class);
     $operation->addThrow(999, Model\Message::class);
     $operation->setAction(Action\Execute\Images::class);
 };

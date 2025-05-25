@@ -14,7 +14,7 @@ return function (Operation $operation) {
     $operation->setHttpMethod(HttpMethod::GET);
     $operation->setHttpPath('/project/:id/execute/logs');
     $operation->setHttpCode(200);
-    $operation->setOutgoing(Model\Message::class);
+    $operation->setOutgoing(Model\DockerLogs::class);
     $operation->addThrow(999, Model\Message::class);
     $operation->setAction(Action\Project\Execute\Logs::class);
 };
