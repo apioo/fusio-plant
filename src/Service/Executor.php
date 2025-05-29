@@ -37,7 +37,7 @@ readonly class Executor
      */
     public function waitForResponse(string $commandId): string
     {
-        $file = __DIR__ . '/../../../output/' . $commandId . '.cmd';
+        $file = __DIR__ . '/../../output/' . $commandId . '.cmd';
 
         $count = 0;
         while (true) {
