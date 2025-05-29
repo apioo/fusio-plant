@@ -58,9 +58,9 @@ EOF
 curl -fsSL https://raw.githubusercontent.com/apioo/fusio-plant/refs/heads/main/bash/prune.sh -o /etc/cron.daily/docker-prune
 chmod +x /etc/cron.daily/docker-prune
 project_key=$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 40)
-mysql_password=$(tr -dc 'A-Za-z0-9!?%=' < /dev/urandom | head -c 20)
+mysql_password=$(tr -dc 'A-Za-z0-9_' < /dev/urandom | head -c 20)
 backend_username=$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 8)
-backend_password=$(tr -dc 'A-Za-z0-9!?%=' < /dev/urandom | head -c 16)
+backend_password=$(tr -dc 'A-Za-z0-9_' < /dev/urandom | head -c 16)
 rm /etc/nginx/sites-enabled/default
 cat > /etc/nginx/sites-available/plant <<EOF
 server {
