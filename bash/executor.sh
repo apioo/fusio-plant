@@ -112,15 +112,15 @@ do
         rm "$command"
         certbot --nginx --non-interactive --agree-tos -m "$email" -d "$domain" >> "$outputFile"
         ;;
-      "images")
-        rm "$command"
-        docker images --format=json >> "$outputFile"
-        ;;
       "login")
         username=$(printf "%b" "$(jq -r ".username" "$command")")
         password=$(printf "%b" "$(jq -r ".password" "$command")")
         rm "$command"
         echo "$password" | docker login -u "$username" --password-stdin >> "$outputFile"
+        ;;
+      "images")
+        rm "$command"
+        docker images --format=json >> "$outputFile"
         ;;
       "ps")
         rm "$command"
