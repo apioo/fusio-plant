@@ -21,7 +21,7 @@
 
 namespace App\Service\Project;
 
-use App\Model\ProjectApp;
+use App\Model;
 use PSX\Record\Record;
 use Symfony\Component\Yaml\Yaml;
 
@@ -31,13 +31,10 @@ readonly class ComposeWriter
     {
     }
 
-    /**
-     * @param array<ProjectApp> $apps
-     */
-    public function write(int $id, array $apps): string
+    public function write(int $id, Model\Project $project): string
     {
         $services = [];
-        foreach ($apps as $index => $app) {
+        foreach ($project->getApps() as $index => $app) {
             $services[$app->getName()] = $this->buildConfigForApp($id, $index, $app);
         }
 
@@ -46,9 +43,10 @@ readonly class ComposeWriter
         ], inline: 12);
     }
 
-    private function buildConfigForApp(int $id, int $index, ProjectApp $app): array
+    private function buildConfigForApp(int $id, int $index, Model\ProjectApp $app): array
     {
         $return = [
+            'container_name' => $id . '_' . $app->getName(),
             'image' => $app->getImage(),
             'restart' => 'always',
             'labels' => [

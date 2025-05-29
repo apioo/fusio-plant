@@ -30,7 +30,7 @@ use App\Table\Generated\ProjectRow;
 
 readonly class ProjectExecutor
 {
-    public function __construct(private Executor $executor, private ComposeWriter $composeWriter, private NginxWriter $nginxWriter)
+    public function __construct(private Executor $executor, private ComposeWriter $composeWriter, private NginxWriter $nginxWriter, private BackupCronWriter $backupCronWriter)
     {
     }
 
@@ -41,8 +41,9 @@ readonly class ProjectExecutor
      */
     public function setup(int $id, Model\Project $project): string
     {
-        $composeYaml = $this->composeWriter->write($id, $project->getApps());
-        $nginxConfig = $this->nginxWriter->write($id, $project->getApps());
+        $composeYaml = $this->composeWriter->write($id, $project);
+        $nginxConfig = $this->nginxWriter->write($id, $project);
+        $backupCron = $this->backupCronWriter->write($id, $project);
 
         $commandId = $this->buildCommandId($id);
 
@@ -51,6 +52,7 @@ readonly class ProjectExecutor
         $command->setName($project->getName());
         $command->setCompose($composeYaml);
         $command->setNginx($nginxConfig);
+        $command->setBackup($backupCron);
         $this->executor->writeCommand($commandId, $command);
 
         return $this->executor->waitForResponse($commandId);

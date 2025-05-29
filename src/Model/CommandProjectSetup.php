@@ -10,6 +10,7 @@ class CommandProjectSetup extends Command implements \JsonSerializable, \PSX\Rec
     protected ?string $name = null;
     protected ?string $compose = null;
     protected ?string $nginx = null;
+    protected ?string $backup = null;
     public function setName(?string $name): void
     {
         $this->name = $name;
@@ -34,6 +35,14 @@ class CommandProjectSetup extends Command implements \JsonSerializable, \PSX\Rec
     {
         return $this->nginx;
     }
+    public function setBackup(?string $backup): void
+    {
+        $this->backup = $backup;
+    }
+    public function getBackup(): ?string
+    {
+        return $this->backup;
+    }
     public function toRecord(): \PSX\Record\RecordInterface
     {
         /** @var \PSX\Record\Record<mixed> $record */
@@ -41,6 +50,7 @@ class CommandProjectSetup extends Command implements \JsonSerializable, \PSX\Rec
         $record->put('name', $this->name);
         $record->put('compose', $this->compose);
         $record->put('nginx', $this->nginx);
+        $record->put('backup', $this->backup);
         return $record;
     }
     public function jsonSerialize(): object

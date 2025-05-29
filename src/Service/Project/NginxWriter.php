@@ -23,7 +23,7 @@ namespace App\Service\Project;
 
 use App\Exception\ConfigurationException;
 use App\Exception\PortResolveException;
-use App\Model\ProjectApp;
+use App\Model;
 
 readonly class NginxWriter
 {
@@ -32,14 +32,13 @@ readonly class NginxWriter
     }
 
     /**
-     * @param array<ProjectApp> $apps
      * @throws ConfigurationException
      * @throws PortResolveException
      */
-    public function write(int $id, array $apps): string
+    public function write(int $id, Model\Project $project): string
     {
         $configs = [];
-        foreach ($apps as $index => $app) {
+        foreach ($project->getApps() as $index => $app) {
             $domains = $app->getDomains() ?? [];
             if (count($domains) === 0) {
                 // no nginx config needed in case there are no domains
@@ -56,7 +55,7 @@ readonly class NginxWriter
      * @throws ConfigurationException
      * @throws PortResolveException
      */
-    private function writeConfigForApp(int $id, int $index, ProjectApp $app): string
+    private function writeConfigForApp(int $id, int $index, Model\ProjectApp $app): string
     {
         $appId = $id . '_' . $app->getName();
         $domains = implode(' ', $app->getDomains() ?? []);

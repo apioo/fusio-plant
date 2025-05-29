@@ -31,12 +31,16 @@ do
         name="${name//[^[:alnum:]]/_}"
         compose=$(jq -r ".compose" "$command")
         nginx=$(jq -r ".nginx" "$command")
+        backup=$(jq -r ".backup" "$command")
         rm "$command"
+        mkdir "/backup/$name"
         mkdir "/docker/$name"
         echo "$compose" > "/docker/$name/docker-compose.yml"
         echo "$nginx" > "/etc/nginx/sites-available/$name"
         ln -s "/etc/nginx/sites-available/$name" "/etc/nginx/sites-enabled/$name"
         service nginx reload
+        echo "$backup" > "/etc/cron.daily/$name"
+        chmod +x "/etc/cron.daily/$name"
         pushd "/docker/$name" || continue
         docker compose pull
         docker compose up -d >> "$outputFile"
