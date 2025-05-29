@@ -39,8 +39,8 @@ do
         echo "$nginx" > "/etc/nginx/sites-available/$name"
         ln -s "/etc/nginx/sites-available/$name" "/etc/nginx/sites-enabled/$name"
         service nginx reload
-        echo "$backup" > "/etc/cron.daily/$name"
-        chmod +x "/etc/cron.daily/$name"
+        echo "$backup" > "/etc/cron.daily/backup-$name"
+        chmod +x "/etc/cron.daily/backup-$name"
         pushd "/docker/$name" || continue
         docker compose pull
         docker compose up -d >> "$outputFile"
@@ -52,6 +52,7 @@ do
         rm "$command"
         rm "/etc/nginx/sites-enabled/$name"
         rm "/etc/nginx/sites-available/$name"
+        rm "/etc/cron.daily/backup-$name"
         service nginx reload
         pushd "/docker/$name" || continue
         docker compose down >> "$outputFile"
