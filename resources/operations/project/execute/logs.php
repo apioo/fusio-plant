@@ -11,7 +11,7 @@ return function (Operation $operation) {
     $operation->setStability(Stability::EXPERIMENTAL);
     $operation->setPublic(false);
     $operation->setDescription('Returns the latest logs');
-    $operation->setHttpMethod(HttpMethod::GET);
+    $operation->setHttpMethod(HttpMethod::POST);
     $operation->setHttpPath('/project/:id/execute/logs');
     $operation->setHttpCode(200);
     $operation->setOutgoing(Model\DockerLogs::class);

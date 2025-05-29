@@ -9,8 +9,17 @@ use PSX\Schema\Attribute\Description;
 #[Description('Docker login')]
 class DockerLogin implements \JsonSerializable, \PSX\Record\RecordableInterface
 {
+    protected ?string $domain = null;
     protected ?string $username = null;
     protected ?string $password = null;
+    public function setDomain(?string $domain): void
+    {
+        $this->domain = $domain;
+    }
+    public function getDomain(): ?string
+    {
+        return $this->domain;
+    }
     public function setUsername(?string $username): void
     {
         $this->username = $username;
@@ -31,6 +40,7 @@ class DockerLogin implements \JsonSerializable, \PSX\Record\RecordableInterface
     {
         /** @var \PSX\Record\Record<mixed> $record */
         $record = new \PSX\Record\Record();
+        $record->put('domain', $this->domain);
         $record->put('username', $this->username);
         $record->put('password', $this->password);
         return $record;

@@ -241,6 +241,9 @@
       "description": "Docker login",
       "type": "struct",
       "properties": {
+        "domain": {
+          "type": "string"
+        },
         "username": {
           "type": "string"
         },
