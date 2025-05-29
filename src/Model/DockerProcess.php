@@ -50,7 +50,7 @@ class DockerProcess implements \JsonSerializable, \PSX\Record\RecordableInterfac
     protected ?string $status = null;
     #[Key('CreatedAt')]
     #[Description('')]
-    protected ?\PSX\DateTime\LocalDateTime $createdAt = null;
+    protected ?string $createdAt = null;
     public function setID(?string $iD): void
     {
         $this->iD = $iD;
@@ -155,11 +155,11 @@ class DockerProcess implements \JsonSerializable, \PSX\Record\RecordableInterfac
     {
         return $this->status;
     }
-    public function setCreatedAt(?\PSX\DateTime\LocalDateTime $createdAt): void
+    public function setCreatedAt(?string $createdAt): void
     {
         $this->createdAt = $createdAt;
     }
-    public function getCreatedAt(): ?\PSX\DateTime\LocalDateTime
+    public function getCreatedAt(): ?string
     {
         return $this->createdAt;
     }

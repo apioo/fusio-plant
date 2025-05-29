@@ -27,9 +27,9 @@ class DockerImage implements \JsonSerializable, \PSX\Record\RecordableInterface
     #[Key('VirtualSize')]
     protected ?string $virtualSize = null;
     #[Key('CreatedAt')]
-    protected ?\PSX\DateTime\LocalDateTime $createdAt = null;
+    protected ?string $createdAt = null;
     #[Key('CreatedSince')]
-    protected ?\PSX\DateTime\LocalDateTime $createdSince = null;
+    protected ?string $createdSince = null;
     public function setID(?string $iD): void
     {
         $this->iD = $iD;
@@ -102,19 +102,19 @@ class DockerImage implements \JsonSerializable, \PSX\Record\RecordableInterface
     {
         return $this->virtualSize;
     }
-    public function setCreatedAt(?\PSX\DateTime\LocalDateTime $createdAt): void
+    public function setCreatedAt(?string $createdAt): void
     {
         $this->createdAt = $createdAt;
     }
-    public function getCreatedAt(): ?\PSX\DateTime\LocalDateTime
+    public function getCreatedAt(): ?string
     {
         return $this->createdAt;
     }
-    public function setCreatedSince(?\PSX\DateTime\LocalDateTime $createdSince): void
+    public function setCreatedSince(?string $createdSince): void
     {
         $this->createdSince = $createdSince;
     }
-    public function getCreatedSince(): ?\PSX\DateTime\LocalDateTime
+    public function getCreatedSince(): ?string
     {
         return $this->createdSince;
     }

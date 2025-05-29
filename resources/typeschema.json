@@ -290,12 +290,10 @@
           "type": "string"
         },
         "CreatedAt": {
-          "type": "string",
-          "format": "date-time"
+          "type": "string"
         },
         "CreatedSince": {
-          "type": "string",
-          "format": "date-time"
+          "type": "string"
         }
       }
     },
@@ -366,8 +364,7 @@
         },
         "CreatedAt": {
           "description": "",
-          "type": "string",
-          "format": "date-time"
+          "type": "string"
         }
       }
     },
