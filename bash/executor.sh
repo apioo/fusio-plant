@@ -23,7 +23,7 @@ do
     output=$(basename -- "$command")
     outputFile="/opt/plant/output/$output.lock"
     resultFile="/opt/plant/output/$output"
-    touch "$outputFile":
+    touch "$outputFile"
     chown www-data: "$outputFile"
     case $type in
       "project-setup")
