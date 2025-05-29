@@ -31,7 +31,7 @@ class Joomla extends PresetAbstract
         $mysqlJoomlaPassword = substr(sha1(random_bytes(40)), 0, 16);
 
         $joomlaEnv = Record::fromArray([
-            'JOOMLA_DB_HOST' => 'db',
+            'JOOMLA_DB_HOST' => 'mysql',
             'JOOMLA_DB_USER' => 'joomla',
             'JOOMLA_DB_PASSWORD' => $mysqlJoomlaPassword,
             'JOOMLA_DB_NAME' => 'joomla_db',
