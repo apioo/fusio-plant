@@ -29,7 +29,7 @@ readonly class Executor
 {
     public function writeCommand(string $commandId, Model\Command $command): void
     {
-        file_put_contents(__DIR__ . '/../../../input/' . $commandId . '.cmd', Parser::encode($command));
+        file_put_contents(__DIR__ . '/../../input/' . $commandId . '.cmd', Parser::encode($command));
     }
 
     /**
