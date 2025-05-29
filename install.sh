@@ -124,7 +124,7 @@ if [ $? -ne 0 ]; then
     echo "> certbot --nginx --agree-tos -m \"info@$domain\" -d \"$domain\""
     echo ""
 fi
-supervisord
+supervisorctl start all
 echo ""
 echo "Fusio Plant successfully installed"
 echo ""
