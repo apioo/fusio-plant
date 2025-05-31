@@ -22,31 +22,25 @@
 namespace App\Service\Monitor;
 
 use App\DTO\Docker\Stats;
-use App\Model\DockerStatistic;
-use App\Service\JsonParser;
+use App\Model;
 
 readonly class StatsParser
 {
-    public function __construct(private JsonParser $parser)
-    {
-    }
-
     /**
      * @return \Generator<Stats>
      */
-    public function parse(string $output): \Generator
+    public function parse(Model\DockerStatistics $stats): \Generator
     {
-        $lines = $this->parser->parseLines($output, DockerStatistic::class);
-        foreach ($lines as $data) {
-            [$memUsage, $memLimit] = $this->parseUnits($data->getMemUsage());
-            [$netIOReceived, $netIOSent] = $this->parseUnits($data->getBlockIO());
-            [$blockIOWritten, $blockIORead] = $this->parseUnits($data->getNetIO());
+        foreach ($stats->getEntry() as $entry) {
+            [$memUsage, $memLimit] = $this->parseUnits($entry->getMemUsage());
+            [$netIOReceived, $netIOSent] = $this->parseUnits($entry->getBlockIO());
+            [$blockIOWritten, $blockIORead] = $this->parseUnits($entry->getNetIO());
 
             yield new Stats(
-                $data->getContainer(),
-                $data->getName(),
-                $this->parsePercentage($data->getCPUPerc()),
-                $this->parsePercentage($data->getMemPerc()),
+                $entry->getContainer(),
+                $entry->getName(),
+                $this->parsePercentage($entry->getCPUPerc()),
+                $this->parsePercentage($entry->getMemPerc()),
                 $memUsage,
                 $memLimit,
                 $netIOReceived,

@@ -21,6 +21,7 @@
 
 namespace App\Service;
 
+use App\Model;
 use App\Service\Monitor\StatsParser;
 use App\Table;
 use PSX\DateTime\LocalDateTime;
@@ -35,18 +36,13 @@ readonly class Monitor
     {
         $projects = $this->projectTable->findAll();
         foreach ($projects as $project) {
-            $response = $this->project->stats($project->getDisplayId());
-            $this->parseOutput($project, $response->getOutput());
+            $this->parseOutput($project, $this->project->stats($project->getDisplayId()));
         }
     }
 
-    private function parseOutput(Table\Generated\ProjectRow $project, ?string $output): void
+    private function parseOutput(Table\Generated\ProjectRow $project, Model\DockerStatistics $stats): void
     {
-        if (empty($output)) {
-            return;
-        }
-
-        $result = $this->statsParser->parse($output);
+        $result = $this->statsParser->parse($stats);
         foreach ($result as $stats) {
             $row = new Table\Generated\MonitorRow();
             $row->setProjectId($project->getId());
