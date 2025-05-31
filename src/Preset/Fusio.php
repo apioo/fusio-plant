@@ -38,8 +38,8 @@ class Fusio extends PresetAbstract
         $fusioEnv = Record::fromArray([
             'FUSIO_TENANT_ID' => '',
             'FUSIO_PROJECT_KEY' => $projectKey,
-            'FUSIO_URL' => 'https://mydomain.com',
-            'FUSIO_APPS_URL' => 'https://mydomain.com/apps',
+            'FUSIO_URL' => '',
+            'FUSIO_APPS_URL' => '',
             'FUSIO_ENV' => 'prod',
             'FUSIO_DEBUG' => 'false',
             'FUSIO_CONNECTION' => 'pdo-mysql://fusio:' . $mysqlFusioPassword . '@mysql/fusio',
