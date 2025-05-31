@@ -20,6 +20,7 @@
  */
 
 use App\DTO\Docker\Stats;
+use App\Model;
 use App\Service\JsonParser;
 use App\Service\Monitor\StatsParser;
 use PHPUnit\Framework\TestCase;
@@ -34,7 +35,14 @@ class StatsParserTest extends TestCase
 {"BlockIO":"0B / 418kB","CPUPerc":"0.00%","Container":"82b7cd0aaf17","ID":"82b7cd0aaf17","MemPerc":"0.24%","MemUsage":"19.14MiB / 7.709GiB","Name":"drupal-postgres-1","NetIO":"1.84kB / 126B","PIDs":"6"}
 TEXT;
 
-        $result = iterator_to_array((new StatsParser(new JsonParser(new SchemaManager())))->parse($raw));
+        $jsonParser = new JsonParser(new SchemaManager());
+        $lines = $jsonParser->parseLines($raw, Model\DockerStatistic::class);
+
+        $collection = new Model\DockerStatistics();
+        $collection->setTotalResults(count($lines));
+        $collection->setEntry($lines);
+
+        $result = iterator_to_array((new StatsParser())->parse($collection));
 
         self::assertCount(2, $result);
 
