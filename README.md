@@ -68,6 +68,11 @@ you can see all available commands at the [executor script](./bash/executor.sh).
 The cache folder which is used in case [Nginx content caching](https://docs.nginx.com/nginx/admin-guide/content-cache/content-caching/)
 is activated. 
 
+### /backup
+
+Plant automatically generates daily backups for every used mysql image. Those backups are
+placed in this folder for each project.
+
 ## Preset
 
 If you create a new project at Plant you can select a preset. A preset is basically a predefined
