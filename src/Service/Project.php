@@ -162,7 +162,7 @@ readonly class Project
 
         $this->dispatchEvent('project.down', $row, $row->getDisplayId());
 
-        return $this->newMessage('Project up successfully executed', $row->getDisplayId(), $output);
+        return $this->newMessage('Project down successfully executed', $row->getDisplayId(), $output);
     }
 
     public function logs(string $id): Model\DockerLogs
