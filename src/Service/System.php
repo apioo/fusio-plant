@@ -44,7 +44,7 @@ readonly class System
             throw new StatusCode\InternalServerErrorException('Could not execute certbot', previous: $e);
         }
 
-        return $this->newMessage('Obtained certificate successfully', null, $output);
+        return $this->newMessage('Obtained certificate successfully', $output);
     }
 
     public function images(): DockerImages
@@ -71,7 +71,7 @@ readonly class System
             throw new StatusCode\InternalServerErrorException('Could not execute login', previous: $e);
         }
 
-        return $this->newMessage('Login successfully', null, $output);
+        return $this->newMessage('Login successfully', $output);
     }
 
     public function ps(): Model\DockerProcesses
@@ -106,12 +106,11 @@ readonly class System
         return $collection;
     }
 
-    private function newMessage(string $message, string $id, ?string $output = null): Model\Message
+    private function newMessage(string $message, ?string $output = null): Model\Message
     {
         $return = new Model\Message();
         $return->setSuccess(true);
         $return->setMessage($message);
-        $return->setId($id);
         $return->setOutput($output);
         return $return;
     }
