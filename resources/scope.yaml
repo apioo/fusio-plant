@@ -1,8 +1,28 @@
 dashboard:
   description: ""
-preset:
-  description: ""
 execute:
+  description: ""
+execute.certbot:
+  description: ""
+execute.images:
+  description: ""
+execute.login:
+  description: ""
+execute.ps:
+  description: ""
+execute.stats:
+  description: ""
+execute.deploy:
+  description: ""
+execute.down:
+  description: ""
+execute.logs:
+  description: ""
+execute.pull:
+  description: ""
+execute.up:
+  description: ""
+preset:
   description: ""
 project:
   description: ""

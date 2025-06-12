@@ -7,7 +7,7 @@ use Fusio\Cli\Builder\Operation\HttpMethod;
 use Fusio\Cli\Builder\Operation\Stability;
 
 return function (Operation $operation) {
-    $operation->setScopes(['execute']);
+    $operation->setScopes(['execute.ps']);
     $operation->setStability(Stability::EXPERIMENTAL);
     $operation->setPublic(false);
     $operation->setDescription('List containers for the project');

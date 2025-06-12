@@ -7,7 +7,7 @@ use Fusio\Cli\Builder\Operation\HttpMethod;
 use Fusio\Cli\Builder\Operation\Stability;
 
 return function (Operation $operation) {
-    $operation->setScopes(['execute']);
+    $operation->setScopes(['execute.images']);
     $operation->setStability(Stability::EXPERIMENTAL);
     $operation->setPublic(false);
     $operation->setDescription('Returns all available images');

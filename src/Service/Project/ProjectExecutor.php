@@ -106,6 +106,21 @@ readonly class ProjectExecutor
     /**
      * @throws ProcessTimeoutException
      */
+    public function deploy(int $id, ProjectRow $project): string
+    {
+        $commandId = $this->buildCommandId($id);
+
+        $command = new Model\CommandProjectDeploy();
+        $command->setType('project-deploy');
+        $command->setName($project->getName());
+        $this->executor->writeCommand($commandId, $command);
+
+        return $this->executor->waitForResponse($commandId);
+    }
+
+    /**
+     * @throws ProcessTimeoutException
+     */
     public function down(int $id, ProjectRow $project): string
     {
         $commandId = $this->buildCommandId($id);

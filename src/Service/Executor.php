@@ -23,10 +23,15 @@ namespace App\Service;
 
 use App\Exception\ProcessTimeoutException;
 use App\Model;
+use PSX\Framework\Config\ConfigInterface;
 use PSX\Json\Parser;
 
 readonly class Executor
 {
+    public function __construct(private ConfigInterface $config)
+    {
+    }
+
     public function writeCommand(string $commandId, Model\Command $command): void
     {
         file_put_contents(__DIR__ . '/../../input/' . $commandId . '.cmd', Parser::encode($command));
@@ -37,6 +42,10 @@ readonly class Executor
      */
     public function waitForResponse(string $commandId): string
     {
+        if ($this->config->get('psx_debug') === true) {
+            return '';
+        }
+
         $file = __DIR__ . '/../../output/' . $commandId . '.cmd';
 
         $count = 0;

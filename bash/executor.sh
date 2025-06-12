@@ -42,7 +42,7 @@ do
         echo "$backup" > "/etc/cron.daily/backup-$name"
         chmod +x "/etc/cron.daily/backup-$name"
         pushd "/docker/$name" || continue
-        docker compose pull
+        docker compose pull >> "$outputFile"
         docker compose up -d >> "$outputFile"
         popd || continue
         ;;
@@ -58,6 +58,15 @@ do
         docker compose down >> "$outputFile"
         popd || continue
         rm -r "/docker/$name"
+        ;;
+      "project-deploy")
+        name=$(jq -r ".name" "$command")
+        name="${name//[^[:alnum:]]/_}"
+        rm "$command"
+        pushd "/docker/$name" || continue
+        docker compose pull >> "$outputFile"
+        docker compose up -d >> "$outputFile"
+        popd || continue
         ;;
       "project-down")
         name=$(jq -r ".name" "$command")

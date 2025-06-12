@@ -488,6 +488,18 @@
         }
       }
     },
+    "Command_Project_Deploy": {
+      "type": "struct",
+      "parent": {
+        "type": "reference",
+        "target": "Command"
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
     "Command_Project_Down": {
       "type": "struct",
       "parent": {

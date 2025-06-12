@@ -147,6 +147,24 @@ readonly class Project
         return $this->newMessage('Project successfully deleted', $row->getDisplayId(), $output);
     }
 
+    public function deploy(string $id): Message
+    {
+        $row = $this->projectTable->findOneByDisplayId($id);
+        if (!$row instanceof Table\Generated\ProjectRow) {
+            throw new StatusCode\NotFoundException('Provided project does not exist');
+        }
+
+        try {
+            $output = $this->executor->deploy($row->getId(), $row);
+        } catch (ProcessTimeoutException $e) {
+            throw new StatusCode\InternalServerErrorException('Could not deploy, got: ' . $e->getMessage(), previous: $e);
+        }
+
+        $this->dispatchEvent('project.deploy', $row, $row->getDisplayId());
+
+        return $this->newMessage('Project deploy successfully executed', $row->getDisplayId(), $output);
+    }
+
     public function down(string $id): Message
     {
         $row = $this->projectTable->findOneByDisplayId($id);

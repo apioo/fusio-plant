@@ -11,6 +11,7 @@
 "project.create": !include resources/operations/project/create.php
 "project.update": !include resources/operations/project/update.php
 "project.delete": !include resources/operations/project/delete.php
+"project.execute.deploy": !include resources/operations/project/execute/deploy.php
 "project.execute.down": !include resources/operations/project/execute/down.php
 "project.execute.logs": !include resources/operations/project/execute/logs.php
 "project.execute.ps": !include resources/operations/project/execute/ps.php
