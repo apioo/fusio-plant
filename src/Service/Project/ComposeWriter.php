@@ -54,6 +54,11 @@ readonly class ComposeWriter
             ],
         ];
 
+        $command = $app->getCommand();
+        if (!empty($command)) {
+            $return['command'] = $command;
+        }
+
         $environment = $app->getEnvironment();
         if ($environment instanceof Record) {
             $return['environment'] = $environment->getAll();

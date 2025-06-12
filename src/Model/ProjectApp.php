@@ -22,6 +22,8 @@ class ProjectApp implements \JsonSerializable, \PSX\Record\RecordableInterface
     protected ?bool $cache = null;
     #[Description('Optional if a domain was provided the internal port of the docker image which is exposes an HTTP server, if not provided port 80 is assumed')]
     protected ?int $port = null;
+    #[Description('Optional a command to execute')]
+    protected ?string $command = null;
     /**
      * @var \PSX\Record\Record<string>|null
      */
@@ -83,6 +85,14 @@ class ProjectApp implements \JsonSerializable, \PSX\Record\RecordableInterface
     {
         return $this->port;
     }
+    public function setCommand(?string $command): void
+    {
+        $this->command = $command;
+    }
+    public function getCommand(): ?string
+    {
+        return $this->command;
+    }
     /**
      * @param \PSX\Record\Record<string>|null $environment
      */
@@ -134,6 +144,7 @@ class ProjectApp implements \JsonSerializable, \PSX\Record\RecordableInterface
         $record->put('domains', $this->domains);
         $record->put('cache', $this->cache);
         $record->put('port', $this->port);
+        $record->put('command', $this->command);
         $record->put('environment', $this->environment);
         $record->put('volumes', $this->volumes);
         $record->put('links', $this->links);

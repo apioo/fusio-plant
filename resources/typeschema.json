@@ -179,6 +179,10 @@
           "description": "Optional if a domain was provided the internal port of the docker image which is exposes an HTTP server, if not provided port 80 is assumed",
           "type": "integer"
         },
+        "command": {
+          "description": "Optional a command to execute",
+          "type": "string"
+        },
         "environment": {
           "description": "Environment variables provided to the docker image",
           "type": "map",
