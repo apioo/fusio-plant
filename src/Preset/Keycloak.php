@@ -39,7 +39,7 @@ class Keycloak extends PresetAbstract
             'KC_DB_URL' => 'jdbc:mysql://mysql/keycloak',
             'KC_DB_USERNAME' => 'keycloak',
             'KC_DB_PASSWORD' => $mysqlKeycloakPassword,
-            'KC_PROXY_HEADERS' => 'X-Forwarded-For',
+            'KC_PROXY_HEADERS' => 'xforwarded',
             'KC_HTTP_ENABLED' => 'true',
             'PROXY_ADDRESS_FORWARDING' => 'true',
         ]);
