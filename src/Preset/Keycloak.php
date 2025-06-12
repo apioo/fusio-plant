@@ -52,7 +52,7 @@ class Keycloak extends PresetAbstract
         ]);
 
         return [
-            $this->newApp('keycloak', 'quay.io/keycloak/keycloak:26.2.5', port: 8080, environment: $keycloakEnv, links: ['mysql']),
+            $this->newApp('keycloak', 'quay.io/keycloak/keycloak:26.2.5', port: 8080, command: 'start', environment: $keycloakEnv, links: ['mysql']),
             $this->newApp('mysql', 'mysql:8.4', environment: $mysqlEnv, volumes: [
                 $this->newVolume('./db', '/var/lib/mysql')
             ]),

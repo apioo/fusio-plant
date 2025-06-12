@@ -39,7 +39,7 @@ abstract class PresetAbstract implements PresetInterface
         return str_replace(' ', '-', ucwords(str_replace('_', ' ', Container::underscore((new \ReflectionClass($this))->getShortName()))));
     }
 
-    protected function newApp(string $name, string $image, ?array $domains = null, ?bool $cache = null, ?int $port = null, ?Record $environment = null, ?array $links = null, ?array $volumes = null): ProjectApp
+    protected function newApp(string $name, string $image, ?array $domains = null, ?bool $cache = null, ?int $port = null, ?string $command = null, ?Record $environment = null, ?array $links = null, ?array $volumes = null): ProjectApp
     {
         $app = new ProjectApp();
         $app->setName($name);
@@ -47,6 +47,7 @@ abstract class PresetAbstract implements PresetInterface
         $app->setDomains($domains ?? []);
         $app->setCache($cache);
         $app->setPort($port);
+        $app->setCommand($command);
         $app->setEnvironment($environment ?? new Record());
         $app->setVolumes($volumes ?? []);
         $app->setLinks($links ?? []);
