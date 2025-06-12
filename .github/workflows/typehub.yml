@@ -1,0 +1,15 @@
+name: TypeHub
+on:
+  - pull_request
+  - push
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Push
+        uses: apioo/typehub-fusio-action@v0.1.4
+        with:
+          document: plant
+          client-id: ${{ secrets.TYPEHUB_CLIENT_ID }}
+          client-secret: ${{ secrets.TYPEHUB_CLIENT_SECRET }}
+          filter: app
