@@ -36,10 +36,7 @@ class Fusio extends PresetAbstract
         $backendPassword = substr(sha1(random_bytes(40)), 0, 16);
 
         $fusioEnv = Record::fromArray([
-            'FUSIO_TENANT_ID' => '',
             'FUSIO_PROJECT_KEY' => $projectKey,
-            'FUSIO_URL' => '',
-            'FUSIO_APPS_URL' => '',
             'FUSIO_ENV' => 'prod',
             'FUSIO_DEBUG' => 'false',
             'FUSIO_CONNECTION' => 'pdo-mysql://fusio:' . $mysqlFusioPassword . '@mysql/fusio',
@@ -48,8 +45,11 @@ class Fusio extends PresetAbstract
             'FUSIO_BACKEND_PW' => $backendPassword,
             'FUSIO_MAILER' => 'native://default',
             'FUSIO_MESSENGER' => 'doctrine://default',
+            'FUSIO_URL' => '',
+            'FUSIO_APPS_URL' => '',
             'FUSIO_MAIL_SENDER' => '',
             'FUSIO_TRUSTED_IP_HEADER' => 'X-Forwarded-For',
+            'FUSIO_TENANT_ID' => '',
             'STRIPE_API_KEY' => '',
             'STRIPE_WEBHOOK_KEY' => '',
             'RECAPTCHA_KEY' => '',
