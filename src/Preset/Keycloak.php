@@ -34,15 +34,13 @@ class Keycloak extends PresetAbstract
         $keycloakEnv = Record::fromArray([
             'KEYCLOAK_ADMIN' => 'admin',
             'KEYCLOAK_ADMIN_PASSWORD' => $adminPassword,
-            'KC_HOSTNAME' => 'myhost.com',
             'KC_DB' => 'mysql',
             'KC_DB_URL' => 'jdbc:mysql://mysql/keycloak',
             'KC_DB_USERNAME' => 'keycloak',
             'KC_DB_PASSWORD' => $mysqlKeycloakPassword,
-            'KC_PROXY_HEADERS' => 'xforwarded',
-            'KC_HTTP_ENABLED' => 'true',
-            'PROXY_ADDRESS_FORWARDING' => 'true',
         ]);
+
+        $command = 'start --hostname-strict false --proxy-headers xforwarded --http-enabled true';
 
         $mysqlEnv = Record::fromArray([
             'MYSQL_DATABASE' => 'keycloak',
@@ -52,7 +50,7 @@ class Keycloak extends PresetAbstract
         ]);
 
         return [
-            $this->newApp('keycloak', 'quay.io/keycloak/keycloak:26.2.5', port: 8080, command: 'start', environment: $keycloakEnv, links: ['mysql']),
+            $this->newApp('keycloak', 'quay.io/keycloak/keycloak:26.2.5', port: 8080, command: $command, environment: $keycloakEnv, links: ['mysql']),
             $this->newApp('mysql', 'mysql:8.4', environment: $mysqlEnv, volumes: [
                 $this->newVolume('./db', '/var/lib/mysql')
             ]),
