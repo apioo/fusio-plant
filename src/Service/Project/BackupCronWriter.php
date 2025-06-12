@@ -30,7 +30,7 @@ readonly class BackupCronWriter
         $output = [];
         $output[] = '#!/bin/bash';
         foreach ($project->getApps() as $app) {
-            if (str_starts_with($app->getImage(), 'mysql')) {
+            if (!str_starts_with($app->getImage(), 'mysql')) {
                 continue;
             }
 
@@ -43,9 +43,9 @@ readonly class BackupCronWriter
     private function writeCronForMysql(int $id, Model\ProjectApp $app, Model\Project $project): string
     {
         $appId = $id . '_' . $app->getName();
-        $user = escapeshellarg($app->getEnvironment()->get('MYSQL_USER'));
-        $password = escapeshellarg($app->getEnvironment()->get('MYSQL_PASSWORD'));
-        $database = escapeshellarg($app->getEnvironment()->get('MYSQL_DATABASE'));
+        $user = escapeshellarg('' . $app->getEnvironment()->get('MYSQL_USER'));
+        $password = escapeshellarg('' . $app->getEnvironment()->get('MYSQL_PASSWORD'));
+        $database = escapeshellarg('' . $app->getEnvironment()->get('MYSQL_DATABASE'));
 
         $config = [];
         $config[] = 'backup_file="/backup/' . $project->getName() . '/' . $app->getName() . '-$(date +\'%Y-%m-%d\')"';
