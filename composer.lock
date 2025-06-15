@@ -1982,16 +1982,16 @@
         },
         {
             "name": "fusio/impl",
-            "version": "v8.5.0",
+            "version": "v8.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/apioo/fusio-impl.git",
-                "reference": "3fcabe2287600408b2bd8c35bdb1a980546d343c"
+                "reference": "04c404be43969535ebbab67ad999dd965f7fda95"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/apioo/fusio-impl/zipball/3fcabe2287600408b2bd8c35bdb1a980546d343c",
-                "reference": "3fcabe2287600408b2bd8c35bdb1a980546d343c",
+                "url": "https://api.github.com/repos/apioo/fusio-impl/zipball/04c404be43969535ebbab67ad999dd965f7fda95",
+                "reference": "04c404be43969535ebbab67ad999dd965f7fda95",
                 "shasum": ""
             },
             "require": {
@@ -2051,7 +2051,7 @@
             "homepage": "https://www.fusio-project.org",
             "support": {
                 "issues": "https://github.com/apioo/fusio-impl/issues",
-                "source": "https://github.com/apioo/fusio-impl/tree/v8.5.0"
+                "source": "https://github.com/apioo/fusio-impl/tree/v8.5.2"
             },
             "funding": [
                 {
@@ -2067,7 +2067,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2025-05-30T20:33:16+00:00"
+            "time": "2025-06-15T19:39:06+00:00"
         },
         {
             "name": "fusio/marketplace",
@@ -2112,16 +2112,16 @@
         },
         {
             "name": "fusio/model",
-            "version": "v4.4.6",
+            "version": "v4.4.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/apioo/fusio-model.git",
-                "reference": "2d9ee8a59300a0bc08c016b26e9ace52a2d390bf"
+                "reference": "bb0ebc6d02d89dc7867385382d92463dd44e541a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/apioo/fusio-model/zipball/2d9ee8a59300a0bc08c016b26e9ace52a2d390bf",
-                "reference": "2d9ee8a59300a0bc08c016b26e9ace52a2d390bf",
+                "url": "https://api.github.com/repos/apioo/fusio-model/zipball/bb0ebc6d02d89dc7867385382d92463dd44e541a",
+                "reference": "bb0ebc6d02d89dc7867385382d92463dd44e541a",
                 "shasum": ""
             },
             "require": {
@@ -2153,7 +2153,7 @@
             "homepage": "https://www.fusio-project.org",
             "support": {
                 "issues": "https://github.com/apioo/fusio-model/issues",
-                "source": "https://github.com/apioo/fusio-model/tree/v4.4.6"
+                "source": "https://github.com/apioo/fusio-model/tree/v4.4.7"
             },
             "funding": [
                 {
@@ -2169,7 +2169,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2025-04-26T20:25:44+00:00"
+            "time": "2025-06-14T15:18:44+00:00"
         },
         {
             "name": "fusio/worker-sdk",
@@ -3413,16 +3413,16 @@
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "3.0.43",
+            "version": "3.0.44",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "709ec107af3cb2f385b9617be72af8cf62441d02"
+                "reference": "1d0b5e7e1434678411787c5a0535e68907cf82d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/709ec107af3cb2f385b9617be72af8cf62441d02",
-                "reference": "709ec107af3cb2f385b9617be72af8cf62441d02",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/1d0b5e7e1434678411787c5a0535e68907cf82d9",
+                "reference": "1d0b5e7e1434678411787c5a0535e68907cf82d9",
                 "shasum": ""
             },
             "require": {
@@ -3503,7 +3503,7 @@
             ],
             "support": {
                 "issues": "https://github.com/phpseclib/phpseclib/issues",
-                "source": "https://github.com/phpseclib/phpseclib/tree/3.0.43"
+                "source": "https://github.com/phpseclib/phpseclib/tree/3.0.44"
             },
             "funding": [
                 {
@@ -3519,7 +3519,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-12-14T21:12:59+00:00"
+            "time": "2025-06-15T09:59:26+00:00"
         },
         {
             "name": "phpstan/phpdoc-parser",
@@ -4093,16 +4093,16 @@
         },
         {
             "name": "psx/api",
-            "version": "v7.3.6",
+            "version": "v7.3.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/apioo/psx-api.git",
-                "reference": "2e2f9bddc7b80a0308ec23f596ccbd532df626e4"
+                "reference": "958b63c4fba39f13ff56bbfd54d79bd2295dce66"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/apioo/psx-api/zipball/2e2f9bddc7b80a0308ec23f596ccbd532df626e4",
-                "reference": "2e2f9bddc7b80a0308ec23f596ccbd532df626e4",
+                "url": "https://api.github.com/repos/apioo/psx-api/zipball/958b63c4fba39f13ff56bbfd54d79bd2295dce66",
+                "reference": "958b63c4fba39f13ff56bbfd54d79bd2295dce66",
                 "shasum": ""
             },
             "require": {
@@ -4148,7 +4148,7 @@
             ],
             "support": {
                 "issues": "https://github.com/apioo/psx-api/issues",
-                "source": "https://github.com/apioo/psx-api/tree/v7.3.6"
+                "source": "https://github.com/apioo/psx-api/tree/v7.3.7"
             },
             "funding": [
                 {
@@ -4164,7 +4164,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2025-05-12T17:00:42+00:00"
+            "time": "2025-06-15T19:31:10+00:00"
         },
         {
             "name": "psx/cloudevents",
@@ -5135,16 +5135,16 @@
         },
         {
             "name": "psx/schema",
-            "version": "v7.4.1",
+            "version": "v7.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/apioo/psx-schema.git",
-                "reference": "7abfb3ffdb883c9fa94a7f7e34297df2e6812d55"
+                "reference": "a10c32bfafb40f7f5b8a3b7bbaafd8f0b05edcf8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/apioo/psx-schema/zipball/7abfb3ffdb883c9fa94a7f7e34297df2e6812d55",
-                "reference": "7abfb3ffdb883c9fa94a7f7e34297df2e6812d55",
+                "url": "https://api.github.com/repos/apioo/psx-schema/zipball/a10c32bfafb40f7f5b8a3b7bbaafd8f0b05edcf8",
+                "reference": "a10c32bfafb40f7f5b8a3b7bbaafd8f0b05edcf8",
                 "shasum": ""
             },
             "require": {
@@ -5193,7 +5193,7 @@
             ],
             "support": {
                 "issues": "https://github.com/apioo/psx-schema/issues",
-                "source": "https://github.com/apioo/psx-schema/tree/v7.4.1"
+                "source": "https://github.com/apioo/psx-schema/tree/v7.4.2"
             },
             "funding": [
                 {
@@ -5209,7 +5209,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2025-05-29T08:12:05+00:00"
+            "time": "2025-06-15T19:21:42+00:00"
         },
         {
             "name": "psx/sql",
@@ -10280,16 +10280,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "12.2.1",
+            "version": "12.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "5f09fda04e7caea93cff50b4e90319184f3e6ee3"
+                "reference": "19e25c2da3f8071a683ee1e445b0e24bba25de61"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/5f09fda04e7caea93cff50b4e90319184f3e6ee3",
-                "reference": "5f09fda04e7caea93cff50b4e90319184f3e6ee3",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/19e25c2da3f8071a683ee1e445b0e24bba25de61",
+                "reference": "19e25c2da3f8071a683ee1e445b0e24bba25de61",
                 "shasum": ""
             },
             "require": {
@@ -10357,7 +10357,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.2.1"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.2.2"
             },
             "funding": [
                 {
@@ -10381,7 +10381,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-06-07T05:17:47+00:00"
+            "time": "2025-06-13T05:49:28+00:00"
         },
         {
             "name": "sebastian/cli-parser",
