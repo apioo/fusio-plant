@@ -123,8 +123,8 @@ services:
       FUSIO_BACKEND_EMAIL: "info@$domain"
       FUSIO_BACKEND_PW: "$backend_password"
       FUSIO_MAIL_SENDER: "info@$domain"
-      FUSIO_URL: "https://$domain"
-      FUSIO_APPS_URL: "https://$domain/apps"
+      FUSIO_URL: ""
+      FUSIO_APPS_URL: ""
       FUSIO_TRUSTED_IP_HEADER: "X-Forwarded-For"
       FUSIO_TENANT_ID: ""
     volumes:
