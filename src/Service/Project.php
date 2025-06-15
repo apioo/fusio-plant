@@ -294,8 +294,9 @@ readonly class Project
 
     private function assertProject(Model\Project $project): void
     {
-        if (!ctype_alnum($project->getName())) {
-            throw new StatusCode\BadRequestException('Project name must contain only alphanumerical characters');
+        $name = $project->getName();
+        if (empty($name) || !preg_match('/^[a-zA-Z0-9\\-]{3,128}$/', $name)) {
+            throw new StatusCode\BadRequestException('Project name must contain only alphanumerical characters or hyphens and must be between 3 and 128 characters');
         }
 
         $apps = $project->getApps();
