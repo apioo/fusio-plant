@@ -127,7 +127,7 @@ do
         username=$(printf "%b" "$(jq -r ".username" "$command")")
         password=$(printf "%b" "$(jq -r ".password" "$command")")
         rm "$command"
-        echo "$password" | docker login $domain -u "$username" --password-stdin
+        docker login $domain -u "$username" -p "$password" >> "$outputFile"
         ;;
       "images")
         rm "$command"
