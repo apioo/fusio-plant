@@ -42,8 +42,8 @@ do
         echo "$backup" > "/etc/cron.daily/backup-$name"
         chmod +x "/etc/cron.daily/backup-$name"
         pushd "/docker/$name" || continue
-        docker compose pull >> "$outputFile"
-        docker compose up -d >> "$outputFile"
+        docker compose pull >> "$outputFile" 2>&1
+        docker compose up -d >> "$outputFile" 2>&1
         popd || continue
         ;;
       "project-remove")
@@ -55,7 +55,7 @@ do
         rm "/etc/cron.daily/backup-$name"
         service nginx reload
         pushd "/docker/$name" || continue
-        docker compose down >> "$outputFile"
+        docker compose down >> "$outputFile" 2>&1
         popd || continue
         rm -r "/docker/$name"
         ;;
@@ -64,8 +64,8 @@ do
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
         pushd "/docker/$name" || continue
-        docker compose pull >> "$outputFile"
-        docker compose up -d >> "$outputFile"
+        docker compose pull >> "$outputFile" 2>&1
+        docker compose up -d >> "$outputFile" 2>&1
         popd || continue
         ;;
       "project-down")
@@ -73,7 +73,7 @@ do
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
         pushd "/docker/$name" || continue
-        docker compose down >> "$outputFile"
+        docker compose down >> "$outputFile" 2>&1
         popd || continue
         ;;
       "project-logs")
@@ -81,7 +81,7 @@ do
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
         pushd "/docker/$name" || continue
-        docker compose logs --no-color --tail=256 >> "$outputFile"
+        docker compose logs --no-color --tail=256 >> "$outputFile" 2>&1
         popd || continue
         ;;
       "project-ps")
@@ -89,7 +89,7 @@ do
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
         pushd "/docker/$name" || continue
-        docker compose ps --format=json >> "$outputFile"
+        docker compose ps --format=json >> "$outputFile" 2>&1
         popd || continue
         ;;
       "project-pull")
@@ -97,7 +97,7 @@ do
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
         pushd "/docker/$name" || continue
-        docker compose pull >> "$outputFile"
+        docker compose pull >> "$outputFile" 2>&1
         popd || continue
         ;;
       "project-stats")
@@ -105,7 +105,7 @@ do
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
         pushd "/docker/$name" || continue
-        docker compose stats --no-stream --format=json >> "$outputFile"
+        docker compose stats --no-stream --format=json >> "$outputFile" 2>&1
         popd || continue
         ;;
       "project-up")
@@ -113,33 +113,33 @@ do
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
         pushd "/docker/$name" || continue
-        docker compose up -d >> "$outputFile"
+        docker compose up -d >> "$outputFile" 2>&1
         popd || continue
         ;;
       "certbot")
         domain=$(printf "%b" "$(jq -r ".domain" "$command")")
         email=$(printf "%b" "$(jq -r ".email" "$command")")
         rm "$command"
-        certbot --nginx --non-interactive --agree-tos -m "$email" -d "$domain" >> "$outputFile"
+        certbot --nginx --non-interactive --agree-tos -m "$email" -d "$domain" >> "$outputFile" 2>&1
         ;;
       "login")
         domain=$(printf "%b" "$(jq -r ".domain" "$command")")
         username=$(printf "%b" "$(jq -r ".username" "$command")")
         password=$(printf "%b" "$(jq -r ".password" "$command")")
         rm "$command"
-        docker login $domain -u "$username" -p "$password" >> "$outputFile"
+        docker login $domain -u "$username" -p "$password" >> "$outputFile" 2>&1
         ;;
       "images")
         rm "$command"
-        docker images --format=json >> "$outputFile"
+        docker images --format=json >> "$outputFile" 2>&1
         ;;
       "ps")
         rm "$command"
-        docker ps --format=json >> "$outputFile"
+        docker ps --format=json >> "$outputFile" 2>&1
         ;;
       "stats")
         rm "$command"
-        docker stats --no-stream --format=json >> "$outputFile"
+        docker stats --no-stream --format=json >> "$outputFile" 2>&1
         ;;
       *)
         rm "$command"
