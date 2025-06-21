@@ -88,6 +88,9 @@ readonly class Project
             throw new StatusCode\NotFoundException('Provided project does not exist');
         }
 
+        // it is not possible to change the project name
+        $project->setName($row->getName());
+
         $this->assertProject($project);
 
         $this->projectTable->beginTransaction();
