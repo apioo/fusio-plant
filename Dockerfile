@@ -14,3 +14,5 @@ RUN mkdir /var/www/html/fusio/public/apps/plant
 RUN wget -O /var/www/html/fusio/public/apps/plant/plant.zip "https://github.com/apioo/fusio-plant-frontend/releases/download/v${FUSIO_APP_PLANT}/plant.zip"
 RUN cd /var/www/html/fusio/public/apps/plant && unzip plant.zip
 RUN rm /var/www/html/fusio/public/apps/plant/plant.zip
+RUN rm -r /var/www/html/fusio/public/apps/account
+RUN rm -r /var/www/html/fusio/public/apps/developer
