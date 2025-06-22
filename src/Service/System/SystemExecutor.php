@@ -70,6 +70,7 @@ readonly class SystemExecutor
 
         $command = new Model\CommandLogin();
         $command->setType('login');
+        $command->setDomain($login->getDomain());
         $command->setUsername($login->getUsername());
         $command->setPassword($login->getPassword());
         $this->executor->writeCommand($commandId, $command);
