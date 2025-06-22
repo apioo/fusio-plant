@@ -150,7 +150,7 @@ do
         password=$(printf "%b" "$(jq -r ".password" "$command")")
         rm "$command"
         echo "> docker login" >> "$outputFile"
-        docker login $domain -u "$username" -p "$password" >> "$outputFile" 2>&1
+        docker login "$domain" -u "$username" -p "$password" >> "$outputFile" 2>&1
         echo "Exit code: $?" >> "$outputFile"
         ;;
       "images")
