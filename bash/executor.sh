@@ -38,12 +38,18 @@ do
         echo "$compose" > "/docker/$name/docker-compose.yml"
         echo "$nginx" > "/etc/nginx/sites-available/$name"
         ln -s "/etc/nginx/sites-available/$name" "/etc/nginx/sites-enabled/$name"
+        echo "> service nginx reload" >> "$outputFile"
         service nginx reload
+        echo "Exit code: $?" >> "$outputFile"
         echo "$backup" > "/etc/cron.daily/backup-$name"
         chmod +x "/etc/cron.daily/backup-$name"
         pushd "/docker/$name" || continue
+        echo "> docker compose pull" >> "$outputFile"
         docker compose pull >> "$outputFile" 2>&1
+        echo "Exit code: $?" >> "$outputFile"
+        echo "> docker compose up -d" >> "$outputFile"
         docker compose up -d >> "$outputFile" 2>&1
+        echo "Exit code: $?" >> "$outputFile"
         popd || continue
         ;;
       "project-remove")
@@ -53,9 +59,13 @@ do
         rm "/etc/nginx/sites-enabled/$name"
         rm "/etc/nginx/sites-available/$name"
         rm "/etc/cron.daily/backup-$name"
+        echo "> service nginx reload" >> "$outputFile"
         service nginx reload
+        echo "Exit code: $?" >> "$outputFile"
         pushd "/docker/$name" || continue
+        echo "> docker compose down" >> "$outputFile"
         docker compose down >> "$outputFile" 2>&1
+        echo "Exit code: $?" >> "$outputFile"
         popd || continue
         rm -r "/docker/$name"
         ;;
@@ -64,8 +74,12 @@ do
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
         pushd "/docker/$name" || continue
+        echo "> docker compose pull" >> "$outputFile"
         docker compose pull >> "$outputFile" 2>&1
+        echo "Exit code: $?" >> "$outputFile"
+        echo "> docker compose up -d" >> "$outputFile"
         docker compose up -d >> "$outputFile" 2>&1
+        echo "Exit code: $?" >> "$outputFile"
         popd || continue
         ;;
       "project-down")
@@ -73,7 +87,9 @@ do
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
         pushd "/docker/$name" || continue
+        echo "> docker compose down" >> "$outputFile"
         docker compose down >> "$outputFile" 2>&1
+        echo "Exit code: $?" >> "$outputFile"
         popd || continue
         ;;
       "project-logs")
@@ -97,7 +113,9 @@ do
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
         pushd "/docker/$name" || continue
+        echo "> docker compose pull" >> "$outputFile"
         docker compose pull >> "$outputFile" 2>&1
+        echo "Exit code: $?" >> "$outputFile"
         popd || continue
         ;;
       "project-stats")
@@ -113,21 +131,27 @@ do
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
         pushd "/docker/$name" || continue
+        echo "> docker compose up -d" >> "$outputFile"
         docker compose up -d >> "$outputFile" 2>&1
+        echo "Exit code: $?" >> "$outputFile"
         popd || continue
         ;;
       "certbot")
         domain=$(printf "%b" "$(jq -r ".domain" "$command")")
         email=$(printf "%b" "$(jq -r ".email" "$command")")
         rm "$command"
+        echo "> certbot --nginx" >> "$outputFile"
         certbot --nginx --non-interactive --agree-tos -m "$email" -d "$domain" >> "$outputFile" 2>&1
+        echo "Exit code: $?" >> "$outputFile"
         ;;
       "login")
         domain=$(printf "%b" "$(jq -r ".domain" "$command")")
         username=$(printf "%b" "$(jq -r ".username" "$command")")
         password=$(printf "%b" "$(jq -r ".password" "$command")")
         rm "$command"
+        echo "> docker login" >> "$outputFile"
         docker login $domain -u "$username" -p "$password" >> "$outputFile" 2>&1
+        echo "Exit code: $?" >> "$outputFile"
         ;;
       "images")
         rm "$command"
