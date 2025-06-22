@@ -27,9 +27,11 @@ use App\Exception\ProcessTimeoutException;
 use App\Model;
 use App\Model\Message;
 use App\Service\Project\ProjectExecutor;
+use App\Service\System\SystemExecutor;
 use App\Table;
 use Fusio\Engine\ContextInterface;
 use Fusio\Engine\DispatcherInterface;
+use Fusio\Impl\Service\System\FrameworkConfig;
 use PSX\CloudEvents\Builder;
 use PSX\DateTime\LocalDateTime;
 use PSX\Http\Exception as StatusCode;
@@ -41,8 +43,10 @@ readonly class Project
     public function __construct(
         private Table\Project $projectTable,
         private Table\Monitor $monitorTable,
-        private ProjectExecutor $executor,
+        private ProjectExecutor $projectExecutor,
+        private SystemExecutor $systemExecutor,
         private JsonParser $jsonParser,
+        private FrameworkConfig $frameworkConfig,
         private DispatcherInterface $dispatcher
     ) {
     }
@@ -64,7 +68,7 @@ readonly class Project
             $this->projectTable->create($row);
 
             try {
-                $output = $this->executor->setup($this->projectTable->getLastInsertId(), $project);
+                $output = $this->projectExecutor->setup($this->projectTable->getLastInsertId(), $project);
             } catch (ProcessTimeoutException|ConfigurationException|PortResolveException $e) {
                 throw new StatusCode\InternalServerErrorException('Could not setup project, got: ' . $e->getMessage(), previous: $e);
             }
@@ -101,9 +105,20 @@ readonly class Project
             $this->projectTable->update($row);
 
             try {
-                $output = $this->executor->setup($row->getId(), $project);
+                $output = $this->projectExecutor->setup($row->getId(), $project);
             } catch (ProcessTimeoutException $e) {
                 throw new StatusCode\InternalServerErrorException('Could not update project, got: ' . $e->getMessage(), previous: $e);
+            }
+
+            foreach ($this->getDomains($project) as $domain) {
+                try {
+                    $request = new Model\CertbotRequest();
+                    $request->setDomain($domain);
+                    $request->setEmail($this->frameworkConfig->getMailSender());
+                    $output.= $this->systemExecutor->certbot($request);
+                } catch (ProcessTimeoutException $e) {
+                    throw new StatusCode\InternalServerErrorException('Could not update project, got: ' . $e->getMessage(), previous: $e);
+                }
             }
 
             $this->dispatchEvent('project.updated', $row, $row->getDisplayId());
@@ -133,7 +148,7 @@ readonly class Project
             $this->projectTable->delete($row);
 
             try {
-                $output = $this->executor->remove($row->getId(), $row);
+                $output = $this->projectExecutor->remove($row->getId(), $row);
             } catch (ProcessTimeoutException $e) {
                 throw new StatusCode\InternalServerErrorException('Could not remove project, got: ' . $e->getMessage(), previous: $e);
             }
@@ -158,7 +173,7 @@ readonly class Project
         }
 
         try {
-            $output = $this->executor->deploy($row->getId(), $row);
+            $output = $this->projectExecutor->deploy($row->getId(), $row);
         } catch (ProcessTimeoutException $e) {
             throw new StatusCode\InternalServerErrorException('Could not deploy, got: ' . $e->getMessage(), previous: $e);
         }
@@ -176,7 +191,7 @@ readonly class Project
         }
 
         try {
-            $output = $this->executor->down($row->getId(), $row);
+            $output = $this->projectExecutor->down($row->getId(), $row);
         } catch (ProcessTimeoutException $e) {
             throw new StatusCode\InternalServerErrorException('Could not down, got: ' . $e->getMessage(), previous: $e);
         }
@@ -194,7 +209,7 @@ readonly class Project
         }
 
         try {
-            $output = $this->executor->logs($row->getId(), $row);
+            $output = $this->projectExecutor->logs($row->getId(), $row);
         } catch (ProcessTimeoutException $e) {
             throw new StatusCode\InternalServerErrorException('Could not get logs, got: ' . $e->getMessage(), previous: $e);
         }
@@ -212,7 +227,7 @@ readonly class Project
         }
 
         try {
-            $output = $this->executor->ps($row->getId(), $row);
+            $output = $this->projectExecutor->ps($row->getId(), $row);
         } catch (ProcessTimeoutException $e) {
             throw new StatusCode\InternalServerErrorException('Could not get ps, got: ' . $e->getMessage(), previous: $e);
         }
@@ -233,7 +248,7 @@ readonly class Project
         }
 
         try {
-            $output = $this->executor->pull($row->getId(), $row);
+            $output = $this->projectExecutor->pull($row->getId(), $row);
         } catch (ProcessTimeoutException $e) {
             throw new StatusCode\InternalServerErrorException('Could not pull, got: ' . $e->getMessage(), previous: $e);
         }
@@ -251,7 +266,7 @@ readonly class Project
         }
 
         try {
-            $output = $this->executor->stats($row->getId(), $row);
+            $output = $this->projectExecutor->stats($row->getId(), $row);
         } catch (ProcessTimeoutException $e) {
             throw new StatusCode\InternalServerErrorException('Could not get stats, got: ' . $e->getMessage(), previous: $e);
         }
@@ -272,7 +287,7 @@ readonly class Project
         }
 
         try {
-            $output = $this->executor->up($row->getId(), $row);
+            $output = $this->projectExecutor->up($row->getId(), $row);
         } catch (ProcessTimeoutException $e) {
             throw new StatusCode\InternalServerErrorException('Could not up, got: ' . $e->getMessage(), previous: $e);
         }
@@ -322,5 +337,16 @@ readonly class Project
         $return->setId($id);
         $return->setOutput($output);
         return $return;
+    }
+
+    private function getDomains(Model\Project $project): \Generator
+    {
+        $apps = $project->getApps() ?? [];
+        foreach ($apps as $app) {
+            $domains = $app->getDomains() ?? [];
+            foreach ($domains as $domain) {
+                yield $domain;
+            }
+        }
     }
 }
