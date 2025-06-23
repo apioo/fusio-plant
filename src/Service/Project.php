@@ -117,7 +117,7 @@ readonly class Project
                     $request->setEmail($this->frameworkConfig->getMailSender());
                     $output.= $this->systemExecutor->certbot($request);
                 } catch (ProcessTimeoutException $e) {
-                    throw new StatusCode\InternalServerErrorException('Could not update project, got: ' . $e->getMessage(), previous: $e);
+                    throw new StatusCode\InternalServerErrorException('Could not register SSL certificate for domain ' . $domain . ', got: ' . $e->getMessage(), previous: $e);
                 }
             }
 
