@@ -180,6 +180,6 @@ readonly class ProjectExecutor
 
     private function buildCommandId(int $id): string
     {
-        return $id . '-' . date('YmdHisv');
+        return $id . '-' . uniqid() . '-' . date('YmdHisv');
     }
 }
