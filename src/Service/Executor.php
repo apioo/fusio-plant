@@ -60,6 +60,8 @@ readonly class Executor
             if ($count > 30) {
                 throw new ProcessTimeoutException('Command output timeout for: ' . $commandId);
             }
+
+            clearstatcache();
         }
     }
 }
