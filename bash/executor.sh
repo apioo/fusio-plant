@@ -43,14 +43,14 @@ do
         echo "Exit code: $?" >> "$outputFile"
         echo "$backup" > "/etc/cron.daily/backup-$name"
         chmod +x "/etc/cron.daily/backup-$name"
-        pushd "/docker/$name" || continue
+        pushd "/docker/$name"
         echo "> docker compose pull" >> "$outputFile"
         docker compose pull >> "$outputFile" 2>&1
         echo "Exit code: $?" >> "$outputFile"
         echo "> docker compose up -d" >> "$outputFile"
         docker compose up -d >> "$outputFile" 2>&1
         echo "Exit code: $?" >> "$outputFile"
-        popd || continue
+        popd
         ;;
       "project-remove")
         name=$(jq -r ".name" "$command")
@@ -62,79 +62,79 @@ do
         echo "> service nginx reload" >> "$outputFile"
         service nginx reload
         echo "Exit code: $?" >> "$outputFile"
-        pushd "/docker/$name" || continue
+        pushd "/docker/$name"
         echo "> docker compose down" >> "$outputFile"
         docker compose down >> "$outputFile" 2>&1
         echo "Exit code: $?" >> "$outputFile"
-        popd || continue
+        popd
         rm -r "/docker/$name"
         ;;
       "project-deploy")
         name=$(jq -r ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
-        pushd "/docker/$name" || continue
+        pushd "/docker/$name"
         echo "> docker compose pull" >> "$outputFile"
         docker compose pull >> "$outputFile" 2>&1
         echo "Exit code: $?" >> "$outputFile"
         echo "> docker compose up -d" >> "$outputFile"
         docker compose up -d >> "$outputFile" 2>&1
         echo "Exit code: $?" >> "$outputFile"
-        popd || continue
+        popd
         ;;
       "project-down")
         name=$(jq -r ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
-        pushd "/docker/$name" || continue
+        pushd "/docker/$name"
         echo "> docker compose down" >> "$outputFile"
         docker compose down >> "$outputFile" 2>&1
         echo "Exit code: $?" >> "$outputFile"
-        popd || continue
+        popd
         ;;
       "project-logs")
         name=$(jq -r ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
-        pushd "/docker/$name" || continue
+        pushd "/docker/$name"
         docker compose logs --no-color --tail=256 >> "$outputFile" 2>&1
-        popd || continue
+        popd
         ;;
       "project-ps")
         name=$(jq -r ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
-        pushd "/docker/$name" || continue
+        pushd "/docker/$name"
         docker compose ps --format=json >> "$outputFile" 2>&1
-        popd || continue
+        popd
         ;;
       "project-pull")
         name=$(jq -r ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
-        pushd "/docker/$name" || continue
+        pushd "/docker/$name"
         echo "> docker compose pull" >> "$outputFile"
         docker compose pull >> "$outputFile" 2>&1
         echo "Exit code: $?" >> "$outputFile"
-        popd || continue
+        popd
         ;;
       "project-stats")
         name=$(jq -r ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
-        pushd "/docker/$name" || continue
+        pushd "/docker/$name"
         docker compose stats --no-stream --format=json >> "$outputFile" 2>&1
-        popd || continue
+        popd
         ;;
       "project-up")
         name=$(jq -r ".name" "$command")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
-        pushd "/docker/$name" || continue
+        pushd "/docker/$name"
         echo "> docker compose up -d" >> "$outputFile"
         docker compose up -d >> "$outputFile" 2>&1
         echo "Exit code: $?" >> "$outputFile"
-        popd || continue
+        popd
         ;;
       "certbot")
         domain=$(printf "%b" "$(jq -r ".domain" "$command")")
