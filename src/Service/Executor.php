@@ -37,7 +37,7 @@ readonly class Executor
     public function execute(Model\Command $command): string
     {
         $handler = fopen($this->plantPipe, 'w+');
-        fwrite($handler, Parser::encode($command));
+        fwrite($handler, Parser::encode($command) . PHP_EOL);
         fflush($handler);
 
         $response = '';
