@@ -45,17 +45,13 @@ readonly class ProjectExecutor
         $nginxConfig = $this->nginxWriter->write($id, $project);
         $backupCron = $this->backupCronWriter->write($id, $project);
 
-        $commandId = $this->buildCommandId($id);
-
         $command = new Model\CommandProjectSetup();
         $command->setType('project-setup');
         $command->setName($project->getName());
         $command->setCompose($composeYaml);
         $command->setNginx($nginxConfig);
         $command->setBackup($backupCron);
-        $this->executor->writeCommand($commandId, $command);
-
-        return $this->executor->waitForResponse($commandId);
+        return $this->executor->execute($command);
     }
 
     /**
@@ -63,14 +59,10 @@ readonly class ProjectExecutor
      */
     public function remove(int $id, ProjectRow $project): string
     {
-        $commandId = $this->buildCommandId($id);
-
         $command = new Model\CommandProjectRemove();
         $command->setType('project-remove');
         $command->setName($project->getName());
-        $this->executor->writeCommand($commandId, $command);
-
-        return $this->executor->waitForResponse($commandId);
+        return $this->executor->execute($command);
     }
 
     /**
@@ -78,14 +70,10 @@ readonly class ProjectExecutor
      */
     public function pull(int $id, ProjectRow $project): string
     {
-        $commandId = $this->buildCommandId($id);
-
         $command = new Model\CommandProjectPull();
         $command->setType('project-pull');
         $command->setName($project->getName());
-        $this->executor->writeCommand($commandId, $command);
-
-        return $this->executor->waitForResponse($commandId);
+        return $this->executor->execute($command);
     }
 
     /**
@@ -93,14 +81,10 @@ readonly class ProjectExecutor
      */
     public function up(int $id, ProjectRow $project): string
     {
-        $commandId = $this->buildCommandId($id);
-
         $command = new Model\CommandProjectUp();
         $command->setType('project-up');
         $command->setName($project->getName());
-        $this->executor->writeCommand($commandId, $command);
-
-        return $this->executor->waitForResponse($commandId);
+        return $this->executor->execute($command);
     }
 
     /**
@@ -108,14 +92,10 @@ readonly class ProjectExecutor
      */
     public function deploy(int $id, ProjectRow $project): string
     {
-        $commandId = $this->buildCommandId($id);
-
         $command = new Model\CommandProjectDeploy();
         $command->setType('project-deploy');
         $command->setName($project->getName());
-        $this->executor->writeCommand($commandId, $command);
-
-        return $this->executor->waitForResponse($commandId);
+        return $this->executor->execute($command);
     }
 
     /**
@@ -123,14 +103,10 @@ readonly class ProjectExecutor
      */
     public function down(int $id, ProjectRow $project): string
     {
-        $commandId = $this->buildCommandId($id);
-
         $command = new Model\CommandProjectDown();
         $command->setType('project-down');
         $command->setName($project->getName());
-        $this->executor->writeCommand($commandId, $command);
-
-        return $this->executor->waitForResponse($commandId);
+        return $this->executor->execute($command);
     }
 
     /**
@@ -138,14 +114,10 @@ readonly class ProjectExecutor
      */
     public function logs(int $id, ProjectRow $project): string
     {
-        $commandId = $this->buildCommandId($id);
-
         $command = new Model\CommandProjectLogs();
         $command->setType('project-logs');
         $command->setName($project->getName());
-        $this->executor->writeCommand($commandId, $command);
-
-        return $this->executor->waitForResponse($commandId);
+        return $this->executor->execute($command);
     }
 
     /**
@@ -153,14 +125,10 @@ readonly class ProjectExecutor
      */
     public function ps(int $id, ProjectRow $project): string
     {
-        $commandId = $this->buildCommandId($id);
-
         $command = new Model\CommandProjectPs();
         $command->setType('project-ps');
         $command->setName($project->getName());
-        $this->executor->writeCommand($commandId, $command);
-
-        return $this->executor->waitForResponse($commandId);
+        return $this->executor->execute($command);
     }
 
     /**
@@ -168,18 +136,9 @@ readonly class ProjectExecutor
      */
     public function stats(int $id, ProjectRow $project): string
     {
-        $commandId = $this->buildCommandId($id);
-
         $command = new Model\CommandProjectStats();
         $command->setType('project-stats');
         $command->setName($project->getName());
-        $this->executor->writeCommand($commandId, $command);
-
-        return $this->executor->waitForResponse($commandId);
-    }
-
-    private function buildCommandId(int $id): string
-    {
-        return $id . '-' . uniqid() . '-' . date('YmdHisv');
+        return $this->executor->execute($command);
     }
 }

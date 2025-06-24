@@ -21,47 +21,36 @@
 
 namespace App\Service;
 
-use App\Exception\ProcessTimeoutException;
 use App\Model;
 use PSX\Framework\Config\ConfigInterface;
 use PSX\Json\Parser;
 
 readonly class Executor
 {
+    private string $plantPipe;
+
     public function __construct(private ConfigInterface $config)
     {
+        $this->plantPipe = $this->config->get('plant_pipe');
     }
 
-    public function writeCommand(string $commandId, Model\Command $command): void
+    public function execute(Model\Command $command): string
     {
-        file_put_contents(__DIR__ . '/../../input/' . $commandId . '.cmd', Parser::encode($command));
-    }
+        $handler = fopen($this->plantPipe, 'w+');
+        fwrite($handler, Parser::encode($command));
+        fflush($handler);
 
-    /**
-     * @throws ProcessTimeoutException
-     */
-    public function waitForResponse(string $commandId): string
-    {
-        if ($this->config->get('psx_debug') === true) {
-            return '';
-        }
-
-        $file = __DIR__ . '/../../output/' . $commandId . '.cmd';
-
-        $count = 0;
-        while (true) {
-            if (is_file($file)) {
-                return file_get_contents($file);
+        $response = '';
+        while (($buffer = fgets($handler, 4096)) !== false) {
+            if (str_contains($buffer, '--PLANT--')) {
+                break;
             }
 
-            sleep(1);
-            $count++;
-
-            if ($count > 30) {
-                throw new ProcessTimeoutException('Command output timeout for: ' . $commandId);
-            }
-
-            clearstatcache();
+            $response.= $buffer;
         }
+
+        fclose($handler);
+
+        return $response;
     }
 }

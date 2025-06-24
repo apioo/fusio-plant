@@ -36,15 +36,11 @@ readonly class SystemExecutor
      */
     public function certbot(Model\CertbotRequest $request): string
     {
-        $commandId = $this->buildCommandId(0);
-
         $command = new Model\CommandCertbot();
         $command->setType('certbot');
         $command->setDomain($request->getDomain());
         $command->setEmail($request->getEmail());
-        $this->executor->writeCommand($commandId, $command);
-
-        return $this->executor->waitForResponse($commandId);
+        return $this->executor->execute($command);
     }
 
     /**
@@ -52,13 +48,9 @@ readonly class SystemExecutor
      */
     public function images(): string
     {
-        $commandId = $this->buildCommandId(0);
-
         $command = new Model\CommandPs();
         $command->setType('images');
-        $this->executor->writeCommand($commandId, $command);
-
-        return $this->executor->waitForResponse($commandId);
+        return $this->executor->execute($command);
     }
 
     /**
@@ -66,16 +58,12 @@ readonly class SystemExecutor
      */
     public function login(Model\DockerLogin $login): string
     {
-        $commandId = $this->buildCommandId(0);
-
         $command = new Model\CommandLogin();
         $command->setType('login');
         $command->setDomain($login->getDomain());
         $command->setUsername($login->getUsername());
         $command->setPassword($login->getPassword());
-        $this->executor->writeCommand($commandId, $command);
-
-        return $this->executor->waitForResponse($commandId);
+        return $this->executor->execute($command);
     }
 
     /**
@@ -83,13 +71,9 @@ readonly class SystemExecutor
      */
     public function ps(): string
     {
-        $commandId = $this->buildCommandId(0);
-
         $command = new Model\CommandPs();
         $command->setType('ps');
-        $this->executor->writeCommand($commandId, $command);
-
-        return $this->executor->waitForResponse($commandId);
+        return $this->executor->execute($command);
     }
 
     /**
@@ -97,17 +81,8 @@ readonly class SystemExecutor
      */
     public function stats(): string
     {
-        $commandId = $this->buildCommandId(0);
-
         $command = new Model\CommandStats();
         $command->setType('stats');
-        $this->executor->writeCommand($commandId, $command);
-
-        return $this->executor->waitForResponse($commandId);
-    }
-
-    private function buildCommandId(int $id): string
-    {
-        return $id . '-' . uniqid() . '-' . date('YmdHisv');
+        return $this->executor->execute($command);
     }
 }

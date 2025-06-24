@@ -5,6 +5,8 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\env;
 
 return [
 
+    'plant_pipe'               => __DIR__ . '/bin/plant',
+
     // Firewall configuration, the firewall works similar to fail2ban, in case a client has produced a specific number
     // of client errors, we insert a ban for this ip for a specific amount of time. This protects us from brute-force
     // attacks and other malicious requests

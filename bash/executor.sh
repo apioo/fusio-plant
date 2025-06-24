@@ -16,160 +16,141 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-while inotifywait -q -e modify /opt/plant/input
+pipe=/opt/plant/pipe
+while true
 do
-  for command in /opt/plant/input/*.cmd; do
-    type=$(jq -r ".type" "$command")
-    output=$(basename -- "$command")
-    outputFile="/opt/plant/output/$output.lock"
-    resultFile="/opt/plant/output/$output"
-    touch "$outputFile"
-    chown www-data: "$outputFile"
+  while read -r command; do
+    type=$(echo "$command" | jq -r ".type")
     case $type in
       "project-setup")
-        name=$(jq -r ".name" "$command")
+        name=$(echo "$command" | jq -r ".name")
         name="${name//[^[:alnum:]]/_}"
-        compose=$(jq -r ".compose" "$command")
-        nginx=$(jq -r ".nginx" "$command")
-        backup=$(jq -r ".backup" "$command")
-        rm "$command"
+        compose=$(echo "$command" | jq -r ".compose")
+        nginx=$(echo "$command" | jq -r ".nginx")
+        backup=$(echo "$command" | jq -r ".backup")
         mkdir "/backup/$name"
         mkdir "/docker/$name"
         echo "$compose" > "/docker/$name/docker-compose.yml"
         echo "$nginx" > "/etc/nginx/sites-available/$name"
         ln -s "/etc/nginx/sites-available/$name" "/etc/nginx/sites-enabled/$name"
-        echo "> service nginx reload" >> "$outputFile"
-        service nginx reload
-        echo "Exit code: $?" >> "$outputFile"
+        echo "> service nginx reload" > "$pipe"
+        service nginx reload > "$pipe"
+        echo "Exit code: $?" > "$pipe"
         echo "$backup" > "/etc/cron.daily/backup-$name"
         chmod +x "/etc/cron.daily/backup-$name"
         pushd "/docker/$name"
-        echo "> docker compose pull" >> "$outputFile"
-        docker compose pull >> "$outputFile" 2>&1
-        echo "Exit code: $?" >> "$outputFile"
-        echo "> docker compose up -d" >> "$outputFile"
-        docker compose up -d >> "$outputFile" 2>&1
-        echo "Exit code: $?" >> "$outputFile"
+        echo "> docker compose pull" > "$pipe"
+        docker compose pull > "$pipe" 2>&1
+        echo "Exit code: $?" > "$pipe"
+        echo "> docker compose up -d" > "$pipe"
+        docker compose up -d > "$pipe" 2>&1
+        echo "Exit code: $?" > "$pipe"
         popd
         ;;
       "project-remove")
-        name=$(jq -r ".name" "$command")
+        name=$(echo "$command" | jq -r ".name")
         name="${name//[^[:alnum:]]/_}"
-        rm "$command"
         rm "/etc/nginx/sites-enabled/$name"
         rm "/etc/nginx/sites-available/$name"
         rm "/etc/cron.daily/backup-$name"
-        echo "> service nginx reload" >> "$outputFile"
+        echo "> service nginx reload" > "$pipe"
         service nginx reload
-        echo "Exit code: $?" >> "$outputFile"
+        echo "Exit code: $?" > "$pipe"
         pushd "/docker/$name"
-        echo "> docker compose down" >> "$outputFile"
-        docker compose down >> "$outputFile" 2>&1
-        echo "Exit code: $?" >> "$outputFile"
+        echo "> docker compose down" > "$pipe"
+        docker compose down > "$pipe" 2>&1
+        echo "Exit code: $?" > "$pipe"
         popd
         rm -r "/docker/$name"
         ;;
       "project-deploy")
-        name=$(jq -r ".name" "$command")
+        name=$(echo "$command" | jq -r ".name")
         name="${name//[^[:alnum:]]/_}"
         rm "$command"
         pushd "/docker/$name"
-        echo "> docker compose pull" >> "$outputFile"
-        docker compose pull >> "$outputFile" 2>&1
-        echo "Exit code: $?" >> "$outputFile"
-        echo "> docker compose up -d" >> "$outputFile"
-        docker compose up -d >> "$outputFile" 2>&1
-        echo "Exit code: $?" >> "$outputFile"
+        echo "> docker compose pull" > "$pipe"
+        docker compose pull > "$pipe" 2>&1
+        echo "Exit code: $?" > "$pipe"
+        echo "> docker compose up -d" > "$pipe"
+        docker compose up -d > "$pipe" 2>&1
+        echo "Exit code: $?" > "$pipe"
         popd
         ;;
       "project-down")
-        name=$(jq -r ".name" "$command")
+        name=$(echo "$command" | jq -r ".name")
         name="${name//[^[:alnum:]]/_}"
-        rm "$command"
         pushd "/docker/$name"
-        echo "> docker compose down" >> "$outputFile"
-        docker compose down >> "$outputFile" 2>&1
-        echo "Exit code: $?" >> "$outputFile"
+        echo "> docker compose down" > "$pipe"
+        docker compose down > "$pipe" 2>&1
+        echo "Exit code: $?" > "$pipe"
         popd
         ;;
       "project-logs")
-        name=$(jq -r ".name" "$command")
+        name=$(echo "$command" | jq -r ".name")
         name="${name//[^[:alnum:]]/_}"
-        rm "$command"
         pushd "/docker/$name"
-        docker compose logs --no-color --tail=256 >> "$outputFile" 2>&1
+        docker compose logs --no-color --tail=256 > "$pipe" 2>&1
         popd
         ;;
       "project-ps")
-        name=$(jq -r ".name" "$command")
+        name=$(echo "$command" | jq -r ".name")
         name="${name//[^[:alnum:]]/_}"
-        rm "$command"
         pushd "/docker/$name"
-        docker compose ps --format=json >> "$outputFile" 2>&1
+        docker compose ps --format=json > "$pipe" 2>&1
         popd
         ;;
       "project-pull")
-        name=$(jq -r ".name" "$command")
+        name=$(echo "$command" | jq -r ".name")
         name="${name//[^[:alnum:]]/_}"
-        rm "$command"
         pushd "/docker/$name"
-        echo "> docker compose pull" >> "$outputFile"
-        docker compose pull >> "$outputFile" 2>&1
-        echo "Exit code: $?" >> "$outputFile"
+        echo "> docker compose pull" > "$pipe"
+        docker compose pull > "$pipe" 2>&1
+        echo "Exit code: $?" > "$pipe"
         popd
         ;;
       "project-stats")
-        name=$(jq -r ".name" "$command")
+        name=$(echo "$command" | jq -r ".name")
         name="${name//[^[:alnum:]]/_}"
-        rm "$command"
         pushd "/docker/$name"
-        docker compose stats --no-stream --format=json >> "$outputFile" 2>&1
+        docker compose stats --no-stream --format=json > "$pipe" 2>&1
         popd
         ;;
       "project-up")
-        name=$(jq -r ".name" "$command")
+        name=$(echo "$command" | jq -r ".name")
         name="${name//[^[:alnum:]]/_}"
-        rm "$command"
         pushd "/docker/$name"
-        echo "> docker compose up -d" >> "$outputFile"
-        docker compose up -d >> "$outputFile" 2>&1
-        echo "Exit code: $?" >> "$outputFile"
+        echo "> docker compose up -d" > "$pipe"
+        docker compose up -d > "$pipe" 2>&1
+        echo "Exit code: $?" > "$pipe"
         popd
         ;;
       "certbot")
-        domain=$(printf "%b" "$(jq -r ".domain" "$command")")
-        email=$(printf "%b" "$(jq -r ".email" "$command")")
-        rm "$command"
-        echo "> certbot --nginx" >> "$outputFile"
-        certbot --nginx --non-interactive --agree-tos -m "$email" -d "$domain" >> "$outputFile" 2>&1
-        echo "Exit code: $?" >> "$outputFile"
+        domain=$(printf "%b" "$(echo "$command" | jq -r ".domain")")
+        email=$(printf "%b" "$(echo "$command" | jq -r ".email")")
+        echo "> certbot --nginx" > "$pipe"
+        certbot --nginx --non-interactive --agree-tos -m "$email" -d "$domain" > "$pipe" 2>&1
+        echo "Exit code: $?" > "$pipe"
         ;;
       "login")
-        domain=$(printf "%b" "$(jq -r ".domain" "$command")")
-        username=$(printf "%b" "$(jq -r ".username" "$command")")
-        password=$(printf "%b" "$(jq -r ".password" "$command")")
-        rm "$command"
-        echo "> docker login" >> "$outputFile"
-        docker login "$domain" -u "$username" -p "$password" >> "$outputFile" 2>&1
-        echo "Exit code: $?" >> "$outputFile"
+        domain=$(printf "%b" "$(echo "$command" | jq -r ".domain")")
+        username=$(printf "%b" "$(echo "$command" | jq -r ".username")")
+        password=$(printf "%b" "$(echo "$command" | jq -r ".password")")
+        echo "> docker login" > "$pipe"
+        docker login "$domain" -u "$username" -p "$password" > "$pipe" 2>&1
+        echo "Exit code: $?" > "$pipe"
         ;;
       "images")
-        rm "$command"
-        docker images --format=json >> "$outputFile" 2>&1
+        docker images --format=json > "$pipe" 2>&1
         ;;
       "ps")
-        rm "$command"
-        docker ps --format=json >> "$outputFile" 2>&1
+        docker ps --format=json > "$pipe" 2>&1
         ;;
       "stats")
-        rm "$command"
-        docker stats --no-stream --format=json >> "$outputFile" 2>&1
-        ;;
-      *)
-        rm "$command"
+        docker stats --no-stream --format=json > "$pipe" 2>&1
         ;;
     esac
-    mv "$outputFile" "$resultFile"
-  done
-  sleep 1
+    echo "" > "$pipe"
+    echo "--PLANT--" > "$pipe"
+    echo "" > "$pipe"
+  done < $pipe
 done
