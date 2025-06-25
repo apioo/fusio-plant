@@ -33,7 +33,8 @@
   ],
   "require": {
     "php": ">=8.2",
-    "fusio/impl": "^8.0"
+    "fusio/impl": "^8.0",
+    "symfony/lock": "^7.3"
   },
   "require-dev": {
     "phpunit/phpunit": "^12.1"
