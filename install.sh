@@ -38,8 +38,10 @@ mkdir /cache
 mkdir /docker
 chown -R www-data: /cache
 mkdir /opt/plant
-mkfifo /opt/plant/pipe
-ls -l /opt/plant/pipe
+mkfifo /opt/plant/input
+ls -l /opt/plant/input
+mkfifo /opt/plant/output
+ls -l /opt/plant/output
 mkdir /opt/plant/www
 cat > /opt/plant/www/index.html <<EOF
 <!DOCTYPE>
@@ -126,7 +128,8 @@ services:
       FUSIO_TRUSTED_IP_HEADER: "X-Forwarded-For"
       FUSIO_TENANT_ID: ""
     volumes:
-      - /opt/plant/pipe:/var/www/html/fusio/bin/plant
+      - /opt/plant/input:/var/www/html/fusio/bin/input
+      - /opt/plant/output:/var/www/html/fusio/bin/output
     links:
       - mysql-fusio
     ports:

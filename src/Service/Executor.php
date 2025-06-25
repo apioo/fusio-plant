@@ -24,32 +24,48 @@ namespace App\Service;
 use App\Model;
 use PSX\Framework\Config\ConfigInterface;
 use PSX\Json\Parser;
+use Symfony\Component\Lock\LockFactory;
+use Symfony\Component\Lock\Store\FlockStore;
 
 readonly class Executor
 {
-    private string $plantPipe;
+    private string $inputPipe;
+    private string $outputPipe;
+    private LockFactory $lockFactory;
 
     public function __construct(private ConfigInterface $config)
     {
-        $this->plantPipe = $this->config->get('plant_pipe');
+        $this->inputPipe = $this->config->get('plant_pipe_input');
+        $this->outputPipe = $this->config->get('plant_pipe_output');
+        $this->lockFactory = new LockFactory(new FlockStore($this->config->get('psx_path_cache')));
     }
 
     public function execute(Model\Command $command): string
     {
-        $handler = fopen($this->plantPipe, 'w+');
-        fwrite($handler, Parser::encode($command) . PHP_EOL);
-        fflush($handler);
+        $lock = $this->lockFactory->createLock('command-execute');
+        $lock->acquire(true);
 
         $response = '';
-        while (($buffer = fgets($handler, 4096)) !== false) {
-            if (str_contains($buffer, '--PLANT--')) {
-                break;
+
+        try {
+            $inputHandler = fopen($this->inputPipe, 'w');
+            $outputHandler = fopen($this->outputPipe, 'r');
+
+            fwrite($inputHandler, Parser::encode($command) . PHP_EOL);
+
+            while (($buffer = fgets($outputHandler, 4096)) !== false) {
+                if (str_contains($buffer, '--PLANT--')) {
+                    break;
+                }
+
+                $response.= $buffer;
             }
 
-            $response.= $buffer;
+            fclose($inputHandler);
+            fclose($outputHandler);
+        } finally {
+            $lock->release();
         }
-
-        fclose($handler);
 
         return $response;
     }
