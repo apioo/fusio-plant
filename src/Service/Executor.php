@@ -53,12 +53,24 @@ readonly class Executor
             fclose($input);
 
             $output = fopen($this->outputPipe, 'r');
-            while (($buffer = fgets($output, 4096)) !== false) {
-                if (str_contains($buffer, '--PLANT--')) {
-                    break;
-                }
 
-                $response.= $buffer;
+            $read = [$output];
+            $write = $except = null;
+            $return = stream_select($read, $write, $except, 300);
+            if ($return === false) {
+                throw new \RuntimeException('Could not select stream');
+            }
+
+            if ($return > 0) {
+                while (($buffer = fgets($output, 4096)) !== false) {
+                    if (str_contains($buffer, '--PLANT--')) {
+                        break;
+                    }
+
+                    $response.= $buffer;
+                }
+            } else {
+                throw new \RuntimeException('No stream was selected');
             }
 
             fclose($output);
