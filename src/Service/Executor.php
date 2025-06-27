@@ -51,7 +51,7 @@ readonly class Executor
 
         try {
             $input = fopen($this->inputPipe, 'w');
-            fwrite($input, Parser::encode($command) . PHP_EOL);
+            fwrite($input, Parser::encode($command, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES) . PHP_EOL);
             fclose($input);
 
             $output = fopen($this->outputPipe, 'r');
