@@ -29,6 +29,8 @@ use Symfony\Component\Lock\Store\FlockStore;
 
 readonly class Executor
 {
+    private const MAX_TRY = 32;
+
     private string $inputPipe;
     private string $outputPipe;
     private LockFactory $lockFactory;
@@ -54,23 +56,28 @@ readonly class Executor
 
             $output = fopen($this->outputPipe, 'r');
 
-            $read = [$output];
-            $write = $except = null;
-            $return = stream_select($read, $write, $except, 300);
-            if ($return === false) {
-                throw new \RuntimeException('Could not select stream');
-            }
-
-            if ($return > 0) {
-                while (($buffer = fgets($output, 4096)) !== false) {
-                    if (str_contains($buffer, '--PLANT--')) {
-                        break;
-                    }
-
-                    $response.= $buffer;
+            $count = 0;
+            while ($count < self::MAX_TRY) {
+                $read = [$output];
+                $write = $except = null;
+                $return = stream_select($read, $write, $except, 300);
+                if ($return === false) {
+                    throw new \RuntimeException('Could not select stream');
                 }
-            } else {
-                throw new \RuntimeException('No stream was selected');
+
+                if ($return > 0) {
+                    while (($buffer = fgets($output, 4096)) !== false) {
+                        if (str_contains($buffer, '--PLANT--')) {
+                            break 2;
+                        }
+
+                        $response.= $buffer;
+                    }
+                } else {
+                    usleep(500);
+                }
+
+                $count++;
             }
 
             fclose($output);
