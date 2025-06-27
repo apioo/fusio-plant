@@ -48,12 +48,12 @@ readonly class Executor
         $response = '';
 
         try {
-            $inputHandler = fopen($this->inputPipe, 'w');
-            $outputHandler = fopen($this->outputPipe, 'r');
+            $input = fopen($this->inputPipe, 'w');
+            fwrite($input, Parser::encode($command) . PHP_EOL);
+            fclose($input);
 
-            fwrite($inputHandler, Parser::encode($command) . PHP_EOL);
-
-            while (($buffer = fgets($outputHandler, 4096)) !== false) {
+            $output = fopen($this->outputPipe, 'r');
+            while (($buffer = fgets($output, 4096)) !== false) {
                 if (str_contains($buffer, '--PLANT--')) {
                     break;
                 }
@@ -61,8 +61,7 @@ readonly class Executor
                 $response.= $buffer;
             }
 
-            fclose($inputHandler);
-            fclose($outputHandler);
+            fclose($output);
         } finally {
             $lock->release();
         }
