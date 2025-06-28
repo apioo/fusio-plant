@@ -37,7 +37,7 @@ readonly class Executor
     private string $outputPipe;
     private LockFactory $lockFactory;
 
-    public function __construct(private ConfigInterface $config, private LoggerInterface $logger)
+    public function __construct(private ConfigInterface $config)
     {
         $this->inputPipe = $this->config->get('plant_pipe_input');
         $this->outputPipe = $this->config->get('plant_pipe_output');
@@ -54,12 +54,9 @@ readonly class Executor
         try {
             file_put_contents($this->outputPipe, '');
 
-            $input = fopen($this->inputPipe, 'w');
-
             $command = Parser::encode($command, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES) . PHP_EOL;
 
-            $this->logger->error('Write: ' . $command);
-
+            $input = fopen($this->inputPipe, 'w');
             fwrite($input, $command);
             fclose($input);
 
@@ -68,18 +65,10 @@ readonly class Executor
             while ($count < self::MAX_TRY) {
                 $size = filesize($this->outputPipe);
                 if ($size > 0) {
-                    $chunk = fread($output, $size);
-
-                    $this->logger->error('Read: ' . $chunk);
-
-                    $response.= $chunk;
-                } else {
-                    $this->logger->error('Size is empty');
+                    $response.= fread($output, $size);
                 }
 
                 if (str_contains($response, self::EOF_MARKER)) {
-                    $this->logger->error('Found marker: ' . self::EOF_MARKER);
-
                     $response = str_replace(self::EOF_MARKER, '', $response);
                     $response = trim($response);
                     break;
@@ -97,8 +86,6 @@ readonly class Executor
 
             $lock->release();
         }
-
-        $this->logger->error('Response: ' . $response);
 
         return $response;
     }
