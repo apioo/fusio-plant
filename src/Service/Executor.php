@@ -29,7 +29,7 @@ use Symfony\Component\Lock\Store\FlockStore;
 
 readonly class Executor
 {
-    private const MAX_TRY = 32;
+    private const MAX_TRY = 512;
 
     private string $inputPipe;
     private string $outputPipe;
@@ -51,31 +51,22 @@ readonly class Executor
 
         try {
             $input = fopen($this->inputPipe, 'w');
+            $output = fopen($this->outputPipe, 'r');
+
             fwrite($input, Parser::encode($command, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES) . PHP_EOL);
             fclose($input);
 
-            $output = fopen($this->outputPipe, 'r');
-
             $count = 0;
             while ($count < self::MAX_TRY) {
-                $read = [$output];
-                $write = $except = null;
-                $return = stream_select($read, $write, $except, 300);
-                if ($return === false) {
-                    throw new \RuntimeException('Could not select stream');
-                }
-
-                if ($return > 0) {
-                    while (($buffer = fgets($output, 4096)) !== false) {
-                        if (str_contains($buffer, '--PLANT--')) {
-                            break 2;
-                        }
-
-                        $response.= $buffer;
+                while (($buffer = fgets($output)) !== false) {
+                    if (str_contains($buffer, '--PLANT--')) {
+                        break 2;
                     }
-                } else {
-                    usleep(500);
+
+                    $response.= $buffer;
                 }
+
+                usleep(200);
 
                 $count++;
             }
