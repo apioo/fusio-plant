@@ -59,7 +59,10 @@ readonly class Executor
             $output = fopen($this->outputPipe, 'r');
             $count = 0;
             while ($count < self::MAX_TRY) {
-                $response.= fread($output, filesize($this->outputPipe));
+                $size = filesize($this->outputPipe);
+                if ($size > 0) {
+                    $response.= fread($output, $size);
+                }
 
                 if (str_contains($response, '--PLANT--')) {
                     break;
