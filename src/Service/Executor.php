@@ -79,6 +79,8 @@ readonly class Executor
             if (is_resource($output)) {
                 fclose($output);
             }
+
+            file_put_contents($this->outputPipe, '');
         } finally {
             $lock->release();
         }
