@@ -73,6 +73,17 @@ readonly class Project
                 throw new StatusCode\InternalServerErrorException('Could not setup project, got: ' . $e->getMessage(), previous: $e);
             }
 
+            foreach ($this->getDomains($project) as $domain) {
+                try {
+                    $request = new Model\CertbotRequest();
+                    $request->setDomain($domain);
+                    $request->setEmail($this->frameworkConfig->getMailSender());
+                    $output.= $this->systemExecutor->certbot($request);
+                } catch (ProcessTimeoutException $e) {
+                    throw new StatusCode\InternalServerErrorException('Could not register SSL certificate for domain ' . $domain . ', got: ' . $e->getMessage(), previous: $e);
+                }
+            }
+
             $this->dispatchEvent('project.created', $row, $row->getDisplayId());
 
             $this->projectTable->commit();
