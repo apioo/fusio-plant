@@ -41,8 +41,7 @@ mkdir /opt/plant
 mkfifo /opt/plant/input
 ls -l /opt/plant/input
 chown www-data: /opt/plant/input
-mkfifo /opt/plant/output
-ls -l /opt/plant/output
+touch /opt/plant/output
 chown www-data: /opt/plant/output
 mkdir /opt/plant/www
 cat > /opt/plant/www/index.html <<EOF

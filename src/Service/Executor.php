@@ -51,19 +51,24 @@ readonly class Executor
 
         try {
             $input = fopen($this->inputPipe, 'w');
-            $output = fopen($this->outputPipe, 'r');
-
             fwrite($input, Parser::encode($command, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES) . PHP_EOL);
             fclose($input);
 
+            $output = null;
             $count = 0;
             while ($count < self::MAX_TRY) {
-                while (($buffer = fgets($output)) !== false) {
-                    if (str_contains($buffer, '--PLANT--')) {
-                        break 2;
-                    }
+                if ($output === null && is_file($this->outputPipe)) {
+                    $output = fopen($this->outputPipe, 'r');
+                }
 
-                    $response.= $buffer;
+                if ($output !== null) {
+                    while (($buffer = fgets($output)) !== false) {
+                        if (str_contains($buffer, '--PLANT--')) {
+                            break 2;
+                        }
+
+                        $response.= $buffer . "\n";
+                    }
                 }
 
                 usleep(200);
@@ -71,7 +76,9 @@ readonly class Executor
                 $count++;
             }
 
-            fclose($output);
+            if (is_resource($output)) {
+                fclose($output);
+            }
         } finally {
             $lock->release();
         }
