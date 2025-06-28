@@ -62,7 +62,7 @@ readonly class Executor
             while ($count < self::MAX_TRY) {
                 fseek($output, $position);
                 $response.= fread($output, filesize($this->outputPipe));
-                $position = ftell($position);
+                $position = ftell($output);
 
                 if (str_contains($response, '--PLANT--')) {
                     break;
