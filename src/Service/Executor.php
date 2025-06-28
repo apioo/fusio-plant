@@ -58,11 +58,8 @@ readonly class Executor
 
             $output = fopen($this->outputPipe, 'r');
             $count = 0;
-            $position = 0;
             while ($count < self::MAX_TRY) {
-                fseek($output, $position);
                 $response.= fread($output, filesize($this->outputPipe));
-                $position = ftell($output);
 
                 if (str_contains($response, '--PLANT--')) {
                     break;
