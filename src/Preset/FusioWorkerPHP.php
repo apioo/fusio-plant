@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the Fusio Plant project (https://fusio-project.org/product/plant).
+ * This file is part of the Fusio Plant project (https://github.com/apioo/fusio-plant).
  * Fusio Plant is a server control panel to easily self-host apps on your server.
  *
  * Copyright (c) Christoph Kappestein <christoph.kappestein@gmail.com>
