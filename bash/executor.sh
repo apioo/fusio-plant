@@ -154,4 +154,8 @@ execute_command () {
   echo "" >> "$output"
 }
 
-while read -r line; do execute_command "$line"; done < $input
+while true
+do
+  while read -r line; do execute_command "$line"; done < $input
+  sleep 1
+done
