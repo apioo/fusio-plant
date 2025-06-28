@@ -72,9 +72,7 @@ readonly class Executor
                 $count++;
             }
 
-            if (is_resource($output)) {
-                fclose($output);
-            }
+            fclose($output);
         } finally {
             file_put_contents($this->outputPipe, '');
 
