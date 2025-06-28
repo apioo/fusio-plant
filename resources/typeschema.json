@@ -241,6 +241,24 @@
         }
       }
     },
+    "Backup_Export": {
+      "description": "Exports a project configuration backup",
+      "type": "struct",
+      "properties": {
+        "export": {
+          "type": "string"
+        }
+      }
+    },
+    "Backup_Import": {
+      "description": "Imports a project configuration backup",
+      "type": "struct",
+      "properties": {
+        "import": {
+          "type": "string"
+        }
+      }
+    },
     "Docker_Login": {
       "description": "Docker login",
       "type": "struct",

@@ -29,6 +29,7 @@ final class Version20250413132135 extends AbstractMigration
         $projectTable->addColumn('insert_date', 'datetime');
         $projectTable->setPrimaryKey(['id']);
         $projectTable->addUniqueIndex(['display_id']);
+        $projectTable->addUniqueIndex(['name']);
 
         $monitorTable = $schema->createTable('app_monitor');
         $monitorTable->addColumn('id', 'integer', ['autoincrement' => true]);

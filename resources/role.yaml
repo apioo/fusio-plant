@@ -1,5 +1,6 @@
 Consumer:
   scopes:
+    - backup
     - dashboard
     - preset
     - project
@@ -10,6 +11,7 @@ Consumer:
     - consumer
 Administrator:
   scopes:
+    - backup
     - dashboard
     - preset
     - project

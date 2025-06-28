@@ -1,3 +1,5 @@
+"backup.export": !include resources/operations/backup/export.php
+"backup.import": !include resources/operations/backup/import.php
 "dashboard.getAll": !include resources/operations/dashboard/collection.php
 "execute.certbot": !include resources/operations/execute/certbot.php
 "execute.images": !include resources/operations/execute/images.php

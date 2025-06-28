@@ -44,6 +44,8 @@ readonly class Executor
 
     public function execute(Model\Command $command): string
     {
+        return '';
+
         $lock = $this->lockFactory->createLock('command-execute');
         $lock->acquire(true);
 
