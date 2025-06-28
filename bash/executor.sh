@@ -21,6 +21,7 @@ output=/opt/plant/output
 
 execute_command () {
   type=$(echo "$1" | jq -r ".type")
+  tempFile=/opt/plant/temp
   case $type in
     "project-setup")
       name=$(echo "$1" | jq -r ".name")
@@ -33,18 +34,18 @@ execute_command () {
       echo "$compose" > "/docker/$name/docker-compose.yml"
       echo "$nginx" > "/etc/nginx/sites-available/$name"
       ln -s "/etc/nginx/sites-available/$name" "/etc/nginx/sites-enabled/$name"
-      echo "> service nginx reload" > "$output"
-      service nginx reload > "$output"
-      echo "Exit code: $?" > "$output"
+      echo "> service nginx reload" > "$tempFile"
+      service nginx reload > "$tempFile"
+      echo "Exit code: $?" > "$tempFile"
       echo "$backup" > "/etc/cron.daily/backup-$name"
       chmod +x "/etc/cron.daily/backup-$name"
       pushd "/docker/$name"
-      echo "> docker compose pull" > "$output"
-      docker compose pull > "$output" 2>&1
-      echo "Exit code: $?" > "$output"
-      echo "> docker compose up -d" > "$output"
-      docker compose up -d > "$output" 2>&1
-      echo "Exit code: $?" > "$output"
+      echo "> docker compose pull" > "$tempFile"
+      docker compose pull > "$tempFile" 2>&1
+      echo "Exit code: $?" > "$tempFile"
+      echo "> docker compose up -d" > "$tempFile"
+      docker compose up -d > "$tempFile" 2>&1
+      echo "Exit code: $?" > "$tempFile"
       popd
       ;;
     "project-remove")
@@ -53,13 +54,13 @@ execute_command () {
       rm "/etc/nginx/sites-enabled/$name"
       rm "/etc/nginx/sites-available/$name"
       rm "/etc/cron.daily/backup-$name"
-      echo "> service nginx reload" > "$output"
+      echo "> service nginx reload" > "$tempFile"
       service nginx reload
-      echo "Exit code: $?" > "$output"
+      echo "Exit code: $?" > "$tempFile"
       pushd "/docker/$name"
-      echo "> docker compose down" > "$output"
-      docker compose down > "$output" 2>&1
-      echo "Exit code: $?" > "$output"
+      echo "> docker compose down" > "$tempFile"
+      docker compose down > "$tempFile" 2>&1
+      echo "Exit code: $?" > "$tempFile"
       popd
       rm -r "/docker/$name"
       ;;
@@ -67,90 +68,91 @@ execute_command () {
       name=$(echo "$1" | jq -r ".name")
       name="${name//[^[:alnum:]]/_}"
       pushd "/docker/$name"
-      echo "> docker compose pull" > "$output"
-      docker compose pull > "$output" 2>&1
-      echo "Exit code: $?" > "$output"
-      echo "> docker compose up -d" > "$output"
-      docker compose up -d > "$output" 2>&1
-      echo "Exit code: $?" > "$output"
+      echo "> docker compose pull" > "$tempFile"
+      docker compose pull > "$tempFile" 2>&1
+      echo "Exit code: $?" > "$tempFile"
+      echo "> docker compose up -d" > "$tempFile"
+      docker compose up -d > "$tempFile" 2>&1
+      echo "Exit code: $?" > "$tempFile"
       popd
       ;;
     "project-down")
       name=$(echo "$1" | jq -r ".name")
       name="${name//[^[:alnum:]]/_}"
       pushd "/docker/$name"
-      echo "> docker compose down" > "$output"
-      docker compose down > "$output" 2>&1
-      echo "Exit code: $?" > "$output"
+      echo "> docker compose down" > "$tempFile"
+      docker compose down > "$tempFile" 2>&1
+      echo "Exit code: $?" > "$tempFile"
       popd
       ;;
     "project-logs")
       name=$(echo "$1" | jq -r ".name")
       name="${name//[^[:alnum:]]/_}"
       pushd "/docker/$name"
-      docker compose logs --no-color --tail=256 > "$output" 2>&1
+      docker compose logs --no-color --tail=256 > "$tempFile" 2>&1
       popd
       ;;
     "project-ps")
       name=$(echo "$1" | jq -r ".name")
       name="${name//[^[:alnum:]]/_}"
       pushd "/docker/$name"
-      docker compose ps --format=json > "$output" 2>&1
+      docker compose ps --format=json > "$tempFile" 2>&1
       popd
       ;;
     "project-pull")
       name=$(echo "$1" | jq -r ".name")
       name="${name//[^[:alnum:]]/_}"
       pushd "/docker/$name"
-      echo "> docker compose pull" > "$output"
-      docker compose pull > "$output" 2>&1
-      echo "Exit code: $?" > "$output"
+      echo "> docker compose pull" > "$tempFile"
+      docker compose pull > "$tempFile" 2>&1
+      echo "Exit code: $?" > "$tempFile"
       popd
       ;;
     "project-stats")
       name=$(echo "$1" | jq -r ".name")
       name="${name//[^[:alnum:]]/_}"
       pushd "/docker/$name"
-      docker compose stats --no-stream --format=json > "$output" 2>&1
+      docker compose stats --no-stream --format=json > "$tempFile" 2>&1
       popd
       ;;
     "project-up")
       name=$(echo "$1" | jq -r ".name")
       name="${name//[^[:alnum:]]/_}"
       pushd "/docker/$name"
-      echo "> docker compose up -d" > "$output"
-      docker compose up -d > "$output" 2>&1
-      echo "Exit code: $?" > "$output"
+      echo "> docker compose up -d" > "$tempFile"
+      docker compose up -d > "$tempFile" 2>&1
+      echo "Exit code: $?" > "$tempFile"
       popd
       ;;
     "certbot")
       domain=$(printf "%b" "$(echo "$1" | jq -r ".domain")")
       email=$(printf "%b" "$(echo "$1" | jq -r ".email")")
-      echo "> certbot --nginx" > "$output"
-      certbot --nginx --non-interactive --agree-tos -m "$email" -d "$domain" > "$output" 2>&1
-      echo "Exit code: $?" > "$output"
+      echo "> certbot --nginx" > "$tempFile"
+      certbot --nginx --non-interactive --agree-tos -m "$email" -d "$domain" > "$tempFile" 2>&1
+      echo "Exit code: $?" > "$tempFile"
       ;;
     "login")
       domain=$(printf "%b" "$(echo "$1" | jq -r ".domain")")
       username=$(printf "%b" "$(echo "$1" | jq -r ".username")")
       password=$(printf "%b" "$(echo "$1" | jq -r ".password")")
-      echo "> docker login" > "$output"
-      docker login "$domain" -u "$username" -p "$password" > "$output" 2>&1
-      echo "Exit code: $?" > "$output"
+      echo "> docker login" > "$tempFile"
+      docker login "$domain" -u "$username" -p "$password" > "$tempFile" 2>&1
+      echo "Exit code: $?" > "$tempFile"
       ;;
     "images")
-      docker images --format=json > "$output" 2>&1
+      docker images --format=json > "$tempFile" 2>&1
       ;;
     "ps")
-      docker ps --format=json > "$output" 2>&1
+      docker ps --format=json > "$tempFile" 2>&1
       ;;
     "stats")
-      docker stats --no-stream --format=json > "$output" 2>&1
+      docker stats --no-stream --format=json > "$tempFile" 2>&1
       ;;
   esac
-  echo "" > "$output"
-  echo "--PLANT--" > "$output"
-  echo "" > "$output"
+  echo "" > "$tempFile"
+  echo "--PLANT--" > "$tempFile"
+  echo "" > "$tempFile"
+  cat $tempFile > $output
 }
 
 while read -r line; do execute_command "$line"; done < $input
