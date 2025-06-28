@@ -86,6 +86,7 @@ readonly class Executor
                 }
 
                 usleep(200);
+                clearstatcache();
 
                 $count++;
             }
