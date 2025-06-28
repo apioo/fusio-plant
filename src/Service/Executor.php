@@ -58,13 +58,14 @@ readonly class Executor
 
             $output = fopen($this->outputPipe, 'r');
             $count = 0;
+            $position = 0;
             while ($count < self::MAX_TRY) {
-                while (($buffer = fgets($output)) !== false) {
-                    if (str_contains($buffer, '--PLANT--')) {
-                        break 2;
-                    }
+                fseek($output, $position);
+                $response.= fread($output, filesize($this->outputPipe));
+                $position = ftell($position);
 
-                    $response.= $buffer . "\n";
+                if (str_contains($response, '--PLANT--')) {
+                    break;
                 }
 
                 usleep(200);
