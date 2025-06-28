@@ -22,6 +22,7 @@
 namespace App\Service;
 
 use App\Model;
+use Psr\Log\LoggerInterface;
 use PSX\Framework\Config\ConfigInterface;
 use PSX\Json\Parser;
 use Symfony\Component\Lock\LockFactory;
@@ -36,7 +37,7 @@ readonly class Executor
     private string $outputPipe;
     private LockFactory $lockFactory;
 
-    public function __construct(private ConfigInterface $config)
+    public function __construct(private ConfigInterface $config, private LoggerInterface $logger)
     {
         $this->inputPipe = $this->config->get('plant_pipe_input');
         $this->outputPipe = $this->config->get('plant_pipe_output');
@@ -54,7 +55,12 @@ readonly class Executor
             file_put_contents($this->outputPipe, '');
 
             $input = fopen($this->inputPipe, 'w');
-            fwrite($input, Parser::encode($command, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES) . PHP_EOL);
+
+            $command = Parser::encode($command, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES) . PHP_EOL;
+
+            $this->logger->error('Write: ' . $command);
+
+            fwrite($input, $command);
             fclose($input);
 
             $output = fopen($this->outputPipe, 'r');
@@ -62,10 +68,18 @@ readonly class Executor
             while ($count < self::MAX_TRY) {
                 $size = filesize($this->outputPipe);
                 if ($size > 0) {
-                    $response.= fread($output, $size);
+                    $chunk = fread($output, $size);
+
+                    $this->logger->error('Read: ' . $chunk);
+
+                    $response.= $chunk;
+                } else {
+                    $this->logger->error('Size is empty');
                 }
 
                 if (str_contains($response, self::EOF_MARKER)) {
+                    $this->logger->error('Found marker: ' . self::EOF_MARKER);
+
                     $response = str_replace(self::EOF_MARKER, '', $response);
                     $response = trim($response);
                     break;
@@ -82,6 +96,8 @@ readonly class Executor
 
             $lock->release();
         }
+
+        $this->logger->error('Response: ' . $response);
 
         return $response;
     }
