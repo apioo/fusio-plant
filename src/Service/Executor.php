@@ -21,8 +21,8 @@
 
 namespace App\Service;
 
+use App\Exception\ProcessTimeoutException;
 use App\Model;
-use Psr\Log\LoggerInterface;
 use PSX\Framework\Config\ConfigInterface;
 use PSX\Json\Parser;
 use Symfony\Component\Lock\LockFactory;
@@ -44,12 +44,16 @@ readonly class Executor
         $this->lockFactory = new LockFactory(new FlockStore($this->config->get('psx_path_cache')));
     }
 
+    /**
+     * @throws ProcessTimeoutException
+     */
     public function execute(Model\Command $command): string
     {
         $lock = $this->lockFactory->createLock('command-execute');
         $lock->acquire(true);
 
         $response = '';
+        $foundMarker = false;
 
         try {
             file_put_contents($this->outputPipe, '');
@@ -69,6 +73,8 @@ readonly class Executor
                 }
 
                 if (str_contains($response, self::EOF_MARKER)) {
+                    $foundMarker = true;
+
                     $response = str_replace(self::EOF_MARKER, '', $response);
                     $response = trim($response);
                     break;
@@ -85,6 +91,10 @@ readonly class Executor
             file_put_contents($this->outputPipe, '');
 
             $lock->release();
+        }
+
+        if (!$foundMarker) {
+            throw new ProcessTimeoutException('Could not execute command');
         }
 
         return $response;
