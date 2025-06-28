@@ -30,6 +30,7 @@ use Symfony\Component\Lock\Store\FlockStore;
 readonly class Executor
 {
     private const MAX_TRY = 512;
+    private const EOF_MARKER = '--PLANT-EOF--';
 
     private string $inputPipe;
     private string $outputPipe;
@@ -64,7 +65,9 @@ readonly class Executor
                     $response.= fread($output, $size);
                 }
 
-                if (str_contains($response, '--PLANT--')) {
+                if (str_contains($response, self::EOF_MARKER)) {
+                    $response = str_replace(self::EOF_MARKER, '', $response);
+                    $response = trim($response);
                     break;
                 }
 

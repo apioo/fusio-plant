@@ -150,7 +150,7 @@ execute_command () {
       ;;
   esac
   echo "" >> "$output"
-  echo "--PLANT--" >> "$output"
+  echo "--PLANT-EOF--" >> "$output"
   echo "" >> "$output"
 }
 
