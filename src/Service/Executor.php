@@ -50,25 +50,21 @@ readonly class Executor
         $response = '';
 
         try {
+            file_put_contents($this->outputPipe, '');
+
             $input = fopen($this->inputPipe, 'w');
             fwrite($input, Parser::encode($command, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES) . PHP_EOL);
             fclose($input);
 
-            $output = null;
+            $output = fopen($this->outputPipe, 'r');
             $count = 0;
             while ($count < self::MAX_TRY) {
-                if ($output === null && is_file($this->outputPipe)) {
-                    $output = fopen($this->outputPipe, 'r');
-                }
-
-                if ($output !== null) {
-                    while (($buffer = fgets($output)) !== false) {
-                        if (str_contains($buffer, '--PLANT--')) {
-                            break 2;
-                        }
-
-                        $response.= $buffer . "\n";
+                while (($buffer = fgets($output)) !== false) {
+                    if (str_contains($buffer, '--PLANT--')) {
+                        break 2;
                     }
+
+                    $response.= $buffer . "\n";
                 }
 
                 usleep(200);
@@ -79,9 +75,9 @@ readonly class Executor
             if (is_resource($output)) {
                 fclose($output);
             }
-
-            file_put_contents($this->outputPipe, '');
         } finally {
+            file_put_contents($this->outputPipe, '');
+
             $lock->release();
         }
 
