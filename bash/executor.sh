@@ -40,11 +40,11 @@ execute_command () {
       echo "$backup" > "/etc/cron.daily/backup-$name"
       chmod +x "/etc/cron.daily/backup-$name"
       pushd "/docker/$name"
-      echo "> docker compose pull -q" >> "$output"
-      docker compose pull >> "$output" 2>&1
+      echo "> docker compose pull" >> "$output"
+      docker compose pull -q >> "$output" 2>&1
       echo "Exit code: $?" >> "$output"
-      echo "> docker compose up -d" >> "$output"
-      docker compose up -d >> "$output" 2>&1
+      echo "> docker compose up" >> "$output"
+      docker compose up -d --remove-orphans >> "$output" 2>&1
       echo "Exit code: $?" >> "$output"
       popd
       ;;
@@ -68,11 +68,11 @@ execute_command () {
       name=$(echo "$1" | jq -r ".name")
       name="${name//[^[:alnum:]]/_}"
       pushd "/docker/$name"
-      echo "> docker compose pull -q" >> "$output"
-      docker compose pull >> "$output" 2>&1
+      echo "> docker compose pull" >> "$output"
+      docker compose pull -q >> "$output" 2>&1
       echo "Exit code: $?" >> "$output"
-      echo "> docker compose up -d" >> "$output"
-      docker compose up -d >> "$output" 2>&1
+      echo "> docker compose up" >> "$output"
+      docker compose up -d --remove-orphans >> "$output" 2>&1
       echo "Exit code: $?" >> "$output"
       popd
       ;;
@@ -103,8 +103,8 @@ execute_command () {
       name=$(echo "$1" | jq -r ".name")
       name="${name//[^[:alnum:]]/_}"
       pushd "/docker/$name"
-      echo "> docker compose pull -q" >> "$output"
-      docker compose pull >> "$output" 2>&1
+      echo "> docker compose pull" >> "$output"
+      docker compose pull -q >> "$output" 2>&1
       echo "Exit code: $?" >> "$output"
       popd
       ;;
@@ -119,8 +119,8 @@ execute_command () {
       name=$(echo "$1" | jq -r ".name")
       name="${name//[^[:alnum:]]/_}"
       pushd "/docker/$name"
-      echo "> docker compose up -d" >> "$output"
-      docker compose up -d >> "$output" 2>&1
+      echo "> docker compose up" >> "$output"
+      docker compose up -d --remove-orphans >> "$output" 2>&1
       echo "Exit code: $?" >> "$output"
       popd
       ;;
