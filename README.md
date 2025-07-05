@@ -57,11 +57,10 @@ Contains all projects and each project contains a `docker-compose.yml` file.
 
 ### /opt/plant
 
-Contains the plant executor which receives commands through the `/opt/plant/input` folder and
+Contains the plant executor which receives commands through the `/opt/plant/input` pipe and
 writes responses back to the `/opt/plant/output` folder. Since the plant app also runs in a
-container those folders are mounted into the plant app to execute commands on the
-host. The executor is a simple bash script that listens for file changes in this folder,
-you can see all available commands at the [executor script](./bash/executor.sh).
+container those paths are mounted into the plant app to execute commands on the
+host. The [executor](./bash/executor.sh) is a simple bash script that receives and executes commands.
 
 ### /cache
 
