@@ -89,7 +89,7 @@ execute_command () {
       name=$(echo "$1" | jq -r ".name")
       name="${name//[^[:alnum:]]/_}"
       pushd "/docker/$name"
-      docker compose logs --no-color --tail=256 >> "$output" 2>&1
+      docker compose logs --no-color --since=60m --tail=256 >> "$output" 2>&1
       popd
       ;;
     "project-ps")
