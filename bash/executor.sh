@@ -103,7 +103,7 @@ execute_command () {
       name=$(echo "$1" | jq -r ".name")
       name="${name//[^[:alnum:]]/_}"
       pushd "/docker/$name"
-      echo "> docker compose pull" >> "$output"
+      echo "> docker compose pull --quiet" >> "$output"
       docker compose pull -q >> "$output" 2>&1
       echo "Exit code: $?" >> "$output"
       popd
