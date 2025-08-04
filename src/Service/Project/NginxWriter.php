@@ -75,7 +75,7 @@ readonly class NginxWriter
         $config[] = '    proxy_pass http://127.0.0.1:' . $internalPort . ';';
         $config[] = '    proxy_set_header Host $host;';
         $config[] = '    proxy_set_header X-Forwarded-For $remote_addr;';
-        $config[] = '    proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;';
+        $config[] = '    proxy_set_header X-Forwarded-Proto $scheme;';
         if ($app->getCache()) {
             $config[] = '    proxy_cache ' . $appId . ';';
             $config[] = '    proxy_cache_valid 200 24h;';
