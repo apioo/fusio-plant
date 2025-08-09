@@ -85,7 +85,7 @@ class Dashboard extends ViewAbstract
         $labels = [];
         $labelFromDate = $fromDate;
         while ($labelFromDate <= $toDate) {
-            $labels[] = $labelFromDate->format($diff < 2419200 ? 'D' : 'Y-m-d');
+            $labels[] = $labelFromDate->format($diff < 2419200 ? 'd' : 'Y-m-d');
 
             $labelFromDate = $labelFromDate->add(new \DateInterval('P1D'));
         }
