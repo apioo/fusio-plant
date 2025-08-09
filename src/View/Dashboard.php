@@ -54,10 +54,11 @@ class Dashboard extends ViewAbstract
             $data[$project->getId()] = [];
             $series[$project->getId()] = $project->getName();
 
-            while ($fromDate <= $toDate) {
-                $data[$project->getId()][$fromDate->format('Y-m-d')] = 0;
+            $projectFromDate = $fromDate;
+            while ($projectFromDate <= $toDate) {
+                $data[$project->getId()][$projectFromDate->format('Y-m-d')] = 0;
 
-                $fromDate = $fromDate->add(new \DateInterval('P1D'));
+                $projectFromDate = $projectFromDate->add(new \DateInterval('P1D'));
             }
         }
 
