@@ -73,8 +73,9 @@ class Dashboard extends ViewAbstract
             $result = $this->connection->fetchAllAssociative($sql, ['project_id' => $project->getId()]);
 
             foreach ($result as $row) {
-                if (isset($data[$row['project_id']][$row['date']])) {
-                    $data[$row['project_id']][$row['date']] = (int) $row['val'];
+                $projectId = (int) $row['project_id'];
+                if (isset($data[$projectId][$row['date']])) {
+                    $data[$projectId][$row['date']] = (int) $row['val'];
                 }
             }
         }
@@ -82,10 +83,11 @@ class Dashboard extends ViewAbstract
         // build labels
         $diff = $toDate->getTimestamp() - $fromDate->getTimestamp();
         $labels = [];
-        while ($fromDate <= $toDate) {
-            $labels[] = $fromDate->format($diff < 2419200 ? 'D' : 'Y-m-d');
+        $labelFromDate = $fromDate;
+        while ($labelFromDate <= $toDate) {
+            $labels[] = $labelFromDate->format($diff < 2419200 ? 'D' : 'Y-m-d');
 
-            $fromDate = $fromDate->add(new \DateInterval('P1D'));
+            $labelFromDate = $labelFromDate->add(new \DateInterval('P1D'));
         }
 
         return $this->build($data, $series, $labels);
