@@ -357,6 +357,10 @@ readonly class Project
             $domains = $app->getDomains() ?? [];
             foreach ($domains as $domain) {
                 yield $domain;
+
+                if (str_starts_with($domain, 'www.')) {
+                    yield str_replace('www.', '', $domain);
+                }
             }
         }
     }

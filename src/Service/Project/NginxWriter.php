@@ -58,7 +58,8 @@ readonly class NginxWriter
     private function writeConfigForApp(int $id, int $index, Model\ProjectApp $app): string
     {
         $appId = $id . '_' . $app->getName();
-        $domains = implode(' ', $app->getDomains() ?? []);
+        $allDomains = $app->getDomains() ?? [];
+        $domains = implode(' ', $allDomains);
         if (empty($domains)) {
             throw new ConfigurationException('You must provide at least one domain');
         }
@@ -82,6 +83,20 @@ readonly class NginxWriter
         }
         $config[] = '  }';
         $config[] = '}';
+
+        // for www domain we automatically add redirect
+        $wwwDomain = reset($allDomains);
+        if ($wwwDomain && str_starts_with($wwwDomain, 'www.')) {
+            $nonWwwDomain = str_replace('www.', '', $wwwDomain);
+            if (!in_array($nonWwwDomain, $allDomains)) {
+                $config[] = 'server {';
+                $config[] = '  server_name ' . $nonWwwDomain . ';';
+                $config[] = '  if ($host = ' . $nonWwwDomain . ') {';
+                $config[] = '    return 301 $scheme://' . $wwwDomain . '$request_uri;';
+                $config[] = '  }';
+                $config[] = '}';
+            }
+        }
 
         return implode("\n", $config) . "\n";
     }
