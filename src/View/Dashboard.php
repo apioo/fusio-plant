@@ -42,9 +42,9 @@ class Dashboard extends ViewAbstract
 
     private function getStats(string $column): StatisticChart
     {
-        $fromDate = new \DateTime();
+        $fromDate = new \DateTimeImmutable();
         $fromDate->sub(new \DateInterval('P14D'));
-        $toDate = new \DateTime();
+        $toDate = new \DateTimeImmutable();
 
         $projects = $this->getTable(Table\Project::class)->findAll();
         $data = [];
