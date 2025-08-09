@@ -68,9 +68,13 @@ class Dashboard extends ViewAbstract
                            DATE(mon.insert_date) AS date
                       FROM app_monitor mon
                      WHERE mon.project_id = :project_id
+                       AND mon.insert_date >= :past
                   GROUP BY DATE(mon.insert_date), mon.project_id';
 
-            $result = $this->connection->fetchAllAssociative($sql, ['project_id' => $project->getId()]);
+            $result = $this->connection->fetchAllAssociative($sql, [
+                'project_id' => $project->getId(),
+                'past' => $fromDate->format('Y-m-d'),
+            ]);
 
             foreach ($result as $row) {
                 $projectId = (int) $row['project_id'];
