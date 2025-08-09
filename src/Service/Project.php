@@ -358,8 +358,9 @@ readonly class Project
             foreach ($domains as $domain) {
                 yield $domain;
 
-                if (str_starts_with($domain, 'www.')) {
-                    yield str_replace('www.', '', $domain);
+                $wwwDomain = 'www.' . $domain;
+                if (substr_count($domain, '.') === 1 && !in_array($wwwDomain, $domains)) {
+                    yield $wwwDomain;
                 }
             }
         }

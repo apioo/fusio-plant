@@ -85,14 +85,14 @@ readonly class NginxWriter
         $config[] = '}';
 
         // for www domain we automatically add redirect
-        $wwwDomain = reset($allDomains);
-        if ($wwwDomain && str_starts_with($wwwDomain, 'www.')) {
-            $nonWwwDomain = str_replace('www.', '', $wwwDomain);
-            if (!in_array($nonWwwDomain, $allDomains)) {
+        $nonWwwDomain = reset($allDomains);
+        if ($nonWwwDomain && substr_count($nonWwwDomain, '.') === 1) {
+            $wwwDomain = 'www.' . $nonWwwDomain;
+            if (!in_array($wwwDomain, $allDomains)) {
                 $config[] = 'server {';
-                $config[] = '  server_name ' . $nonWwwDomain . ';';
-                $config[] = '  if ($host = ' . $nonWwwDomain . ') {';
-                $config[] = '    return 301 $scheme://' . $wwwDomain . '$request_uri;';
+                $config[] = '  server_name ' . $wwwDomain . ';';
+                $config[] = '  if ($host = ' . $wwwDomain . ') {';
+                $config[] = '    return 301 $scheme://' . $nonWwwDomain . '$request_uri;';
                 $config[] = '  }';
                 $config[] = '}';
             }
