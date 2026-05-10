@@ -60,6 +60,9 @@ readonly class StatsParser
         return (int) (rtrim(trim($data), '%') * 100);
     }
 
+    /**
+     * @return array{int, int}
+     */
     private function parseUnits(?string $data): array
     {
         if (empty($data)) {
@@ -69,7 +72,7 @@ readonly class StatsParser
         $parts = explode('/', $data, 2);
 
         return [
-            $this->parseUnit($parts[0] ?? null),
+            $this->parseUnit($parts[0]),
             $this->parseUnit($parts[1] ?? null)
         ];
     }

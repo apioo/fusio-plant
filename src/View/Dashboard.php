@@ -97,6 +97,11 @@ class Dashboard extends ViewAbstract
         return $this->build($data, $series, $labels);
     }
 
+    /**
+     * @param array<int, array<string, int>> $data
+     * @param array<int, string> $seriesNames
+     * @param list<string> $labels
+     */
     private function build(array $data, array $seriesNames, array $labels): StatisticChart
     {
         $allSeries = [];
