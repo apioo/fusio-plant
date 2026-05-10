@@ -57,7 +57,7 @@ readonly class StatsParser
             return 0;
         }
 
-        return (int) (rtrim(trim($data), '%') * 100);
+        return (int) ((float) rtrim(trim($data), '%') * 100);
     }
 
     /**
@@ -90,19 +90,19 @@ readonly class StatsParser
 
         $bytes = 0;
         if (str_ends_with($data, 'gb')) {
-            $bytes = (int) (substr($data, 0, -2) * 1000 * 1000 * 1000);
+            $bytes = (int) ((float) substr($data, 0, -2) * 1000 * 1000 * 1000);
         } elseif (str_ends_with($data, 'gib')) {
-            $bytes = (int) (substr($data, 0, -3) * 1024 * 1024 * 1024);
+            $bytes = (int) ((float) substr($data, 0, -3) * 1024 * 1024 * 1024);
         } elseif (str_ends_with($data, 'mb')) {
-            $bytes = (int) (substr($data, 0, -2) * 1000 * 1000);
+            $bytes = (int) ((float) substr($data, 0, -2) * 1000 * 1000);
         } elseif (str_ends_with($data, 'mib')) {
-            $bytes = (int) (substr($data, 0, -3) * 1024 * 1024);
+            $bytes = (int) ((float) substr($data, 0, -3) * 1024 * 1024);
         } elseif (str_ends_with($data, 'kb')) {
-            $bytes = (int) (substr($data, 0, -2) * 1000);
+            $bytes = (int) ((float) substr($data, 0, -2) * 1000);
         } elseif (str_ends_with($data, 'kib')) {
-            $bytes = (int) (substr($data, 0, -3) * 1024);
+            $bytes = (int) ((float) substr($data, 0, -3) * 1024);
         } elseif (str_ends_with($data, 'b')) {
-            $bytes = (int) (substr($data, 0, -1));
+            $bytes = (int) ((float) substr($data, 0, -1));
         }
 
         return $bytes > 0 ? $bytes / 1024 : 0;
