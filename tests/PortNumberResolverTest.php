@@ -29,11 +29,14 @@ use PHPUnit\Framework\TestCase;
 class PortNumberResolverTest extends TestCase
 {
     #[DataProvider('portResolverProvider')]
-    public function testResolve(int $id, int $index, int $expect)
+    public function testResolve(int $id, int $index, int $expect): void
     {
         self::assertSame($expect, (new PortNumberResolver())->resolve($id, $index));
     }
 
+    /**
+     * @return list<array{int, int}>
+     */
     public static function portResolverProvider(): array
     {
         return [
@@ -49,13 +52,16 @@ class PortNumberResolverTest extends TestCase
     }
 
     #[DataProvider('portResolverFailureProvider')]
-    public function testResolveFailure(int $id, int $index, int $expect)
+    public function testResolveFailure(int $id, int $index, int $expect): void
     {
         $this->expectException(PortResolveException::class);
 
         self::assertSame($expect, (new PortNumberResolver())->resolve($id, $index));
     }
 
+    /**
+     * @return list<array{int, int, int}>
+     */
     public static function portResolverFailureProvider(): array
     {
         return [

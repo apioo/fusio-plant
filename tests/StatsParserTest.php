@@ -28,7 +28,7 @@ use PSX\Schema\SchemaManager;
 
 class StatsParserTest extends TestCase
 {
-    public function testParse()
+    public function testParse(): void
     {
         $raw = <<<TEXT
 {"BlockIO":"0B / 4.1kB","CPUPerc":"0.00%","Container":"11f38036482f","ID":"11f38036482f","MemPerc":"0.69%","MemUsage":"54.32MiB / 7.709GiB","Name":"drupal-drupal-1","NetIO":"5.98kB / 19.3kB","PIDs":"7"}
