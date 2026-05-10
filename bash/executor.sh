@@ -25,7 +25,7 @@ execute_command () {
   case $type in
     "project-setup")
       name=$(echo "$1" | jq -r ".name")
-      name="${name//[^[:alnum:]]/_}"
+      name="${name//[^[:alnum:]-]/_}"
       compose=$(echo "$1" | jq -r ".compose")
       nginx=$(echo "$1" | jq -r ".nginx")
       backup=$(echo "$1" | jq -r ".backup")
@@ -50,7 +50,7 @@ execute_command () {
       ;;
     "project-remove")
       name=$(echo "$1" | jq -r ".name")
-      name="${name//[^[:alnum:]]/_}"
+      name="${name//[^[:alnum:]-]/_}"
       rm "/etc/nginx/sites-enabled/$name"
       rm "/etc/nginx/sites-available/$name"
       rm "/etc/cron.daily/backup-$name"
@@ -66,7 +66,7 @@ execute_command () {
       ;;
     "project-deploy")
       name=$(echo "$1" | jq -r ".name")
-      name="${name//[^[:alnum:]]/_}"
+      name="${name//[^[:alnum:]-]/_}"
       pushd "/docker/$name"
       echo "> docker compose pull" >> "$output"
       docker compose pull -q >> "$output" 2>&1
@@ -78,7 +78,7 @@ execute_command () {
       ;;
     "project-down")
       name=$(echo "$1" | jq -r ".name")
-      name="${name//[^[:alnum:]]/_}"
+      name="${name//[^[:alnum:]-]/_}"
       pushd "/docker/$name"
       echo "> docker compose down" >> "$output"
       docker compose down >> "$output" 2>&1
@@ -87,21 +87,21 @@ execute_command () {
       ;;
     "project-logs")
       name=$(echo "$1" | jq -r ".name")
-      name="${name//[^[:alnum:]]/_}"
+      name="${name//[^[:alnum:]-]/_}"
       pushd "/docker/$name"
       docker compose logs --no-color --since=60m --tail=256 >> "$output" 2>&1
       popd
       ;;
     "project-ps")
       name=$(echo "$1" | jq -r ".name")
-      name="${name//[^[:alnum:]]/_}"
+      name="${name//[^[:alnum:]-]/_}"
       pushd "/docker/$name"
       docker compose ps --format=json >> "$output" 2>&1
       popd
       ;;
     "project-pull")
       name=$(echo "$1" | jq -r ".name")
-      name="${name//[^[:alnum:]]/_}"
+      name="${name//[^[:alnum:]-]/_}"
       pushd "/docker/$name"
       echo "> docker compose pull --quiet" >> "$output"
       docker compose pull -q >> "$output" 2>&1
@@ -110,14 +110,14 @@ execute_command () {
       ;;
     "project-stats")
       name=$(echo "$1" | jq -r ".name")
-      name="${name//[^[:alnum:]]/_}"
+      name="${name//[^[:alnum:]-]/_}"
       pushd "/docker/$name"
       docker compose stats --no-stream --format=json >> "$output" 2>&1
       popd
       ;;
     "project-up")
       name=$(echo "$1" | jq -r ".name")
-      name="${name//[^[:alnum:]]/_}"
+      name="${name//[^[:alnum:]-]/_}"
       pushd "/docker/$name"
       echo "> docker compose up" >> "$output"
       docker compose up -d --remove-orphans >> "$output" 2>&1
