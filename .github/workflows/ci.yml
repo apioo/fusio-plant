@@ -3,14 +3,29 @@ on:
   - pull_request
   - push
 jobs:
+  phpstan:
+    name: PHPStan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.4
+          coverage: none
+      - name: Composer install
+        run: composer install --no-interaction --no-ansi --no-progress
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse
   phpunit:
     name: "PHPUnit (PHP: ${{ matrix.php-versions }})"
     runs-on: ubuntu-latest
     strategy:
       matrix:
         php-versions:
-         - 8.3
          - 8.4
+         - 8.5
     steps:
       - name: Checkout
         uses: actions/checkout@v4
