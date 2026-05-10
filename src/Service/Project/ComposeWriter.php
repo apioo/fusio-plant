@@ -43,6 +43,9 @@ readonly class ComposeWriter
         ], inline: 12);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function buildConfigForApp(int $id, int $index, Model\ProjectApp $app): array
     {
         $return = [

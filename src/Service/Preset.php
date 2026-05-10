@@ -33,6 +33,9 @@ readonly class Preset
      */
     private iterable $presets;
 
+    /**
+     * @param iterable<PresetInterface> $presets
+     */
     public function __construct(#[AutowireIterator('fusio.plant.preset', defaultIndexMethod: 'getName')] iterable $presets)
     {
         $this->presets = $presets;

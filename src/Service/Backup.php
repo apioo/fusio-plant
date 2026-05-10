@@ -35,7 +35,7 @@ readonly class Backup
 {
     private ObjectMapper $objectMapper;
 
-    public function __construct(private Service\Project $projectService, private Table\Project $projectTable, private SchemaManagerInterface $schemaManager)
+    public function __construct(private Service\Project $projectService, private Table\Project $projectTable, SchemaManagerInterface $schemaManager)
     {
         $this->objectMapper = new ObjectMapper($schemaManager);
     }
