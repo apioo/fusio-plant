@@ -35,9 +35,6 @@ readonly class Images implements ActionInterface
 
     public function handle(RequestInterface $request, ParametersInterface $configuration, ContextInterface $context): mixed
     {
-        return $this->service->images(
-            $request->get('id'),
-            $request->getPayload()
-        );
+        return $this->service->images();
     }
 }
