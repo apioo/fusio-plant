@@ -63,6 +63,9 @@ class DashboardCollection implements \JsonSerializable, \PSX\Record\RecordableIn
     {
         return $this->blockioRead;
     }
+    /**
+     * @return \PSX\Record\RecordInterface<mixed>
+     */
     public function toRecord(): \PSX\Record\RecordInterface
     {
         /** @var \PSX\Record\Record<mixed> $record */

@@ -27,6 +27,9 @@ class CertbotRequest implements \JsonSerializable, \PSX\Record\RecordableInterfa
     {
         return $this->email;
     }
+    /**
+     * @return \PSX\Record\RecordInterface<mixed>
+     */
     public function toRecord(): \PSX\Record\RecordInterface
     {
         /** @var \PSX\Record\Record<mixed> $record */

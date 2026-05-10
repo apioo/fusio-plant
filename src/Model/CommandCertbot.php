@@ -25,6 +25,9 @@ class CommandCertbot extends Command implements \JsonSerializable, \PSX\Record\R
     {
         return $this->email;
     }
+    /**
+     * @return \PSX\Record\RecordInterface<mixed>
+     */
     public function toRecord(): \PSX\Record\RecordInterface
     {
         /** @var \PSX\Record\Record<mixed> $record */

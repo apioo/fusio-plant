@@ -163,6 +163,9 @@ class DockerProcess implements \JsonSerializable, \PSX\Record\RecordableInterfac
     {
         return $this->createdAt;
     }
+    /**
+     * @return \PSX\Record\RecordInterface<mixed>
+     */
     public function toRecord(): \PSX\Record\RecordInterface
     {
         /** @var \PSX\Record\Record<mixed> $record */

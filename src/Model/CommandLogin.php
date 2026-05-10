@@ -34,6 +34,9 @@ class CommandLogin extends Command implements \JsonSerializable, \PSX\Record\Rec
     {
         return $this->password;
     }
+    /**
+     * @return \PSX\Record\RecordInterface<mixed>
+     */
     public function toRecord(): \PSX\Record\RecordInterface
     {
         /** @var \PSX\Record\Record<mixed> $record */

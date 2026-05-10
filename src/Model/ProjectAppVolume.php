@@ -27,6 +27,9 @@ class ProjectAppVolume implements \JsonSerializable, \PSX\Record\RecordableInter
     {
         return $this->destination;
     }
+    /**
+     * @return \PSX\Record\RecordInterface<mixed>
+     */
     public function toRecord(): \PSX\Record\RecordInterface
     {
         /** @var \PSX\Record\Record<mixed> $record */

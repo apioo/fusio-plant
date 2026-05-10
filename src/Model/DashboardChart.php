@@ -43,6 +43,9 @@ class DashboardChart implements \JsonSerializable, \PSX\Record\RecordableInterfa
     {
         return $this->series;
     }
+    /**
+     * @return \PSX\Record\RecordInterface<mixed>
+     */
     public function toRecord(): \PSX\Record\RecordInterface
     {
         /** @var \PSX\Record\Record<mixed> $record */

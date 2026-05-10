@@ -45,6 +45,9 @@ class Message implements \JsonSerializable, \PSX\Record\RecordableInterface
     {
         return $this->output;
     }
+    /**
+     * @return \PSX\Record\RecordInterface<mixed>
+     */
     public function toRecord(): \PSX\Record\RecordInterface
     {
         /** @var \PSX\Record\Record<mixed> $record */

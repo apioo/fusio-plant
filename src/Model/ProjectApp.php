@@ -135,6 +135,9 @@ class ProjectApp implements \JsonSerializable, \PSX\Record\RecordableInterface
     {
         return $this->links;
     }
+    /**
+     * @return \PSX\Record\RecordInterface<mixed>
+     */
     public function toRecord(): \PSX\Record\RecordInterface
     {
         /** @var \PSX\Record\Record<mixed> $record */

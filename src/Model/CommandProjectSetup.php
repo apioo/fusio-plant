@@ -43,6 +43,9 @@ class CommandProjectSetup extends Command implements \JsonSerializable, \PSX\Rec
     {
         return $this->backup;
     }
+    /**
+     * @return \PSX\Record\RecordInterface<mixed>
+     */
     public function toRecord(): \PSX\Record\RecordInterface
     {
         /** @var \PSX\Record\Record<mixed> $record */

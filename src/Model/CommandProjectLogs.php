@@ -16,6 +16,9 @@ class CommandProjectLogs extends Command implements \JsonSerializable, \PSX\Reco
     {
         return $this->name;
     }
+    /**
+     * @return \PSX\Record\RecordInterface<mixed>
+     */
     public function toRecord(): \PSX\Record\RecordInterface
     {
         /** @var \PSX\Record\Record<mixed> $record */

@@ -32,6 +32,9 @@ abstract class Command implements \JsonSerializable, \PSX\Record\RecordableInter
     {
         return $this->type;
     }
+    /**
+     * @return \PSX\Record\RecordInterface<mixed>
+     */
     public function toRecord(): \PSX\Record\RecordInterface
     {
         /** @var \PSX\Record\Record<mixed> $record */

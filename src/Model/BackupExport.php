@@ -18,6 +18,9 @@ class BackupExport implements \JsonSerializable, \PSX\Record\RecordableInterface
     {
         return $this->export;
     }
+    /**
+     * @return \PSX\Record\RecordInterface<mixed>
+     */
     public function toRecord(): \PSX\Record\RecordInterface
     {
         /** @var \PSX\Record\Record<mixed> $record */

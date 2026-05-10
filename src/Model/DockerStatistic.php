@@ -108,6 +108,9 @@ class DockerStatistic implements \JsonSerializable, \PSX\Record\RecordableInterf
     {
         return $this->netIO;
     }
+    /**
+     * @return \PSX\Record\RecordInterface<mixed>
+     */
     public function toRecord(): \PSX\Record\RecordInterface
     {
         /** @var \PSX\Record\Record<mixed> $record */
