@@ -98,7 +98,7 @@ class Dashboard extends ViewAbstract
     }
 
     /**
-     * @param array<int, array<string, int>> $data
+     * @param array<int, array<string, float>> $data
      * @param array<int, string> $seriesNames
      * @param list<string> $labels
      */
