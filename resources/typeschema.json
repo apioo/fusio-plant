@@ -653,6 +653,14 @@
       },
       "properties": {
       }
+    },
+    "Munin_Report": {
+      "type": "struct",
+      "properties": {
+        "html": {
+          "type": "string"
+        }
+      }
     }
   }
 }
