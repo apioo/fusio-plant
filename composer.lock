@@ -1972,16 +1972,16 @@
         },
         {
             "name": "fusio/impl",
-            "version": "v8.9.0",
+            "version": "v8.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/apioo/fusio-impl.git",
-                "reference": "9a9fa256490a4349653faf60a96252d2b28e8f6c"
+                "reference": "974dd5ae91993626564b04e46cfbb87e70828e5f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/apioo/fusio-impl/zipball/9a9fa256490a4349653faf60a96252d2b28e8f6c",
-                "reference": "9a9fa256490a4349653faf60a96252d2b28e8f6c",
+                "url": "https://api.github.com/repos/apioo/fusio-impl/zipball/974dd5ae91993626564b04e46cfbb87e70828e5f",
+                "reference": "974dd5ae91993626564b04e46cfbb87e70828e5f",
                 "shasum": ""
             },
             "require": {
@@ -2047,7 +2047,7 @@
             "homepage": "https://www.fusio-project.org",
             "support": {
                 "issues": "https://github.com/apioo/fusio-impl/issues",
-                "source": "https://github.com/apioo/fusio-impl/tree/v8.9.0"
+                "source": "https://github.com/apioo/fusio-impl/tree/v8.9.1"
             },
             "funding": [
                 {
@@ -2063,7 +2063,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-10-06T17:56:09+00:00"
+            "time": "2026-10-08T10:43:45+00:00"
         },
         {
             "name": "fusio/marketplace",
@@ -5131,16 +5131,16 @@
         },
         {
             "name": "psx/framework",
-            "version": "v8.1.7",
+            "version": "v8.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/apioo/psx-framework.git",
-                "reference": "10a0e3f69a2a5889f523d0bec4112f4e4152df3b"
+                "reference": "7e6840d0f451563f10137fd8beab070c9c153c92"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/apioo/psx-framework/zipball/10a0e3f69a2a5889f523d0bec4112f4e4152df3b",
-                "reference": "10a0e3f69a2a5889f523d0bec4112f4e4152df3b",
+                "url": "https://api.github.com/repos/apioo/psx-framework/zipball/7e6840d0f451563f10137fd8beab070c9c153c92",
+                "reference": "7e6840d0f451563f10137fd8beab070c9c153c92",
                 "shasum": ""
             },
             "require": {
@@ -5206,7 +5206,7 @@
             ],
             "support": {
                 "issues": "https://github.com/apioo/psx-framework/issues",
-                "source": "https://github.com/apioo/psx-framework/tree/v8.1.7"
+                "source": "https://github.com/apioo/psx-framework/tree/v8.1.8"
             },
             "funding": [
                 {
@@ -5222,7 +5222,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-10-04T21:40:29+00:00"
+            "time": "2026-10-07T21:07:43+00:00"
         },
         {
             "name": "psx/http",
