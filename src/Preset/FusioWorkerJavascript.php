@@ -27,9 +27,9 @@ class FusioWorkerJavascript extends Fusio
     {
         $apps = parent::load();
 
-        $this->addLink($apps[0] ?? null, 'worker-javascript');
+        $this->addLink($apps[0] ?? null, 'workerjavascript');
 
-        $apps[] = $this->newApp('worker-javascript', 'fusio/worker-javascript:2.0', volumes: [
+        $apps[] = $this->newApp('workerjavascript', 'fusio/worker-javascript:2.0', volumes: [
             $this->newVolume('./worker/javascript', '/worker/actions')
         ]);
 

@@ -27,9 +27,9 @@ class FusioWorkerPHP extends Fusio
     {
         $apps = parent::load();
 
-        $this->addLink($apps[0] ?? null, 'worker-php');
+        $this->addLink($apps[0] ?? null, 'workerphp');
 
-        $apps[] = $this->newApp('worker-php', 'fusio/worker-php:2.0', volumes: [
+        $apps[] = $this->newApp('workerphp', 'fusio/worker-php:2.0', volumes: [
             $this->newVolume('./worker/php', '/worker/actions')
         ]);
 
