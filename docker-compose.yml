@@ -1,4 +1,3 @@
-version: '3'
 services:
   fusio-plant:
     build: fusio/plant
