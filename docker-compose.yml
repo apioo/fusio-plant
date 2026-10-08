@@ -20,6 +20,10 @@ services:
       FUSIO_TRUSTED_IP_HEADER: ""
     links:
       - mysql-fusio
+    volumes:
+      - /opt/plant/input:/var/www/html/fusio/bin/input
+      - /opt/plant/output:/var/www/html/fusio/bin/output
+      - /var/cache/munin/www:/var/www/html/public/apps/munin:ro
     ports:
       - "8080:80"
 

@@ -132,6 +132,7 @@ services:
     volumes:
       - /opt/plant/input:/var/www/html/fusio/bin/input
       - /opt/plant/output:/var/www/html/fusio/bin/output
+      - /var/cache/munin/www:/var/www/html/fusio/public/apps/munin:ro
     links:
       - mysql-fusio
     ports:
