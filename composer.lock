@@ -1972,16 +1972,16 @@
         },
         {
             "name": "fusio/impl",
-            "version": "v8.9.1",
+            "version": "v8.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/apioo/fusio-impl.git",
-                "reference": "974dd5ae91993626564b04e46cfbb87e70828e5f"
+                "reference": "0e9439970b7fc67e98e45e62d45cc3b9d5f3d309"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/apioo/fusio-impl/zipball/974dd5ae91993626564b04e46cfbb87e70828e5f",
-                "reference": "974dd5ae91993626564b04e46cfbb87e70828e5f",
+                "url": "https://api.github.com/repos/apioo/fusio-impl/zipball/0e9439970b7fc67e98e45e62d45cc3b9d5f3d309",
+                "reference": "0e9439970b7fc67e98e45e62d45cc3b9d5f3d309",
                 "shasum": ""
             },
             "require": {
@@ -2047,7 +2047,7 @@
             "homepage": "https://www.fusio-project.org",
             "support": {
                 "issues": "https://github.com/apioo/fusio-impl/issues",
-                "source": "https://github.com/apioo/fusio-impl/tree/v8.9.1"
+                "source": "https://github.com/apioo/fusio-impl/tree/v8.9.2"
             },
             "funding": [
                 {
@@ -2063,7 +2063,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-10-08T10:43:45+00:00"
+            "time": "2026-10-09T08:07:32+00:00"
         },
         {
             "name": "fusio/marketplace",
@@ -4142,16 +4142,16 @@
         },
         {
             "name": "predis/predis",
-            "version": "v3.6.1",
+            "version": "v3.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/predis/predis.git",
-                "reference": "e2db96312ecf57a01a3477bf192d1ebc0ad7e9fb"
+                "reference": "4d91f3b08a60c3bacc2afbd8dc41724559b7626a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/predis/predis/zipball/e2db96312ecf57a01a3477bf192d1ebc0ad7e9fb",
-                "reference": "e2db96312ecf57a01a3477bf192d1ebc0ad7e9fb",
+                "url": "https://api.github.com/repos/predis/predis/zipball/4d91f3b08a60c3bacc2afbd8dc41724559b7626a",
+                "reference": "4d91f3b08a60c3bacc2afbd8dc41724559b7626a",
                 "shasum": ""
             },
             "require": {
@@ -4193,7 +4193,7 @@
             ],
             "support": {
                 "issues": "https://github.com/predis/predis/issues",
-                "source": "https://github.com/predis/predis/tree/v3.6.1"
+                "source": "https://github.com/predis/predis/tree/v3.7.0"
             },
             "funding": [
                 {
@@ -4201,7 +4201,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-17T20:41:00+00:00"
+            "time": "2026-10-08T16:46:04+00:00"
         },
         {
             "name": "psr/cache",
@@ -5972,16 +5972,16 @@
         },
         {
             "name": "psx/sql",
-            "version": "v4.4.4",
+            "version": "v4.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/apioo/psx-sql.git",
-                "reference": "c8979bff6f61739dde1bac7f7e38d49a3235e416"
+                "reference": "ea72f27474ae7520093a77050483340142ac32a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/apioo/psx-sql/zipball/c8979bff6f61739dde1bac7f7e38d49a3235e416",
-                "reference": "c8979bff6f61739dde1bac7f7e38d49a3235e416",
+                "url": "https://api.github.com/repos/apioo/psx-sql/zipball/ea72f27474ae7520093a77050483340142ac32a6",
+                "reference": "ea72f27474ae7520093a77050483340142ac32a6",
                 "shasum": ""
             },
             "require": {
@@ -6021,7 +6021,7 @@
             ],
             "support": {
                 "issues": "https://github.com/apioo/psx-sql/issues",
-                "source": "https://github.com/apioo/psx-sql/tree/v4.4.4"
+                "source": "https://github.com/apioo/psx-sql/tree/v4.4.5"
             },
             "funding": [
                 {
@@ -6037,7 +6037,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-10-07T09:15:45+00:00"
+            "time": "2026-10-08T22:02:47+00:00"
         },
         {
             "name": "psx/uri",
@@ -12295,11 +12295,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.3.0",
+            "version": "2.3.1",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/b1f9890d9af53a25c58129e78f0aadd31f90d7f4",
-                "reference": "b1f9890d9af53a25c58129e78f0aadd31f90d7f4",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/6155239b488e95d26d1ebd95c6b4bb294d7f09db",
+                "reference": "6155239b488e95d26d1ebd95c6b4bb294d7f09db",
                 "shasum": ""
             },
             "require": {
@@ -12355,7 +12355,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-06T06:15:36+00:00"
+            "time": "2026-10-08T21:09:11+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
