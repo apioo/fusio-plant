@@ -1,5 +1,5 @@
 FROM fusio/fusio:7.2
-ARG FUSIO_APP_PLANT="0.2.3"
+ARG FUSIO_APP_PLANT="0.3.0"
 COPY ./resources /var/www/html/fusio/resources
 COPY ./src /var/www/html/fusio/src
 COPY ./.fusio.yml /var/www/html/fusio/.fusio.yml
